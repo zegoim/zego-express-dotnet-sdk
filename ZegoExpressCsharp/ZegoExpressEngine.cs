@@ -576,23 +576,132 @@ namespace ZEGO
          * @param enable Whether to turn on the camera, true: turn on camera, false: turn off camera
          */
         public abstract void EnableCamera(bool enable, ZegoPublishChannel channel = ZegoPublishChannel.Main);
-
+        /**
+         * Enables or disables custom video rendering.
+         *
+         * It must be set before the engine starts, that is, before calling [startPreview], [startPublishing], [startPlayingStream]; and the configuration can be modified after the engine is stopped， that is after calling [logoutRoom].
+         * When the developer starts custom rendering, by calling [setCustomVideoRenderHandler], you can set to receive local and remote video frame data for custom rendering
+         *
+         * @param enable enable or disable
+         * @param config custom video render config
+         */
         public abstract void EnableCustomVideoRender(bool enable, ZegoCustomVideoRenderConfig config);
+        /**
+        * Starts a stream mixing task.
+        *
+        * Due to the performance considerations of the client device, ZegoExpressEngine's mix stream is to start the mixing stream task on the server side of the ZEGO audio and video cloud for mixing stream.
+        * After calling this api, SDK initiates a mixing stream request to the ZEGO audio and video cloud. The ZEGO audio and video cloud will find the current publishing stream and perform video layer blending according to the parameters of the mixing stream task requested by ZegoExpressEngine.
+        * When you need to update the mixing stream task, that is, the input stream list needs to be updated when the input stream increases or decreases, you can update the field of the [ZegoMixerTask] object inputList and call this api again to pass the same [ZegoMixerTask] object to update the mixing stream task.
+        * If an exception occurs when requesting to start the mixing stream task, for example, the most common mix input stream does not exist, it will be given from the callback error code. For specific error codes, please refer to the common error code documentation [https://doc-en.zego.im/en/308.html].
+        * If an input stream does not exist in the middle, the mixing stream task will automatically retry playing the input stream for 90 seconds, and will not retry after 90 seconds.
+        *
+        * @param task Mix stream task object
+        * @param callback Start mix stream task result callback notification
+        */
         public abstract void StartMixerTask(ZegoMixerTask task, OnMixerStartResult onMixerStartResult);
+        /**
+         * Stops a stream mixing task.
+         *
+         * Similar to [startMixerTask], after calling this api, SDK initiates a request to end the mixing stream task to the ZEGO audio and video cloud server.
+         * If you starts the next mixing stream task without stopping the previous mixing stream task, the previous mixing stream task will not stop automatically. The previous mixing stream task will not be stopped automatically until 90 seconds after the input stream of the previous mixing stream task does not exist.
+         * When using the mixing stream function of the ZEGO audio and video cloud service, you should pay attention to the start of the next mixing stream task, and should stop the previous mixing stream task, so as not to cause the anchor has started the next streaming task and mixing with other anchors, and the audience is still playing the output stream of the previous mixing stream task.
+         *
+         * @param task Mix stream task object
+         * @param callback Stop mix stream task result callback notification
+         */
         public abstract void StopMixerTask(ZegoMixerTask task, OnMixerStopResult onMixerStopResult);
+        /**
+         * Creates a media player instance.
+         *
+         * Currently, a maximum of 4 instances can be created, after which it will return null. The more instances of a media player, the greater the performance overhead on the device.
+         *
+         * @return Media player instance, null will be returned when the maximum number is exceeded.
+         */
         public abstract ZegoMediaPlayer CreateMediaPlayer();
+        /**
+         * Destroys a media player instance.
+         *
+         * @param mediaPlayer The media player instance object to be destroyed
+         */
         public abstract void DestroyMediaPlayer(ZegoMediaPlayer mediaPlayer);
+        /**
+         * Enables or disables custom video capture (for the specified channel).
+         *
+         * It must be set before the engine starts, that is, before calling [startPreview], [startPublishing]; and the configuration can be modified after the engine is stopped, that is, after calling [logoutRoom].
+         * When the developer starts the custom capture, it can be set to receive notification of the start and stop of the custom capture by calling [setCustomVideoCaptureHandler].
+         *
+         * @param enable enable or disable
+         * @param config custom video capture config
+         * @param channel publish channel
+         */
         public abstract void EnableCustomVideoCapture(bool enable, ZegoCustomVideoCaptureConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+        /**
+        * Sends the video frames (Raw Data) produced by custom video capture to the SDK (for the specified channel).
+        *
+        * This api need to be start called after the [onStart] callback notification and to be stop called call after the [onStop] callback notification.
+        *
+        * @param data video frame data
+        * @param dataLength video frame data length
+        * @param params video frame param
+        * @param referenceTimeMillisecond video frame reference time, UNIX timestamp, in milliseconds.
+        * @param channel Publishing stream channel
+        */
         public abstract void SendCustomVideoCaptureRawData(byte[] data, uint dataLength, ZegoVideoFrameParam param, ulong referenceTimeMillisecond, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
         public abstract ZegoDeviceInfo[] GetAudioDeviceList(ZegoAudioDeviceType deviceType);
         public abstract ZegoDeviceInfo[] GetVideoDeviceList();
         public abstract void UseAudioDevice(ZegoAudioDeviceType deviceType, string deviceID);
         public abstract void UseVideoDevice(string deviceID, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+        /**
+         * Enables the callback for receiving audio data.
+         *
+         * The callback to the corresponding setting of [setAudioDataHandler] is triggered when this interface is called and at publishing stream state or playing stream state.
+         *
+         * @param enable Whether to enable audio data callback
+         * @param callbackBitMask The callback api bitmask marker for receive audio data, refer to enum [ZegoAudioDataCallbackBitMask], when this param converted to binary, 0x01 for triggering [onCapturedAudioData], 0x10 for triggering [onRemoteAudioData], 0x100 for triggering [onMixedAudioData].The masks can be combined to allow different callbacks to be triggered simultaneously.
+         * @param param param of audio frame
+         */
         public abstract void EnableAudioDataCallback(bool enable, int callbackBitMask, ZegoAudioFrameParam param);
+        /**
+       * Enables the custom audio I/O function.
+       *
+       * It needs to be invoked before [startPublishingStream], [startPlayingStream] or [startPreview] to take effect.
+       *
+       * @param enable Whether to enable custom audio IO, default is false
+       * @param config Custom audio IO config
+       */
         public abstract void EnableCustomAudioIO(bool enable, ZegoCustomAudioConfig config, ZegoPublishChannel channel=ZegoPublishChannel.Main);
+        /**
+         * Sends AAC audio data produced by custom audio capture to the SDK (for the specified channel).
+         *
+         * @param data AAC buffer data
+         * @param dataLength The total length of the buffer data
+         * @param configLength The length of AAC specific config (Note: The AAC encoded data length is 'encodedLength = dataLength - configLength')
+         * @param referenceTimeMillisecond The UNIX timestamp of this AAC audio frame in millisecond.
+         * @param param The param of this AAC audio frame
+         * @param channel Publish channel for capturing audio frames
+         */
         public abstract void SendCustomAudioCaptureAACData(byte[] data, uint dataLength, uint configLength, ulong referenceTimeMillisecond, ZegoAudioFrameParam param, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+        /**
+         * Sends PCM audio data produced by custom audio capture to the SDK (for the specified channel).
+         *
+         * @param data PCM buffer data
+         * @param dataLength The total length of the buffer data
+         * @param param The param of this PCM audio frame
+         * @param channel Publish channel for capturing audio frames
+         */
+
         public abstract void SendCustomAudioCapturePCMData(byte[] data, uint dataLength, ZegoAudioFrameParam param, ZegoPublishChannel channel=ZegoPublishChannel.Main);
+        /**
+        * Fetches PCM audio data of the remote stream for custom audio rendering.
+        *
+        * It is recommended to use the system framework to periodically invoke this API to drive audio data rendering
+        *
+        * @param data A block of memory for storing audio PCM data that requires user to manage the memory block's lifecycle, the SDK will copy the audio frame rendering data to this memory block
+        * @param dataLength The length of the audio data to be fetch this time (dataLength = duration * sampleRate * channels * 2(16 bit depth i.e. 2 Btye))
+        * @param param Specify the parameters of the fetched audio frame
+        */
+
         public abstract void FetchCustomAudioRenderPCMData(ref byte[] data, uint dataLength, ZegoAudioFrameParam param);
         public OnCustomVideoCaptureStart onCustomVideoCaptureStart;
         public OnCustomVideoCaptureStop onCustomVideoCaptureStop;
