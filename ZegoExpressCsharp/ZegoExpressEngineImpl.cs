@@ -815,7 +815,7 @@ namespace ZEGO
             {
                 zego_room_config roomConfig = new zego_room_config();
                 roomConfig.max_member_count = config.maxMemberCount;
-                roomConfig.thrid_token = config.thridToken;
+                roomConfig.thrid_token = config.token;
                 roomConfig.is_user_status_notify = config.isUserStatusNotify;
                 Console.WriteLine(string.Format("LoginRoom ZegoRoomConfig max_member_count:{0} thrid_token:{1} is_user_status_notify:{2}", roomConfig.max_member_count, roomConfig.thrid_token, roomConfig.is_user_status_notify));
                 return ZegoUtil.GetStructPointer(roomConfig);

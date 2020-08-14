@@ -26,6 +26,7 @@ namespace ZEGO
         /** 自定义视频渲染视频帧数据格式 */
         public ZegoCustomVideoRenderSeries series;
         /** 是否在自定义视频渲染的同时，引擎也渲染，默认为 [false] */
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool is_internal_render;
     }
     public struct zego_engine_config
@@ -62,14 +63,20 @@ namespace ZEGO
         [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_EXTRA_INFO_LEN)]
         public byte[] extraInfo;
     }
+    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
     public struct zego_room_config
     {
-        public uint max_member_count;
-        public bool is_user_status_notify;
-        // 由开发者业务服务器下发的 token，用以保证安全性，生成规则详见 https://doc.zego.im/CN/565.html
-        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
-        public string thrid_token;
 
+        /// unsigned int
+        public uint max_member_count;
+
+        /// boolean
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
+        public bool is_user_status_notify;
+
+        /// char[]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
+        public string thrid_token;
     }
     public struct zego_video_frame_param
     {
@@ -271,11 +278,11 @@ namespace ZEGO
     {
 
         /// char[1024]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 1024)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
         public string url;
 
         /// char[512]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 512)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
         public string auth_param;
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
@@ -283,7 +290,7 @@ namespace ZEGO
     {
 
         /// char[1024]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 1024)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
         public string url;
 
         /// zego_stream_relay_cdn_state
@@ -301,7 +308,7 @@ namespace ZEGO
     {
 
         /// char[256]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 256)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN)]
         public string stream_id;
 
         /// float
@@ -312,7 +319,7 @@ namespace ZEGO
     {
 
         /// char[256]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 256)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN)]
         public string stream_id;
 
         /// float*
@@ -342,7 +349,7 @@ namespace ZEGO
     {
 
         /// char[512]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 512)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
         public string image;
 
         /// zego_rect
@@ -395,7 +402,7 @@ namespace ZEGO
     {
 
         /// char[256]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 256)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_MIXER_TASK_LEN)]
         public string task_id;
         //[MarshalAs(UnmanagedType.ByValArray,ArraySubType =UnmanagedType.Struct)]
         /// zego_mixer_input*
@@ -421,10 +428,11 @@ namespace ZEGO
         public System.IntPtr watermark;
 
         /// char[1024]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 1024)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
         public string background_image_url;
 
         /// boolean
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool enable_sound_level;
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
@@ -434,7 +442,7 @@ namespace ZEGO
        
 
         /// char[256]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 256)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN)]
         public string stream_id;
         /// ZegoMixerInputContentType
         public ZegoMixerInputContentType content_type;
@@ -449,7 +457,7 @@ namespace ZEGO
     {
 
         /// char[1024]
-       [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 1024)]
+       [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
         public string target;
     }
 

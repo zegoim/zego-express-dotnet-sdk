@@ -1,0 +1,5 @@
+.vs/
+ZegoExpressCsharp/bin
+ZegoExpressCsharp/obj
+# User-specific files
+*.suo

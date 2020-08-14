@@ -374,12 +374,10 @@ namespace ZEGO
     {
         /// char[512]
         /** message content */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_MESSAGE_LEN)]
-        public string message;
+         public string message;
 
         /// char[64]
         /** message id */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 64)]
         public string messageId;
 
         /** Message send time */
@@ -406,7 +404,6 @@ namespace ZEGO
     {
         /// char[512]
         /** message content */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_MESSAGE_LEN)]
         public string message;
 
         /// char[64]
@@ -426,13 +423,11 @@ namespace ZEGO
     {
         /// char[1024]
         /** CDN URL */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 1024)]
         public string url;
 
         /// char[512]
         /** Auth param of URL */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 512)]
-        public string authParam;
+       public string authParam;
     }
     /**
     * Advanced engine configuration
@@ -451,7 +446,6 @@ namespace ZEGO
     {
         /// char[512]
         /** Log file save path */
-        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
         public string logPath;
         /// ULONGLONG->unsigned __int64
         /** The maximum log file size (Bytes). The default maximum size is 5MB (5 * 1024 * 1024 Bytes) */
@@ -526,7 +520,6 @@ namespace ZEGO
 
         /// boolean
         /** Whether to enable hardware decoding */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool isHardwareDecode;
 
         /// double
@@ -588,7 +581,6 @@ namespace ZEGO
 
         /// boolean
         /** Whether to enable hardware encoding */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool isHardwareEncode;
 
         /// double
@@ -636,8 +628,7 @@ namespace ZEGO
         /** Whether to enable the user in and out of the room onLoadResourceCallback notification [onRoomUserUpdate], the default is off. */
         public bool isUserStatusNotify;
         /** The token issued by the developer's business server is used to ensure security. The generation rules are detailed in [https://doc.zego.im/CN/565.html](https://doc.zego.im/CN/565.html). Default is empty string, that is, no authentication */
-        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
-        public string thridToken;
+        public string token;
     }
     public class ZegoStream
     {
@@ -645,13 +636,13 @@ namespace ZEGO
         public ZegoUser user;
 
         /** Stream ID, a string of up to 256 characters. You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
-        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN)]
+       
         public string streamId;
 
 
 
         /** Stream extra info */
-        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_EXTRA_INFO_LEN)]
+        
         public string extraInfo;
 
     }
@@ -659,7 +650,7 @@ namespace ZEGO
     {
         /// char[1024]
         /** URL of publishing stream to CDN */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 1024)]
+        
         public string url;
 
         /// zego_stream_relay_cdn_state
@@ -734,7 +725,7 @@ namespace ZEGO
     {
         /// char[512]
          /** Watermark image URL */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 512)]
+       
         public string imageUrl;
 
         /// zego_rect
@@ -765,7 +756,6 @@ namespace ZEGO
     {
         public ZegoVideoFrameFormat format;
         /// int[4]
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 4, ArraySubType = UnmanagedType.I4)]
         public int[] strides;
 
         public int width;
