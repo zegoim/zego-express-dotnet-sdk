@@ -409,7 +409,10 @@ namespace ZEGO
                     ZegoAudioFrameParam zegoAudioFrameParam = ChangeZegoAudioFrameStructToClass(param);
                     context.Post(new SendOrPostCallback((o) =>
                     {
-                        zegoMediaPlayer.onAudioFrame(zegoMediaPlayer, result, data_length, zegoAudioFrameParam);
+                        if (zegoMediaPlayer != null)
+                        {
+                            zegoMediaPlayer.onAudioFrame(zegoMediaPlayer, result, data_length, zegoAudioFrameParam);
+                        }
                     }), null);
                 }
             }
@@ -440,7 +443,10 @@ namespace ZEGO
                     ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
                     context.Post(new SendOrPostCallback((o) =>
                     {
-                        zegoMediaPlayer.onVideoFrame(zegoMediaPlayer, onVideoFrameData, mediaplayerDataLength, zegoVideoFrameParam);
+                        if (zegoMediaPlayer != null)
+                        {
+                            zegoMediaPlayer.onVideoFrame(zegoMediaPlayer, onVideoFrameData, mediaplayerDataLength, zegoVideoFrameParam);
+                        }
                     }), null);
                 }
             }
@@ -472,7 +478,10 @@ namespace ZEGO
                     Console.WriteLine(string.Format("zego_on_mediaplayer_load_resource_result mediaplayerID:{0} error_code:{1}", instance_index, error_code));
                     context.Post(new SendOrPostCallback((o) =>
                     {
-                        zegoMediaPlayer.onLoadResourceCallback(error_code);
+                        if (zegoMediaPlayer != null)
+                        {
+                            zegoMediaPlayer.onLoadResourceCallback(error_code);
+                        }
                     }), null);
                 }
             }
@@ -917,7 +926,10 @@ namespace ZEGO
                 Console.WriteLine(string.Format("onRoomStateUpdate roomId:{0}  state:{1}  errorCode:{2} extendedData{3}", roomId, state, errorCode, extendedData));
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onRoomStateUpdate(roomId, state, errorCode, extendedData);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onRoomStateUpdate(roomId, state, errorCode, extendedData);
+                    }
                 }), null);
 
             }
@@ -931,7 +943,10 @@ namespace ZEGO
                 Console.WriteLine(string.Format("onDebugError error_code:{0} func_name:{1} info:{2}", error_code, func_name, info));
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onDebugError(error_code, func_name, info);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onDebugError(error_code, func_name, info);
+                    }
                 }), null);
             }
         }
@@ -947,7 +962,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onRoomStreamExtraInfoUpdate(room_id, result);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onRoomStreamExtraInfoUpdate(room_id, result);
+                    }
                 }), null);
             }
 
@@ -1341,7 +1359,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPublisherStateUpdate(streamId, state, errorCode, extendedData);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPublisherStateUpdate(streamId, state, errorCode, extendedData);
+                    }
                 }), null);
             }
 
@@ -1407,7 +1428,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPublisherRelayCDNStateUpdate(stream_id, infoList);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPublisherRelayCDNStateUpdate(stream_id, infoList);
+                    }
                 }), null);
             }
 
@@ -1553,7 +1577,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPlayerStateUpdate(streamId, state, errorCode, extendedData);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPlayerStateUpdate(streamId, state, errorCode, extendedData);
+                    }
                 }), null);
             }
 
@@ -1571,7 +1598,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPublisherQualityUpdate(streamId, result);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPublisherQualityUpdate(streamId, result);
+                    }
                 }), null);
             }
 
@@ -1607,7 +1637,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPublisherCapturedAudioFirstFrame();
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPublisherCapturedAudioFirstFrame();
+                    }
                 }), null);
             }
 
@@ -1622,7 +1655,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPublisherCapturedVideoFirstFrame(channel);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPublisherCapturedVideoFirstFrame(channel);
+                    }
                 }), null);
             }
 
@@ -1639,7 +1675,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPublisherVideoSizeChanged(width, height, channel);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPublisherVideoSizeChanged(width, height, channel);
+                    }
                 }), null);
             }
 
@@ -1659,7 +1698,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onRoomUserUpdate(roomId, updateType, result, userCount);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onRoomUserUpdate(roomId, updateType, result, userCount);
+                    }
                 }), null);
             }
 
@@ -1885,7 +1927,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onRoomStreamUpdate(roomId, updateType, result, streamInfoCount);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onRoomStreamUpdate(roomId, updateType, result, streamInfoCount);
+                    }
                 }), null);
             }
 
@@ -1919,7 +1964,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPlayerQualityUpdate(streamId, result);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPlayerQualityUpdate(streamId, result);
+                    }
                 }), null);
             }
 
@@ -1959,7 +2007,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPlayerMediaEvent(streamId, mediaEvent);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPlayerMediaEvent(streamId, mediaEvent);
+                    }
                 }), null);
             }
 
@@ -1974,7 +2025,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPlayerRecvAudioFirstFrame(streamId);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPlayerRecvAudioFirstFrame(streamId);
+                    }
                 }), null);
             }
 
@@ -1990,7 +2044,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPlayerRecvVideoFirstFrame(streamId);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPlayerRecvVideoFirstFrame(streamId);
+                    }
                 }), null);
             }
 
@@ -2007,7 +2064,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPlayerRenderVideoFirstFrame(streamId);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPlayerRenderVideoFirstFrame(streamId);
+                    }
                 }), null);
             }
 
@@ -2025,7 +2085,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPlayerVideoSizeChanged(streamId, width, height);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPlayerVideoSizeChanged(streamId, width, height);
+                    }
                 }), null);
             }
 
@@ -2283,7 +2346,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onIMRecvBarrageMessage(room_id, result);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onIMRecvBarrageMessage(room_id, result);
+                    }
                 }), null);
             }
 
@@ -2355,7 +2421,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onCustomVideoCaptureStart(channel);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onCustomVideoCaptureStart(channel);
+                    }
                 }), null);
             }
         }
@@ -2372,7 +2441,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onCustomVideoCaptureStop(channel);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onCustomVideoCaptureStop(channel);
+                    }
                 }), null);
             }
 
@@ -2388,7 +2460,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onCapturedAudioData(result,data_length,zegoAudioFrameParam);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onCapturedAudioData(result, data_length, zegoAudioFrameParam);
+                    }
                 }), null);
             }
         }
@@ -2403,7 +2478,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onRemoteAudioData(result, data_length, zegoAudioFrameParam);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onRemoteAudioData(result, data_length, zegoAudioFrameParam);
+                    }
                 }), null);
             }
         }
@@ -2417,7 +2495,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onMixedAudioData(result, data_length, zegoAudioFrameParam);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onMixedAudioData(result, data_length, zegoAudioFrameParam);
+                    }
                 }), null);
             }
         }
@@ -2434,7 +2515,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onIMRecvBroadcastMessage(room_id, result);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onIMRecvBroadcastMessage(room_id, result);
+                    }
                 }), null);
             }
 
@@ -2472,7 +2556,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onIMRecvCustomCommand(room_id, result, content);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onIMRecvCustomCommand(room_id, result, content);
+                    }
                 }), null);
             }
 
@@ -2527,7 +2614,10 @@ namespace ZEGO
                         Console.WriteLine(string.Format("zego_on_mediaplayer_state_update mediaplayerID:{0} state:{1}", instance_index, state));
                         context.Post(new SendOrPostCallback((o) =>
                         {
-                            zegoMediaPlayer.onMediaPlayerStateUpdate(zegoMediaPlayer, state, error_code);
+                            if (zegoMediaPlayer != null)
+                            {
+                                zegoMediaPlayer.onMediaPlayerStateUpdate(zegoMediaPlayer, state, error_code);
+                            }
                         }), null);
                     }
                 }
@@ -2552,7 +2642,10 @@ namespace ZEGO
                         Console.WriteLine(string.Format("zego_on_mediaplayer_network_event mediaplayerID:{0}", instance_index));
                         context.Post(new SendOrPostCallback((o) =>
                         {
-                            zegoMediaPlayer.onMediaPlayerNetworkEvent(zegoMediaPlayer, net_event);
+                            if (zegoMediaPlayer != null)
+                            {
+                                zegoMediaPlayer.onMediaPlayerNetworkEvent(zegoMediaPlayer, net_event);
+                            }
                         }), null);
                     }
                 }
@@ -2575,7 +2668,10 @@ namespace ZEGO
                         Console.WriteLine(string.Format("zego_on_mediaplayer_playing_progress mediaplayerID:{0}", instance_index));
                         context.Post(new SendOrPostCallback((o) =>
                         {
-                            zegoMediaPlayer.onMediaPlayerPlayingProgress(zegoMediaPlayer, millisecond);
+                            if (zegoMediaPlayer != null)
+                            {
+                                zegoMediaPlayer.onMediaPlayerPlayingProgress(zegoMediaPlayer, millisecond);
+                            }
                         }), null);
                     }
                 }
@@ -2604,7 +2700,10 @@ namespace ZEGO
                             if (callback != null)
                             {
                                 callback(error_code);
-                                zegoMediaPlayer.seekToTimeCallbackDic.Remove(seq);
+                                if (zegoMediaPlayer != null)
+                                {
+                                    zegoMediaPlayer.seekToTimeCallbackDic.Remove(seq);
+                                }
                             }
                         }), null);
                     }
@@ -2628,7 +2727,10 @@ namespace ZEGO
             {
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onPlayerRecvSEI(stream_id, result);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onPlayerRecvSEI(stream_id, result);
+                    }
                 }), null);
             }
 
@@ -2712,7 +2814,10 @@ namespace ZEGO
             zego_sound_level_info soundLevelInfo = ZegoUtil.GetStructByPtr<zego_sound_level_info>(sound_level_info);
 
             //直接在c层子线程返回回调，避免切换到ui线程导致界面卡顿
-            enginePtr.onCapturedSoundLevelUpdate(soundLevelInfo.sound_level);
+            if (enginePtr != null)
+            {
+                enginePtr.onCapturedSoundLevelUpdate(soundLevelInfo.sound_level);
+            }
             //callBackQueue.PostAsynAction(() =>
             //{
             //    enginePtr.onCapturedSoundLevelUpdate(soundLevelInfo.sound_level);
@@ -2728,7 +2833,10 @@ namespace ZEGO
             ZegoUtil.GetStructListByPtr<zego_sound_level_info>(ref infos, sound_level_info_list, info_count);
             Dictionary<string, float> results = ChangeZegoSoundLevelInfoStructListToDictionary(infos);
             //直接在c层子线程返回回调，避免切换到ui线程导致界面卡顿
-            enginePtr.onRemoteSoundLevelUpdate(results);
+            if (enginePtr != null)
+            {
+                enginePtr.onRemoteSoundLevelUpdate(results);
+            }
             //callBackQueue.PostAsynAction(() =>
             //{
             //    enginePtr.onRemoteSoundLevelUpdate(results);
@@ -2759,7 +2867,10 @@ namespace ZEGO
             zego_audio_spectrum_info zegoAudioSpectrumInfo = ZegoUtil.GetStructByPtr<zego_audio_spectrum_info>(audio_spectrum_info);
             float[] result = GetZegoAudioSpectrumInfoStructSpectrumList(zegoAudioSpectrumInfo);
             //直接在c层子线程返回回调，避免切换到ui线程导致界面卡顿
-            enginePtr.onCapturedAudioSpectrumUpdate(result);
+            if (enginePtr != null)
+            {
+                enginePtr.onCapturedAudioSpectrumUpdate(result);
+            }
             //callBackQueue.PostAsynAction(() =>
             //{
 
@@ -2784,7 +2895,10 @@ namespace ZEGO
             ZegoUtil.GetStructListByPtr<zego_audio_spectrum_info>(ref infos, audio_spectrum_info_list, info_count);
             Dictionary<string, float[]> results = ChangeZegoAudioSpectrumInfoListToDictionary(infos);
             //直接在c层子线程返回回调，避免切换到ui线程导致界面卡顿
-            enginePtr.onRemoteAudioSpectrumUpdate(results);
+            if (enginePtr != null)
+            {
+                enginePtr.onRemoteAudioSpectrumUpdate(results);
+            }
             //callBackQueue.PostAsynAction(() =>
             //{
 
@@ -2906,7 +3020,10 @@ namespace ZEGO
                 ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onCapturedVideoFrameRawData(capturedFrameData, captureDataLengthResult,zegoVideoFrameParam , flipMode, channel);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onCapturedVideoFrameRawData(capturedFrameData, captureDataLengthResult, zegoVideoFrameParam, flipMode, channel);
+                    }
                 }), null);
 
             }
@@ -2955,7 +3072,10 @@ namespace ZEGO
                 ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
                 context.Post(new SendOrPostCallback((o) =>
                 {
-                    enginePtr.onRemoteVideoFrameRawData(streamID, remoteFrameData, remoteDataLengthResult,zegoVideoFrameParam);
+                    if (enginePtr != null)
+                    {
+                        enginePtr.onRemoteVideoFrameRawData(streamID, remoteFrameData, remoteDataLengthResult, zegoVideoFrameParam);
+                    }
                 }), null);
             }
         }
