@@ -1083,4 +1083,30 @@ namespace ZEGO
         public ZegoAudioSourceType source_type;
     }
 
+    public enum ZegoAECMode
+    {
+
+        /// zego_aec_mode_aggressive -> 0
+        aggressive = 0,
+
+        /// zego_aec_mode_medium -> 1
+        medium = 1,
+
+        /// zego_aec_mode_soft -> 2
+        soft = 2,
+    }
+
+    public enum ZegoANSMode
+    {
+
+        /// zego_ans_mode_soft -> 0
+        soft = 0,
+
+        /// zego_ans_mode_medium -> 1
+        medium = 1,
+
+        /// zego_ans_mode_aggressive -> 2
+        aggressive = 2,
+    }
+
 }

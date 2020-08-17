@@ -703,6 +703,52 @@ namespace ZEGO
         */
 
         public abstract void FetchCustomAudioRenderPCMData(ref byte[] data, uint dataLength, ZegoAudioFrameParam param);
+
+        /**
+         * Enables or disables Acoustic Echo Cancellation (AEC).
+         *
+         * Turning on echo cancellation, the SDK filters the collected audio data to reduce the echo component in the audio.
+         * It needs to be invoked before [startPublishingStream], [startPlayingStream] or [startPreview] to take effect.
+         *
+         * @param enable Whether to enable echo cancellation, true: enable echo cancellation, false: disable echo cancellation
+         */
+        public abstract void EnableAEC(bool enable);
+        /**
+         * Sets the Acoustic Echo Cancellation (AEC) mode.
+         *
+         * Switch different echo cancellation modes to control the extent to which echo data is eliminated.
+         * It needs to be invoked before [startPublishingStream], [startPlayingStream] or [startPreview] to take effect.
+         *
+         * @param mode Echo cancellation mode
+         */
+        public abstract void SetAECMode(ZegoAECMode mode);
+        /**
+        * Enables or disables Automatic Gain Control (AGC).
+        *
+        * When the auto gain is turned on, the sound will be amplified, but it will affect the sound quality to some extent.
+        * It needs to be invoked before [startPublishingStream], [startPlayingStream] or [startPreview] to take effect.
+        *
+        * @param enable Whether to enable automatic gain control, true: enable AGC, false: disable AGC
+        */
+        public abstract void EnableAGC(bool enable);
+        /**
+        * Enables or disables Automatic Noise Suppression (ANS).
+        *
+        * Turning on the noise suppression switch can reduce the noise in the audio data and make the human voice clearer.
+        * It needs to be invoked before [startPublishingStream], [startPlayingStream] or [startPreview] to take effect.
+        *
+        * @param enable Whether to enable noise suppression, true: enable AGC, false: disable AGC
+        */
+        public abstract void EnableANS(bool enable);
+        /**
+          * Sets the Automatic Noise Suppression (ANS) mode.
+          *
+          * Default is medium mode
+          * It needs to be invoked before [startPublishingStream], [startPlayingStream] or [startPreview] to take effect.
+          *
+          * @param mode Audio Noise Suppression mode
+          */
+        public abstract void SetANSMode(ZegoANSMode mode);
         public OnCustomVideoCaptureStart onCustomVideoCaptureStart;
         public OnCustomVideoCaptureStop onCustomVideoCaptureStop;
         public OnRoomStateUpdate onRoomStateUpdate;

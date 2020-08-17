@@ -541,6 +541,47 @@ namespace ZEGO
             onMixerStopResultDics.Clear();
             //setEngineConfigFlag = false;
         }
+        public override void EnableAEC(bool enable)
+        {
+            if (enginePtr != null)
+            {
+                int result = IExpressPreprocessInternal.zego_express_enable_aec(enable);
+                Console.WriteLine(string.Format("EnableAEC enable:{0} result:{1}",enable, result));
+            }
+        }
+        
+        public override void SetAECMode(ZegoAECMode mode)
+        {
+            if (enginePtr != null)
+            {
+                int result = IExpressPreprocessInternal.zego_express_set_aec_mode(mode);
+                Console.WriteLine(string.Format("SetAECMode ZegoAECMode:{0} result:{1}", mode, result));
+            }
+        }
+        public override void EnableAGC(bool enable)
+        {
+            if (enginePtr != null)
+            {
+                int result = IExpressPreprocessInternal.zego_express_enable_agc(enable);
+                Console.WriteLine(string.Format("EnableAGC enable:{0} result:{1}", enable, result));
+            }
+        }
+        public override void EnableANS(bool enable)
+        {
+            if (enginePtr != null)
+            {
+                int result = IExpressPreprocessInternal.zego_express_enable_ans(enable);
+                Console.WriteLine(string.Format("EnableANS enable:{0} result:{1}", enable, result));
+            }
+        }
+        public override void SetANSMode(ZegoANSMode mode)
+        {
+            if (enginePtr != null)
+            {
+                int result = IExpressPreprocessInternal.zego_express_set_ans_mode(mode);
+                Console.WriteLine(string.Format("SetANSMode ZegoANSMode:{0} result:{1}", mode, result));
+            }
+        }
 
         public override void SendCustomVideoCaptureRawData(byte[] data, uint dataLength, ZegoVideoFrameParam param, ulong referenceTimeMillisecond, ZegoPublishChannel channel = ZegoPublishChannel.Main)
         {
