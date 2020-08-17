@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using static ZEGO.IZegoEventHandler;
-//current version 0.9.1
 namespace ZEGO
 {
     public abstract class ZegoExpressEngine { 
