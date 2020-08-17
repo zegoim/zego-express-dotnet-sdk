@@ -487,7 +487,7 @@ namespace ZEGO
 
         private static void zego_on_engine_uninit(System.IntPtr userContext)
         {
-            if (enginePtr == null) return;
+           
 
             Console.WriteLine("destroy engine success");
             if (onDestroyCompletion != null)
@@ -506,8 +506,8 @@ namespace ZEGO
             {
                 Console.WriteLine("no set destroy engine callback");
             }
-            release();
 
+            release();
 
         }
         public static new void DestroyEngine(IZegoDestroyCompletionCallback onDestroyCompletion = null)
@@ -519,7 +519,8 @@ namespace ZEGO
                     if (enginePtr != null)
                     {
                         ZegoExpressEngineImpl.onDestroyCompletion = onDestroyCompletion;
-                        IExpressEngineInternal.zego_express_engine_uninit_async();//异步回调，不能在结果回调前release内存,否则异常
+                        enginePtr = null;//engine must set null here,or crash
+                        IExpressEngineInternal.zego_express_engine_uninit_async();                     
                     }
                 }
             }
@@ -527,7 +528,7 @@ namespace ZEGO
 
         private static void release()
         {
-            enginePtr = null;
+           
             jvm = IntPtr.Zero;
             application = IntPtr.Zero;
             engineConfig = new zego_engine_config();
