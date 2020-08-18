@@ -50,18 +50,18 @@ namespace ZEGO
     public struct zego_user
     {
         [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_USERID_LEN)]
-        public byte[] userId;
+        public byte[] user_id;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_USERNAME_LEN)]
-        public byte[] userName;
+        public byte[] user_name;
 
     }
     public struct zego_stream
     {
         public zego_user user;
         [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN)]
-        public string streamId;
+        public string stream_id;
         [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_EXTRA_INFO_LEN)]
-        public byte[] extraInfo;
+        public byte[] extra_info;
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
     public struct zego_room_config

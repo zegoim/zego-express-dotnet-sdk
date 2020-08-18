@@ -900,8 +900,8 @@ namespace ZEGO
 
                 zegoUser = new zego_user
                 {
-                    userId = userIdBytes,
-                    userName = userNameBytes
+                    user_id = userIdBytes,
+                    user_name = userNameBytes
                 };
             }
             return zegoUser;
@@ -1910,8 +1910,8 @@ namespace ZEGO
         private static ZegoUser ChangeZegoUserStructToClass(zego_user user)
         {
             ZegoUser zegoUser = new ZegoUser();
-            zegoUser.userId =ZegoUtil.GetUTF8String(user.userId);
-            zegoUser.userName = ZegoUtil.GetUTF8String(user.userName);
+            zegoUser.userId =ZegoUtil.GetUTF8String(user.user_id);
+            zegoUser.userName = ZegoUtil.GetUTF8String(user.user_name);
             return zegoUser;
         }
 
@@ -1950,8 +1950,8 @@ namespace ZEGO
         private static ZegoStream ChangeZegoStreamStructToClass(zego_stream stream)
         {
             ZegoStream zegoStream = new ZegoStream();
-            zegoStream.streamId = stream.streamId;
-            zegoStream.extraInfo = ZegoUtil.GetUTF8String(stream.extraInfo);
+            zegoStream.streamId = stream.stream_id;
+            zegoStream.extraInfo = ZegoUtil.GetUTF8String(stream.extra_info);
             zegoStream.user = ChangeZegoUserStructToClass(stream.user);
             return zegoStream;
         }
