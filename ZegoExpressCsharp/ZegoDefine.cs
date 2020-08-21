@@ -55,8 +55,7 @@ namespace ZEGO
     public enum ZegoCustomVideoRenderSeries
     {
         RGB,
-        //暂时不支持YUV数据格式外部渲染
-        //YUV
+        YUV
     }
 
     // MODULE: ENGINE
@@ -865,9 +864,9 @@ namespace ZEGO
             return ZegoExpressEngineImpl.GetIndex(this);
         }
 
-        public delegate void OnAudioFrame(ZegoMediaPlayer mediaPlayer, byte[] data, uint dataLength, ZegoAudioFrameParam param);
+        public delegate void OnAudioFrame(ZegoMediaPlayer mediaPlayer, IntPtr data, uint dataLength, ZegoAudioFrameParam param);
         public OnAudioFrame onAudioFrame;
-        public delegate void OnVideoFrame(ZegoMediaPlayer mediaPlayer, byte[] data, uint[] dataLength, ZegoVideoFrameParam param);
+        public delegate void OnVideoFrame(ZegoMediaPlayer mediaPlayer, IntPtr data, IntPtr dataLength, ZegoVideoFrameParam param);//dataLength is uint array,fixed Length is 4
         public OnVideoFrame onVideoFrame;
         public void SetVideoHandler(OnVideoFrame onVideoFrame, ZegoVideoFrameFormat format)
         {
