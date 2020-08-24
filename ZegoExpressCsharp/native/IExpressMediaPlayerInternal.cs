@@ -246,8 +246,9 @@ namespace ZEGO
         ///instance_index: ZegoMediaPlayerInstanceIndex
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_media_player_video_frame(ref System.IntPtr data, IntPtr data_length, zego_video_frame_param param, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
-
+        public delegate void zego_on_media_player_video_frame([In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] IntPtr[] data,
+            [In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] uint[] data_length, zego_video_frame_param param,
+            ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
 
 
 

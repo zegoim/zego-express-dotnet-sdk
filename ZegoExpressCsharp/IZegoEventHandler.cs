@@ -383,7 +383,7 @@ namespace ZEGO
          * @param flipMode video flip mode
          * @param channel Publishing stream channel
          */
-        public delegate void OnCapturedVideoFrameRawData(IntPtr data, IntPtr dataLength, ZegoVideoFrameParam param, ZegoVideoFlipMode flipMode, ZegoPublishChannel channel);
+        public delegate void OnCapturedVideoFrameRawData(IntPtr[] data, uint[] dataLength, ZegoVideoFrameParam param, ZegoVideoFlipMode flipMode, ZegoPublishChannel channel);
         /**
          * The callback for obtaining the video frames (Raw Data) of the remote stream. Different streams can be identified by streamID.
          *
@@ -392,7 +392,7 @@ namespace ZEGO
          * @param param Video frame parameters
          * @param streamID Stream ID
          */
-        public delegate void OnRemoteVideoFrameRawData(string streamID, IntPtr data, IntPtr dataLength, ZegoVideoFrameParam param);
+        public delegate void OnRemoteVideoFrameRawData(string streamID, IntPtr[] data, uint[] dataLength, ZegoVideoFrameParam param);
         /**
          * Results of starting a mixer task
          *

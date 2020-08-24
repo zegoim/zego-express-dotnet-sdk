@@ -7,9 +7,14 @@ namespace ZEGO
     public class IExpressCustomVideoInternal
     {
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_custom_video_render_captured_frame_data(ref IntPtr data, IntPtr data_length, zego_video_frame_param param, ZegoVideoFlipMode flip_mode, ZegoPublishChannel channel, System.IntPtr user_context);
+        public delegate void zego_on_custom_video_render_captured_frame_data([In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] IntPtr[] data,
+            [In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] uint[] data_length, zego_video_frame_param param, ZegoVideoFlipMode flip_mode,
+            ZegoPublishChannel channel, IntPtr user_context);
+
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_custom_video_render_remote_frame_data([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string streamID, ref IntPtr data, IntPtr data_length, zego_video_frame_param param, System.IntPtr user_context);
+        public delegate void zego_on_custom_video_render_remote_frame_data([In][MarshalAs(UnmanagedType.LPStr)] string streamID,
+            [In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] IntPtr[] data, [In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] uint[] data_length,
+            zego_video_frame_param param, IntPtr user_context);
 
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_custom_video_render_captured_frame_data_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
@@ -20,7 +25,7 @@ namespace ZEGO
         ///enable: boolean
         ///config: zego_custom_video_render_config*
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_custom_video_render", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_enable_custom_video_render([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, IntPtr  config);
+        public static extern int zego_express_enable_custom_video_render([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, IntPtr config);
 
 
         /// Return Type: int
@@ -28,10 +33,10 @@ namespace ZEGO
         ///config: zego_custom_video_capture_config*
         ///channel: zego_publish_channel
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_custom_video_capture", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_enable_custom_video_capture([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, IntPtr  config, ZegoPublishChannel channel);
+        public static extern int zego_express_enable_custom_video_capture([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, IntPtr config, ZegoPublishChannel channel);
 
 
-        
+
         /// Return Type: void
         ///channel: zego_publish_channel
         ///user_context: void*
