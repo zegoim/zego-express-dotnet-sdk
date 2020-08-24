@@ -420,7 +420,8 @@ namespace ZEGO
         }
 
     
-        public static void zego_on_mediaplayer_video_data(ref System.IntPtr data, IntPtr data_length, zego_video_frame_param param, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context) {
+        public static void zego_on_mediaplayer_video_data(IntPtr[] data, uint[] data_length, zego_video_frame_param param, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
+        {
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
             if (zegoMediaPlayer.onVideoFrame != null)
             {
@@ -2957,8 +2958,9 @@ namespace ZEGO
         }
 
         
-        public static void zego_on_custom_video_render_captured_frame_data(ref IntPtr data, IntPtr dataLength, zego_video_frame_param param, ZegoVideoFlipMode flipMode, ZegoPublishChannel channel, System.IntPtr userContext)
-        {//预览数据回调（写数据） 推流不会触发该回调
+        public static void zego_on_custom_video_render_captured_frame_data(IntPtr[] data, uint[] dataLength, zego_video_frame_param param, ZegoVideoFlipMode flipMode, ZegoPublishChannel channel, System.IntPtr userContext)
+        {
+            //预览数据回调（写数据） 推流不会触发该回调
             if (enginePtr == null || enginePtr.onCapturedVideoFrameRawData == null) return;
             ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
             enginePtr.onCapturedVideoFrameRawData(data, dataLength, zegoVideoFrameParam, flipMode, channel);           
@@ -2979,8 +2981,9 @@ namespace ZEGO
             return zegoVideoFrameParam;
         }
         
-        public static void zego_on_custom_video_render_remote_frame_data(string streamID, ref IntPtr data, IntPtr dataLength, zego_video_frame_param param, System.IntPtr userContext)
-        {//拉流数据回调（写数据）
+        public static void zego_on_custom_video_render_remote_frame_data(string streamID, IntPtr[] data, uint[] dataLength, zego_video_frame_param param, System.IntPtr userContext)
+        {
+            //拉流数据回调（写数据）
             if (enginePtr == null || enginePtr.onRemoteVideoFrameRawData == null) return;
             ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
             enginePtr.onRemoteVideoFrameRawData(streamID, data, dataLength, zegoVideoFrameParam);

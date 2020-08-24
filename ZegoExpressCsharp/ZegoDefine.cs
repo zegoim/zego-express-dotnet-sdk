@@ -866,7 +866,7 @@ namespace ZEGO
 
         public delegate void OnAudioFrame(ZegoMediaPlayer mediaPlayer, IntPtr data, uint dataLength, ZegoAudioFrameParam param);
         public OnAudioFrame onAudioFrame;
-        public delegate void OnVideoFrame(ZegoMediaPlayer mediaPlayer, IntPtr data, IntPtr dataLength, ZegoVideoFrameParam param);//dataLength is uint array,fixed Length is 4
+        public delegate void OnVideoFrame(ZegoMediaPlayer mediaPlayer, IntPtr[] data, uint[] dataLength, ZegoVideoFrameParam param);//dataLength is uint array,fixed Length is 4
         public OnVideoFrame onVideoFrame;
         public void SetVideoHandler(OnVideoFrame onVideoFrame, ZegoVideoFrameFormat format)
         {
