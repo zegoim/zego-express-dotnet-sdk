@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace ZEGO
 {
@@ -822,7 +823,7 @@ namespace ZEGO
             return ZegoExpressEngineImpl.GetCurrentState(this);
         }
         public delegate void OnSeekToTimeCallback(int errorCode);
-        public Dictionary<int, OnSeekToTimeCallback> seekToTimeCallbackDic = new Dictionary<int, OnSeekToTimeCallback>();
+        public ConcurrentDictionary<int, OnSeekToTimeCallback> seekToTimeCallbackDic = new ConcurrentDictionary<int, OnSeekToTimeCallback>();
         
         public void SeekTo(ulong millisecond, OnSeekToTimeCallback onSeekToTimeCallback)
         {
