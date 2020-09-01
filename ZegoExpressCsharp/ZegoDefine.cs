@@ -27,7 +27,7 @@ namespace ZEGO
         public const int ZEGO_EXPRESS_MAX_URL_COUNT = 10;
         public const int ZEGO_EXPRESS_MAX_URL_LEN = 1024;
         public const int ZEGO_EXPRESS_MAX_IMAGE_PATH = 512;
-        public const int ZEGO_EXPRESS_MAX_MESSAGE_LEN = 512;
+        public const int ZEGO_EXPRESS_MAX_MESSAGE_LEN = 1024;
         public const int ZEGO_EXPRESS_MAX_CUSTOM_CMD_LEN = 1024;
         public const int ZEGO_EXPRESS_MAX_MEDIAPLAYER_INSTANCE_COUNT = 4;
 
