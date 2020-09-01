@@ -651,8 +651,23 @@ namespace ZEGO
                 for (int i = 0; i < zego_Device_Info.Length; i++)
                 {
                     ZegoDeviceInfo zegoDevice = new ZegoDeviceInfo();
-                    zegoDevice.deviceId = Encoding.UTF8.GetString(zego_Device_Info[i].device_id);//device接口这里剔除'\0'会出问题
-                    zegoDevice.deviceName = Encoding.UTF8.GetString(zego_Device_Info[i].device_name);
+                    var info = zego_Device_Info[i];
+                    for (var j = 0; j < info.device_id.Length; j++)
+                    {
+                        if (info.device_id[j] == 0)
+                        {
+                            zegoDevice.deviceId = Encoding.UTF8.GetString(info.device_id, 0, j);
+                            break;
+                        }
+                    }
+                    for (var j = 0; j < info.device_name.Length; j++)
+                    {
+                        if (info.device_name[j] == 0)
+                        {
+                            zegoDevice.deviceName = Encoding.UTF8.GetString(info.device_name, 0, j);
+                            break;
+                        }
+                    }
                     result[i] = zegoDevice;
                 }
             }
