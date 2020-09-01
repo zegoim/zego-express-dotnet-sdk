@@ -652,22 +652,8 @@ namespace ZEGO
                 {
                     ZegoDeviceInfo zegoDevice = new ZegoDeviceInfo();
                     var info = zego_Device_Info[i];
-                    for (var j = 0; j < info.device_id.Length; j++)
-                    {
-                        if (info.device_id[j] == 0)
-                        {
-                            zegoDevice.deviceId = Encoding.UTF8.GetString(info.device_id, 0, j);
-                            break;
-                        }
-                    }
-                    for (var j = 0; j < info.device_name.Length; j++)
-                    {
-                        if (info.device_name[j] == 0)
-                        {
-                            zegoDevice.deviceName = Encoding.UTF8.GetString(info.device_name, 0, j);
-                            break;
-                        }
-                    }
+                    zegoDevice.deviceId = ZegoUtil.GetUTF8String(info.device_id);
+                    zegoDevice.deviceName = ZegoUtil.GetUTF8String(info.device_name);
                     result[i] = zegoDevice;
                 }
             }

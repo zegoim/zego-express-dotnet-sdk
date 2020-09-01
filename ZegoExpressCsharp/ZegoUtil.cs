@@ -125,7 +125,16 @@ namespace ZEGO
         }
         public static string GetUTF8String(byte[] data)
         {
-            return Encoding.UTF8.GetString(data).Replace("\0", "");//byte[]数组返回最后会带上一大串'\0',虽无太大影响，还是剔除
+            string result =null;
+            for(int i = 0; i < data.Length; i++)
+            {
+                if (data[i] == 0)
+                {
+                    result= Encoding.UTF8.GetString(data,0,i);
+                    break;
+                }
+            }
+            return result;
         }
     }
 }
