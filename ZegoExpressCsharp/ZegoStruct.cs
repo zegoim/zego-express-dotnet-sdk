@@ -514,7 +514,7 @@ namespace ZEGO
     [StructLayout(LayoutKind.Sequential)]
     public struct zego_data_record_config
     {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
         public byte[] file_path;
 
         public ZegoDataRecordType record_type;

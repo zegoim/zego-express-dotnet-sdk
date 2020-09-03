@@ -458,7 +458,7 @@ namespace ZEGO
         /// <param name="state">
         /// File recording status, according to which you should determine the state of the file recording or the prompt of the UI.
         /// </param>
-        /// <param name="error_code">
+        /// <param name="errorCode">
         /// Error code, please refer to the Error Codes https://doc-en.zego.im/en/308.html for details
         /// </param>
         /// <param name="config">
@@ -470,7 +470,7 @@ namespace ZEGO
         /// <param name="user_context">
         /// Context of user.
         /// </param>
-        public delegate void OnCapturedDataRecordStateUpdate(ZegoDataRecordState state, int error_code, ZegoDataRecordConfig config, ZegoPublishChannel channel, IntPtr user_context);
+        public delegate void OnCapturedDataRecordStateUpdate(ZegoDataRecordState state, int errorCode, ZegoDataRecordConfig config, ZegoPublishChannel channel);
 
         /// <summary>
         /// The callback to report the current recording progress.
@@ -487,6 +487,6 @@ namespace ZEGO
         /// <param name="user_context">
         /// Context of user.
         /// </param>
-        public delegate void OnCapturedDataRecordProgressUpdate(ZegoDataRecordProgress progress, ZegoDataRecordConfig config, ZegoPublishChannel channel, IntPtr user_context);
+        public delegate void OnCapturedDataRecordProgressUpdate(ZegoDataRecordProgress progress, ZegoDataRecordConfig config, ZegoPublishChannel channel);
     }
 }

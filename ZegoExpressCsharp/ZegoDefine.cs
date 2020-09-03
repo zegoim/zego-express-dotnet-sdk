@@ -1119,7 +1119,7 @@ namespace ZEGO
         /// <summary>
         /// only record audio
         /// </summary>
-        Audio = 1,
+        OnlyAudio = 1,
 
         /// <summary>
         /// only record video, Audio-only SDK is invalid.
@@ -1152,17 +1152,17 @@ namespace ZEGO
         /// <summary>
         /// Unrecorded state, which is the state when a recording error occurs or before recording starts.
         /// </summary>
-        zego_data_record_state_no_record = 0,
+        NoRecord = 0,
 
         /// <summary>
         /// Recording in progress, in this state after successfully call [startCapturedMediaRecord]
         /// </summary>
-        zego_data_record_state_recording = 1,
+        Recording = 1,
 
         /// <summary>
         /// Record successs
         /// </summary>
-        zego_data_record_state_success = 2
+        Success = 2
     }
 
     /// <summary>
@@ -1178,6 +1178,6 @@ namespace ZEGO
         /// <summary>
         /// Current recording file size in byte
         /// </summary>
-        public ulong current_file_size;
+        public ulong currentFileSize;
     }
 }
