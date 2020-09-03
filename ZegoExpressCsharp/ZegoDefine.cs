@@ -1109,4 +1109,75 @@ namespace ZEGO
         aggressive = 2,
     }
 
+    public enum ZegoDataRecordType
+    {
+        /// <summary>
+        /// This field indicates that the audio-only SDK records audio by default, and the audio and video SDK records audio and video by default.
+        /// </summary>
+        Default = 0,
+
+        /// <summary>
+        /// only record audio
+        /// </summary>
+        Audio = 1,
+
+        /// <summary>
+        /// only record video, Audio-only SDK is invalid.
+        /// </summary>
+        OnlyVideo = 2,
+
+        /// <summary>
+        /// record audio and video, Audio-only SDK will be recorded only audio.
+        /// </summary>
+        AudioAndVideo = 3
+    }
+
+    public class ZegoDataRecordConfig
+    {
+        /// <summary>
+        /// The path to save the recording file, absolute path, need to include the file name, the file name need to specify the suffix,
+        /// currently only support .mp4 or .flv, if multiple recording for the same path, will overwrite the file with the same name.
+        /// The maximum length should be less than 1024 bytes.
+        /// </summary>
+        public string filePath;
+
+        /// <summary>
+        /// Type of recording media
+        /// </summary>
+        public ZegoDataRecordType recordType;
+    }
+
+    public enum ZegoDataRecordState
+    {
+        /// <summary>
+        /// Unrecorded state, which is the state when a recording error occurs or before recording starts.
+        /// </summary>
+        zego_data_record_state_no_record = 0,
+
+        /// <summary>
+        /// Recording in progress, in this state after successfully call [startCapturedMediaRecord]
+        /// </summary>
+        zego_data_record_state_recording = 1,
+
+        /// <summary>
+        /// Record successs
+        /// </summary>
+        zego_data_record_state_success = 2
+    }
+
+    /// <summary>
+    /// File recording progress
+    /// </summary>
+    public class ZegoDataRecordProgress
+    {
+        /// <summary>
+        /// Current recording duration in milliseconds
+        /// </summary>
+        public ulong duration;
+
+        /// <summary>
+        /// Current recording file size in byte
+        /// </summary>
+        public ulong current_file_size;
+    }
 }

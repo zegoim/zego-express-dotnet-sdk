@@ -511,6 +511,26 @@ namespace ZEGO
         public  ZegoAudioSourceType source_type;        
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct zego_data_record_config
+    {
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
+        public byte[] file_path;
 
+        public ZegoDataRecordType record_type;
+    };
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct zego_data_record_progress
+    {
+        /// <summary>
+        /// Current recording duration in milliseconds
+        /// </summary>
+        public ulong duration;
+
+        /// <summary>
+        /// Current recording file size in byte
+        /// </summary>
+        public ulong current_file_size;
+    }
 }
