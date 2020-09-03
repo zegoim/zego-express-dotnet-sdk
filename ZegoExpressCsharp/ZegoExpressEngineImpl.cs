@@ -2904,8 +2904,9 @@ namespace ZEGO
             var result = new zego_data_record_config();
             if (config != null)
             {
-                result.file_path = Encoding.UTF8.GetBytes(config.filePath);
+                result.file_path = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
                 result.record_type = config.recordType;
+                Encoding.UTF8.GetBytes(config.filePath, 0, config.filePath.Length, result.file_path, 0);
             }
             return result;
         }
