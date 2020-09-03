@@ -74,6 +74,8 @@ namespace ZEGO
         private static IExpressCustomAudioIO.zego_on_captured_audio_data zegoOnCapturedAudioData;
         private static IExpressCustomAudioIO.zego_on_remote_audio_data zegoOnRemoteAudioData;
         private static IExpressCustomAudioIO.zego_on_mixed_audio_data zegoOnMixedAudioData;
+        private static IExpressRecordInternal.zego_on_captured_data_record_state_update zegoOnCapturedDataRecordStateUpdate;
+        private static IExpressRecordInternal.zego_on_captured_data_record_progress_update zegoOnCapturedDataRecordProgressUpdate;
         private ArrayList arrayList;
         public static new void SetEngineConfig(ZegoEngineConfig config)
         {
@@ -334,7 +336,12 @@ namespace ZEGO
 
                         zegoOnMixedAudioData = new IExpressCustomAudioIO.zego_on_mixed_audio_data(zego_on_mixed_audio_data);
                         IExpressCustomAudioIO.zego_register_mixed_audio_data_callback(zegoOnMixedAudioData, IntPtr.Zero);
-                        
+
+                        zegoOnCapturedDataRecordStateUpdate = new IExpressRecordInternal.zego_on_captured_data_record_state_update(zego_on_captured_data_record_state_update);
+                        IExpressRecordInternal.zego_register_captured_data_record_state_update_callback(zegoOnCapturedDataRecordStateUpdate, IntPtr.Zero);
+
+                        zegoOnCapturedDataRecordProgressUpdate = new IExpressRecordInternal.zego_on_captured_data_record_progress_update(zego_on_captured_data_record_progress_update);
+                        IExpressRecordInternal.zego_register_captured_data_record_progress_update_callback(zegoOnCapturedDataRecordProgressUpdate, IntPtr.Zero);
 
                         int createResult = IExpressEngineInternal.zego_express_engine_init(appId, appSign, isTestEnv, scenario);
                         if (createResult != 0)
@@ -2891,5 +2898,56 @@ namespace ZEGO
             ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
             enginePtr.onRemoteVideoFrameRawData(streamID, data, dataLength, zegoVideoFrameParam);
         }
+
+        private static zego_data_record_config ChangeZegoDataRecordConfigClassToStruct(ZegoDataRecordConfig config)
+        {
+            var result = new zego_data_record_config();
+            if (config != null)
+            {
+                result.file_path = Encoding.UTF8.GetBytes(config.filePath);
+                result.record_type = config.recordType;
+            }
+            return result;
+        }
+
+        private static ZegoDataRecordConfig ChangeZegoDataRecordConfigStructToClass(zego_data_record_config config)
+        {
+            return new ZegoDataRecordConfig
+            {
+                filePath = ZegoUtil.GetUTF8String(config.file_path),
+                recordType = config.record_type,
+            };
+        }
+
+        private static ZegoDataRecordProgress ChangeZegoDataRecordProgresstructToClass(zego_data_record_progress config)
+        {
+            return new ZegoDataRecordProgress
+            {
+                current_file_size = config.current_file_size,
+                duration = config.duration,
+            };
+        }
+
+        public override void StartRecordingCapturedData(ZegoDataRecordConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main)
+        {
+            if (enginePtr != null)
+            {
+                IExpressRecordInternal.zego_express_start_recording_captured_data(ChangeZegoDataRecordConfigClassToStruct(config), channel);
+            }
+        }
+
+        public override void StopRecordingCapturedData(ZegoPublishChannel channel = ZegoPublishChannel.Main)
+        {
+            if (enginePtr != null)
+            {
+                IExpressRecordInternal.zego_express_stop_recording_captured_data(channel);
+            }
+        }
+
+        public static void zego_on_captured_data_record_state_update(ZegoDataRecordState state, int error_code, zego_data_record_config config, ZegoPublishChannel channel, IntPtr user_context) =>     
+            enginePtr?.onCapturedDataRecordStateUpdate?.Invoke(state, error_code, ChangeZegoDataRecordConfigStructToClass(config), channel, user_context);
+
+        public static void zego_on_captured_data_record_progress_update(zego_data_record_progress progress, zego_data_record_config config, ZegoPublishChannel channel, IntPtr user_context) =>
+            enginePtr?.onCapturedDataRecordProgressUpdate?.Invoke(ChangeZegoDataRecordProgresstructToClass(progress), ChangeZegoDataRecordConfigStructToClass(config), channel, user_context);
     }
 }

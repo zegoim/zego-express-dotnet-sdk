@@ -451,5 +451,42 @@ namespace ZEGO
          * @param param param of audio frame
          */
         public delegate void OnMixedAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param);
+
+        /// <summary>
+        /// The callback triggered when the state of data recording (to a file) changes.
+        /// </summary>
+        /// <param name="state">
+        /// File recording status, according to which you should determine the state of the file recording or the prompt of the UI.
+        /// </param>
+        /// <param name="error_code">
+        /// Error code, please refer to the Error Codes https://doc-en.zego.im/en/308.html for details
+        /// </param>
+        /// <param name="config">
+        /// Record config
+        /// </param>
+        /// <param name="channel">
+        /// Publishing stream channel
+        /// </param>
+        /// <param name="user_context">
+        /// Context of user.
+        /// </param>
+        public delegate void OnCapturedDataRecordStateUpdate(ZegoDataRecordState state, int error_code, ZegoDataRecordConfig config, ZegoPublishChannel channel, IntPtr user_context);
+
+        /// <summary>
+        /// The callback to report the current recording progress.
+        /// </summary>
+        /// <param name="progress">
+        /// File recording progress, which allows developers to hint at the UI, etc.
+        /// </param>
+        /// <param name="config">
+        /// Record config
+        /// </param>
+        /// <param name="channel">
+        /// Publishing stream channel
+        /// </param>
+        /// <param name="user_context">
+        /// Context of user.
+        /// </param>
+        public delegate void OnCapturedDataRecordProgressUpdate(ZegoDataRecordProgress progress, ZegoDataRecordConfig config, ZegoPublishChannel channel, IntPtr user_context);
     }
 }

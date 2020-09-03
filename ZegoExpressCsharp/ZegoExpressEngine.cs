@@ -748,6 +748,30 @@ namespace ZEGO
           * @param mode Audio Noise Suppression mode
           */
         public abstract void SetANSMode(ZegoANSMode mode);
+
+        /// <summary>
+        /// Starts to record locally captured audio or video and directly save the data to a file.
+        /// Currently only one task can be recorded simultaneously.
+        /// This API needs to be called after the success of <see cref="StartPreview"/> or<see cref="StartPublishingStream"/> to be effective.
+        /// Developers should not <see cref="StopPreview"/> or <see cref="StopPublishingStream"/> during recording, otherwise the SDK will end the current recording task.
+        /// Developers will receive the <see cref="onCapturedDataRecordStateUpdate"/> and the <see cref="onCapturedDataRecordProgressUpdate"/> callback after start recording.
+        /// </summary>
+        /// <param name="config">
+        /// Record config
+        /// </param>
+        /// <param name="channel">
+        /// Publishing stream channel
+        /// </param>
+        public abstract void StartRecordingCapturedData(ZegoDataRecordConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+
+        /// <summary>
+        /// Stops recording locally captured audio or video.
+        /// </summary>
+        /// <param name="channel">
+        /// Publishing stream channel
+        /// </param>
+        public abstract void StopRecordingCapturedData(ZegoPublishChannel channel = ZegoPublishChannel.Main);
+
         public OnCustomVideoCaptureStart onCustomVideoCaptureStart;
         public OnCustomVideoCaptureStop onCustomVideoCaptureStop;
         public OnRoomStateUpdate onRoomStateUpdate;
@@ -781,5 +805,7 @@ namespace ZEGO
         public OnCapturedAudioData onCapturedAudioData;
         public OnRemoteAudioData onRemoteAudioData;
         public OnMixedAudioData onMixedAudioData;
+        public OnCapturedDataRecordStateUpdate onCapturedDataRecordStateUpdate;
+        public OnCapturedDataRecordProgressUpdate onCapturedDataRecordProgressUpdate;
     }
 }
