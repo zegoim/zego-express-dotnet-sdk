@@ -719,7 +719,7 @@ namespace ZEGO
                 zego_custom_audio_config custom_Audio_Config = ChangeZegoCustomAudioConfigClassToStruct(config);
                 IntPtr ptr = ZegoUtil.GetStructPointer(custom_Audio_Config);
                 int result = IExpressCustomAudioIO.zego_express_enable_custom_audio_io(enable, ptr, channel);
-                Console.WriteLine(string.Format("EnableCustomAudioIO  enable:{0} source_type:{1} channel:{2}  result:{3}", enable, config.source_type, channel, result));
+                Console.WriteLine(string.Format("EnableCustomAudioIO  enable:{0} source_type:{1} channel:{2}  result:{3}", enable, config.sourceType, channel, result));
                 ZegoUtil.ReleaseStructPointer(ptr);
             }
         }
@@ -733,7 +733,7 @@ namespace ZEGO
             }
             else
             {
-                result.source_type = config.source_type;
+                result.source_type = config.sourceType;
             }
             return result;
         }

@@ -1080,7 +1080,7 @@ namespace ZEGO
     public class ZegoCustomAudioConfig
     {
         /** Audio capture source type */
-        public ZegoAudioSourceType source_type;
+        public ZegoAudioSourceType sourceType;
     }
 
     public enum ZegoAECMode
