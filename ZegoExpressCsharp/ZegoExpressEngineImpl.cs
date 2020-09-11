@@ -2720,19 +2720,19 @@ namespace ZEGO
             return keyValuePairs;
         }
 
-        public override void StartAudioSpectrumMonitor()
+        public override void StartAudioSpectrumMonitor(uint milliSecond = 100)
         {
             if (enginePtr != null)
             {
-                int result = IExpressDeviceInternal.zego_express_start_audio_spectrum_monitor();
+                int result = IExpressDeviceInternal.zego_express_start_audio_spectrum_monitor(milliSecond);
                 Console.WriteLine(string.Format("StartAudioSpectrumMonitor result:{0}", result));
             }
         }
-        public override void StartSoundLevelMonitor()
+        public override void StartSoundLevelMonitor(uint milliSecond = 100)
         {
             if (enginePtr != null)
             {
-                int result = IExpressDeviceInternal.zego_express_start_sound_level_monitor();
+                int result = IExpressDeviceInternal.zego_express_start_sound_level_monitor(milliSecond);
                 Console.WriteLine(string.Format("StartSoundLevelMonitor result:{0}", result));
             }
         }

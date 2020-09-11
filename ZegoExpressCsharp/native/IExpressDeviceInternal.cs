@@ -28,7 +28,7 @@ namespace ZEGO
 
         /// Return Type: int
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_sound_level_monitor", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_start_sound_level_monitor();
+        public static extern int zego_express_start_sound_level_monitor(uint milliSecond);
 
 
         /// Return Type: int
@@ -38,7 +38,7 @@ namespace ZEGO
 
         /// Return Type: int
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_audio_spectrum_monitor", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_start_audio_spectrum_monitor();
+        public static extern int zego_express_start_audio_spectrum_monitor(uint milliSecond);
 
 
         /// Return Type: int

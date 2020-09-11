@@ -459,7 +459,7 @@ namespace ZEGO
          * Before entering the room, you can call [startPreview] with this api and combine it with [onCapturedSoundLevelUpdate] callback to determine whether the audio device is working properly.
          * [onCapturedSoundLevelUpdate] and [onRemoteSoundLevelUpdate] callback notification period is 100 ms.
          */
-        public abstract void StartSoundLevelMonitor();
+        public abstract void StartSoundLevelMonitor(uint milliSecond=100);
 
 
         /**
@@ -476,7 +476,7 @@ namespace ZEGO
          * After starting monitoring, you can receive local audio spectrum via [onCapturedAudioSpectrumUpdate] callback, and receive remote audio spectrum via [onRemoteAudioSpectrumUpdate] callback.
          * [onCapturedAudioSpectrumUpdate] and [onRemoteAudioSpectrumUpdate] callback notification period is 100 ms.
          */
-        public abstract void StartAudioSpectrumMonitor();
+        public abstract void StartAudioSpectrumMonitor(uint milliSecond=100);
 
 
 
