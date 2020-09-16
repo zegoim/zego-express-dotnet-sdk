@@ -161,7 +161,7 @@ namespace ZEGO
         public static extern void zego_register_publisher_video_size_changed_callback(zego_on_publisher_video_size_changed callback_func, System.IntPtr user_context);
 
         [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_capture_pipeline_scale_mode", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_express_set_capture_pipeline_scale_mode(ZegoCapturePipelineScaleMode mode);
+        public static extern int zego_express_set_capture_pipeline_scale_mode(ZegoCapturePipelineScaleMode mode);
         [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_publish_direct_to_cdn", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_enable_publish_direct_to_cdn(bool enable, IntPtr config, ZegoPublishChannel channel);
 

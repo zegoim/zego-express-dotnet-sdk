@@ -30,6 +30,50 @@ namespace ZEGO
         public const int ZEGO_EXPRESS_MAX_MESSAGE_LEN = 1024;
         public const int ZEGO_EXPRESS_MAX_CUSTOM_CMD_LEN = 1024;
         public const int ZEGO_EXPRESS_MAX_MEDIAPLAYER_INSTANCE_COUNT = 4;
+        public const string MOUDLE = "dotnet";
+
+        //module
+        /// ZEGO_EXPRESS_MODULE_COMMON -> (0)
+        public const int ZEGO_EXPRESS_MODULE_COMMON = 0;
+
+        /// ZEGO_EXPRESS_MODULE_ENGINE -> (1)
+        public const int ZEGO_EXPRESS_MODULE_ENGINE = 1;
+
+        /// ZEGO_EXPRESS_MODULE_ROOM -> (2)
+        public const int ZEGO_EXPRESS_MODULE_ROOM = 2;
+
+        /// ZEGO_EXPRESS_MODULE_PUBLISHER -> (3)
+        public const int ZEGO_EXPRESS_MODULE_PUBLISHER = 3;
+
+        /// ZEGO_EXPRESS_MODULE_PLAYER -> (4)
+        public const int ZEGO_EXPRESS_MODULE_PLAYER = 4;
+
+        /// ZEGO_EXPRESS_MODULE_MIXER -> (5)
+        public const int ZEGO_EXPRESS_MODULE_MIXER = 5;
+
+        /// ZEGO_EXPRESS_MODULE_DEVICE -> (6)
+        public const int ZEGO_EXPRESS_MODULE_DEVICE = 6;
+
+        /// ZEGO_EXPRESS_MODULE_PREPROCESS -> (7)
+        public const int ZEGO_EXPRESS_MODULE_PREPROCESS = 7;
+
+        /// ZEGO_EXPRESS_MODULE_MEDIAPLAYER -> (8)
+        public const int ZEGO_EXPRESS_MODULE_MEDIAPLAYER = 8;
+
+        /// ZEGO_EXPRESS_MODULE_IM -> (9)
+        public const int ZEGO_EXPRESS_MODULE_IM = 9;
+
+        /// ZEGO_EXPRESS_MODULE_RECORD -> (10)
+        public const int ZEGO_EXPRESS_MODULE_RECORD = 10;
+
+        /// ZEGO_EXPRESS_MODULE_CUSTOMVIDEOIO -> (11)
+        public const int ZEGO_EXPRESS_MODULE_CUSTOMVIDEOIO = 11;
+
+        /// ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO -> (12)
+        public const int ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO = 12;
+
+        /// ZEGO_EXPRESS_MODULE_MEDIAPUBLISHER -> (13)
+        public const int ZEGO_EXPRESS_MODULE_MEDIAPUBLISHER = 13;
 
 
     }

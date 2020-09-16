@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -366,8 +367,8 @@ namespace ZEGO
         {
             if (enginePtr == null || onMixerStartResultDics == null) return;
 
-            Console.WriteLine(string.Format("zego_on_mixer_start_result error_code:{0}  seq:{1} extended_data:{2}", error_code, seq, extended_data));
-
+            string log = string.Format("zego_on_mixer_start_result error_code:{0}  seq:{1} extended_data:{2}", error_code, seq, extended_data);
+            ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MIXER);
             OnMixerStartResult onMixerStartResult = GetCallbackFromSeq<OnMixerStartResult>(onMixerStartResultDics, seq);
             if (onMixerStartResult == null)
             {
@@ -390,8 +391,9 @@ namespace ZEGO
         public static void zego_on_mixer_stop_result(int error_code, int seq, System.IntPtr user_context)
         {
             if (enginePtr == null || onMixerStopResultDics == null) return;
+            string log = string.Format("zego_on_mixer_stop_result error_code:{0}  seq:{1}", error_code, seq);
 
-            Console.WriteLine(string.Format("zego_on_mixer_stop_result error_code:{0}  seq:{1}", error_code, seq));
+            ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MIXER);
 
             OnMixerStopResult onMixerStopResult = GetCallbackFromSeq<OnMixerStopResult>(onMixerStopResultDics, seq);
             if (onMixerStopResult == null)
@@ -411,7 +413,7 @@ namespace ZEGO
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
             if (zegoMediaPlayer.onAudioFrame != null)
             {
-                Console.WriteLine(string.Format("zego_on_mediaplayer_audio_data mediaplayerID:{0}", instance_index));
+
                 ZegoAudioFrameParam zegoAudioFrameParam = ChangeZegoAudioFrameStructToClass(param);
                 zegoMediaPlayer.onAudioFrame(zegoMediaPlayer, data, data_length, zegoAudioFrameParam);
             }
@@ -435,7 +437,6 @@ namespace ZEGO
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
             if (zegoMediaPlayer.onVideoFrame != null)
             {
-                Console.WriteLine(string.Format("zego_on_mediaplayer_video_data mediaplayerID:{0}", instance_index));
                 ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
                 zegoMediaPlayer.onVideoFrame(zegoMediaPlayer, data, data_length, zegoVideoFrameParam);
 
@@ -464,7 +465,8 @@ namespace ZEGO
             if (zegoMediaPlayer.onLoadResourceCallback != null)
             {
 
-                Console.WriteLine(string.Format("zego_on_mediaplayer_load_resource_result mediaplayerID:{0} error_code:{1}", instance_index, error_code));
+                string log = string.Format("zego_on_mediaplayer_load_resource_result mediaplayerID:{0} error_code:{1}", instance_index, error_code);
+                ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
                 context?.Post(new SendOrPostCallback((o) =>
                 {
 
@@ -498,11 +500,6 @@ namespace ZEGO
 
                 Console.WriteLine("destroy engine callback success");
             }
-            else
-            {
-                Console.WriteLine("no set destroy engine callback");
-            }
-
             release();
 
         }
@@ -527,6 +524,7 @@ namespace ZEGO
 
 
             engineConfig = new zego_engine_config();
+            ReleaseMediaPlayer();
             mediaPlayerAndIndex.Clear();
             onIMSendBarrageMessageResultDics.Clear();
             onIMSendBroadcastMessageResultDics.Clear();
@@ -537,12 +535,27 @@ namespace ZEGO
             onMixerStopResultDics.Clear();
             //setEngineConfigFlag = false;
         }
+
+        private static void ReleaseMediaPlayer()
+        {
+            int result = 0;
+            string log;
+            foreach (var item in mediaPlayerAndIndex)
+            {
+                result = IExpressMediaPlayerInternal.zego_express_destroy_media_player(item.Key);
+                item.Value.seekToTimeCallbackDic.Clear();
+                log = string.Format("MediaPlayer Destroy index:{0} result:{1} ", item.Key, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
+            }
+        }
+
         public override void EnableAEC(bool enable)
         {
             if (enginePtr != null)
             {
                 int result = IExpressPreprocessInternal.zego_express_enable_aec(enable);
-                Console.WriteLine(string.Format("EnableAEC enable:{0} result:{1}", enable, result));
+                string log = string.Format("EnableAEC enable:{0} result:{1}", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PREPROCESS);
             }
         }
 
@@ -551,7 +564,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPreprocessInternal.zego_express_set_aec_mode(mode);
-                Console.WriteLine(string.Format("SetAECMode ZegoAECMode:{0} result:{1}", mode, result));
+                string log = string.Format("SetAECMode ZegoAECMode:{0} result:{1}", mode, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PREPROCESS);
             }
         }
         public override void EnableAGC(bool enable)
@@ -559,7 +573,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPreprocessInternal.zego_express_enable_agc(enable);
-                Console.WriteLine(string.Format("EnableAGC enable:{0} result:{1}", enable, result));
+                string log = string.Format("EnableAGC enable:{0} result:{1}", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PREPROCESS);
             }
         }
         public override void EnableANS(bool enable)
@@ -567,7 +582,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPreprocessInternal.zego_express_enable_ans(enable);
-                Console.WriteLine(string.Format("EnableANS enable:{0} result:{1}", enable, result));
+                string log = string.Format("EnableANS enable:{0} result:{1}", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PREPROCESS);
             }
         }
         public override void SetANSMode(ZegoANSMode mode)
@@ -575,7 +591,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPreprocessInternal.zego_express_set_ans_mode(mode);
-                Console.WriteLine(string.Format("SetANSMode ZegoANSMode:{0} result:{1}", mode, result));
+                string log = string.Format("SetANSMode ZegoANSMode:{0} result:{1}", mode, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PREPROCESS);
             }
         }
 
@@ -585,7 +602,8 @@ namespace ZEGO
             {
                 zego_video_frame_param zego_Video_Frame_Param = ChangeZegoVideoFrameParamClassToStruct(param);
                 int result = IExpressCustomVideoInternal.zego_express_send_custom_video_capture_raw_data(data, dataLength, zego_Video_Frame_Param, referenceTimeMillisecond, 1000, channel);
-                //Console.WriteLine(string.Format("SendCustomVideoCaptureRawData result:{0}",result));
+                string log = string.Format("SendCustomVideoCaptureRawData result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMVIDEOIO, false);
             }
         }
 
@@ -597,8 +615,8 @@ namespace ZEGO
                 zego_custom_video_capture_config zego_Custom_Video_Capture_Config = ChangeCustomVideoCaptureConfigClassToStruct(config);
                 IntPtr ptr = ZegoUtil.GetStructPointer(zego_Custom_Video_Capture_Config);
                 int result = IExpressCustomVideoInternal.zego_express_enable_custom_video_capture(enable, ptr, channel);
-                Console.WriteLine(string.Format("EnableCustomVideoCapture  enable:{0}  channel:{1}   result:{2}", enable, channel, result));
-                ZegoUtil.ReleaseStructPointer(ptr);
+                string log = string.Format("EnableCustomVideoCapture  enable:{0}  channel:{1}   result:{2}", enable, channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMVIDEOIO);
             }
         }
         private zego_custom_video_capture_config ChangeCustomVideoCaptureConfigClassToStruct(ZegoCustomVideoCaptureConfig config)
@@ -688,7 +706,8 @@ namespace ZEGO
             {
 
                 int result = IExpressDeviceInternal.zego_express_use_audio_device(deviceType, deviceID);
-                Console.WriteLine(string.Format("UseAudioDevice  result:{0}", result));
+                string log = string.Format("UseAudioDevice  result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
 
         }
@@ -700,7 +719,8 @@ namespace ZEGO
             {
 
                 int result = IExpressDeviceInternal.zego_express_use_video_device(deviceID, channel);
-                Console.WriteLine(string.Format("UseVideoDevice  result:{0}", result));
+                string log = string.Format("UseVideoDevice  result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
         public override void EnableAudioDataCallback(bool enable, int callbackBitMask, ZegoAudioFrameParam param)
@@ -709,7 +729,8 @@ namespace ZEGO
             {
                 zego_audio_frame_param audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
                 int result = IExpressCustomAudioIO.zego_express_enable_audio_data_callback(enable, (uint)callbackBitMask, audio_Frame_Param);
-                Console.WriteLine(string.Format("EnableAudioDataCallback  enable:{0} callbackBitMask:{1} channel:{2} sampleRate:{3} result:{4}", enable, callbackBitMask, param.channel, param.samplesRate, result));
+                string log = string.Format("EnableAudioDataCallback  enable:{0} callbackBitMask:{1} channel:{2} sampleRate:{3} result:{4}", enable, callbackBitMask, param.channel, param.samplesRate, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO);
             }
         }
         public override void EnableCustomAudioIO(bool enable, ZegoCustomAudioConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main)
@@ -719,8 +740,9 @@ namespace ZEGO
                 zego_custom_audio_config custom_Audio_Config = ChangeZegoCustomAudioConfigClassToStruct(config);
                 IntPtr ptr = ZegoUtil.GetStructPointer(custom_Audio_Config);
                 int result = IExpressCustomAudioIO.zego_express_enable_custom_audio_io(enable, ptr, channel);
-                Console.WriteLine(string.Format("EnableCustomAudioIO  enable:{0} source_type:{1} channel:{2}  result:{3}", enable, config.sourceType, channel, result));
+                string log = string.Format("EnableCustomAudioIO  enable:{0} source_type:{1} channel:{2}  result:{3}", enable, config.sourceType, channel, result);
                 ZegoUtil.ReleaseStructPointer(ptr);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO);
             }
         }
 
@@ -744,6 +766,8 @@ namespace ZEGO
             {
                 zego_audio_frame_param zego_Audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
                 int result = IExpressCustomAudioIO.zego_express_send_custom_audio_capture_aac_data(data, dataLength, configLength, referenceTimeMillisecond, zego_Audio_Frame_Param, channel);
+                string log = string.Format("SendCustomAudioCaptureAACData result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO, false);
             }
         }
         public override void SendCustomAudioCapturePCMData(byte[] data, uint dataLength, ZegoAudioFrameParam param, ZegoPublishChannel channel = ZegoPublishChannel.Main)
@@ -752,7 +776,8 @@ namespace ZEGO
             {
                 zego_audio_frame_param zego_Audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
                 int result = IExpressCustomAudioIO.zego_express_send_custom_audio_capture_pcm_data(data, dataLength, zego_Audio_Frame_Param, channel);
-
+                string log = string.Format("SendCustomAudioCapturePCMData result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO, false);
             }
         }
         public override void FetchCustomAudioRenderPCMData(ref byte[] data, uint dataLength, ZegoAudioFrameParam param)
@@ -761,7 +786,8 @@ namespace ZEGO
             {
                 zego_audio_frame_param zego_Audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
                 int result = IExpressCustomAudioIO.zego_express_fetch_custom_audio_render_pcm_data(data, dataLength, zego_Audio_Frame_Param);
-
+                string log = string.Format("FetchCustomAudioRenderPCMData result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO, false);
             }
         }
         private zego_audio_frame_param ChangeZegoAudioFrameParamClassToStruct(ZegoAudioFrameParam param)
@@ -797,7 +823,8 @@ namespace ZEGO
                     error_code = IExpressRoomInternal.zego_express_login_room(roomId, zegoUser, ptr);
                     ZegoUtil.ReleaseStructPointer(ptr);
                 }
-                Console.WriteLine(string.Format("LoginRoom  roomId:{0}  userId:{1}  userName:{2} result:{3}", roomId, user.userId, user.userName, error_code));
+                string log = string.Format("LoginRoom  roomId:{0}  userId:{1}  userName:{2} result:{3}", roomId, user.userId, user.userName, error_code);
+                ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_ROOM);
 
             }
         }
@@ -819,7 +846,8 @@ namespace ZEGO
                     enable = true;
                     result = IExpressMediaPlayerInternal.zego_express_media_player_enable_audio_data(enable, curIndex);
                 }
-                Console.WriteLine(string.Format("SetAudioHandler enable:{0} result:{1} ", enable, result));
+                string log = string.Format("SetAudioHandler enable:{0} result:{1} ", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -840,7 +868,8 @@ namespace ZEGO
                     enable = true;
                     result = IExpressMediaPlayerInternal.zego_express_media_player_enable_video_data(enable, format, curIndex);
                 }
-                Console.WriteLine(string.Format("SetVideoHandler enable:{0} result:{1} ", enable, result));
+                string log = string.Format("SetVideoHandler enable:{0} result:{1} ", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -901,7 +930,8 @@ namespace ZEGO
             {
 
                 int result = IExpressRoomInternal.zego_express_logout_room(roomId);
-                Console.WriteLine(string.Format("LogoutRoom roomId:{0}  result:{1}", roomId, result));
+                string log = string.Format("LogoutRoom roomId:{0}  result:{1}", roomId, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_ROOM);
             }
         }
 
@@ -910,13 +940,14 @@ namespace ZEGO
         {
             if (enginePtr == null || enginePtr.onRoomStateUpdate == null) return;
 
-            Console.WriteLine(string.Format("onRoomStateUpdate roomId:{0}  state:{1}  errorCode:{2} extendedData{3}", roomId, state, errorCode, extendedData));
+            string log = string.Format("onRoomStateUpdate roomId:{0}  state:{1}  errorCode:{2} extendedData{3}", roomId, state, errorCode, extendedData);
             context?.Post(new SendOrPostCallback((o) =>
             {
 
                 enginePtr?.onRoomStateUpdate?.Invoke(roomId, state, errorCode, extendedData);
 
             }), null);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
 
         }
@@ -924,12 +955,11 @@ namespace ZEGO
         public static void zego_on_debug_error(int error_code, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string func_name, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string info, System.IntPtr user_context)
         {
             if (enginePtr == null || enginePtr.onDebugError == null) return;
-
-            Console.WriteLine(string.Format("onDebugError error_code:{0} func_name:{1} info:{2}", error_code, func_name, info));
+            string finalInfo = Encoding.UTF8.GetString(Encoding.Default.GetBytes(info));
             context?.Post(new SendOrPostCallback((o) =>
             {
 
-                enginePtr?.onDebugError?.Invoke(error_code, func_name, info);
+                enginePtr?.onDebugError?.Invoke(error_code, func_name, finalInfo);
 
             }), null);
 
@@ -941,8 +971,7 @@ namespace ZEGO
             zego_stream[] zego_streams = new zego_stream[stream_info_count];
             ZegoUtil.GetStructListByPtr<zego_stream>(ref zego_streams, stream_info_list, stream_info_count);//get StructLists by pointer
             List<ZegoStream> result = ChangeZegoStreamStructListToClassList(zego_streams);
-            Console.WriteLine(string.Format("onRoomStreamExtraInfoUpdate room_id:{0}  stream_info_count:{1}", room_id, stream_info_count));
-
+            string log = string.Format("onRoomStreamExtraInfoUpdate room_id:{0}  stream_info_count:{1}", room_id, stream_info_count);
             context?.Post(new SendOrPostCallback((o) =>
             {
 
@@ -950,7 +979,7 @@ namespace ZEGO
 
             }), null);
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
         }
         public override void StartPublishingStream(string streamID, ZegoPublishChannel channel = ZegoPublishChannel.Main)
@@ -958,7 +987,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int error_code = IExpressPublisherInternal.zego_express_start_publishing_stream(streamID, channel);
-                Console.WriteLine(string.Format("StartPublishingStream streamID:{0} channel:{1} result:{2}", streamID, channel, error_code));
+                string log = string.Format("StartPublishingStream streamID:{0} channel:{1} result:{2}", streamID, channel, error_code);
+                ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void StopPublishingStream(ZegoPublishChannel channel = ZegoPublishChannel.Main)
@@ -966,7 +996,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int error_code = IExpressPublisherInternal.zego_express_stop_publishing_stream(channel);
-                Console.WriteLine(string.Format("StopPublishingStream channel:{0} result:{1}", channel, error_code));
+                string log = string.Format("StopPublishingStream channel:{0} result:{1}", channel, error_code);
+                ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void SendBarrageMessage(string roomID, string message, OnIMSendBarrageMessageResult onIMSendBarrageMessageResult)
@@ -975,9 +1006,9 @@ namespace ZEGO
             {
 
                 int result = IExpressIMInternal.zego_express_send_barrage_message(roomID, message);
-                Console.WriteLine(string.Format("SendBarrageMessage roomID:{0}  message:{1} result:{2}", roomID, message, result));
+                string log = string.Format("SendBarrageMessage roomID:{0}  message:{1} result:{2}", roomID, message, result);
                 onIMSendBarrageMessageResultDics.AddOrUpdate(result, onIMSendBarrageMessageResult, (key, oldValue) => onIMSendBarrageMessageResult);
-
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
 
@@ -987,8 +1018,9 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressIMInternal.zego_express_send_broadcast_message(roomID, message);
-                Console.WriteLine(string.Format("SendBroadcastMessage roomID:{0}  message:{1} result:{2}", roomID, message, result));
+                string log = string.Format("SendBroadcastMessage roomID:{0}  message:{1} result:{2}", roomID, message, result);
                 onIMSendBroadcastMessageResultDics.AddOrUpdate(result, onIMSendBroadcastMessageResult, (key, oldValue) => onIMSendBroadcastMessageResult);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
         public override void SetStreamExtraInfo(string extraInfo, OnPublisherSetStreamExtraInfoResult onPublisherSetStreamExtraInfoResult, ZegoPublishChannel channel = ZegoPublishChannel.Main)
@@ -997,8 +1029,9 @@ namespace ZEGO
             {
 
                 int result = IExpressPublisherInternal.zego_express_set_stream_extra_info(extraInfo, channel);
-                Console.WriteLine(string.Format("SetStreamExtraInfo extraInfo:{0}  channel:{1} result:{2}", extraInfo, channel, result));
+                string log = string.Format("SetStreamExtraInfo extraInfo:{0}  channel:{1} result:{2}", extraInfo, channel, result);
                 onPublisherSetStreamExtraInfoResultDics.AddOrUpdate(result, onPublisherSetStreamExtraInfoResult, (key, oldValue) => onPublisherSetStreamExtraInfoResult);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
         public override void SendCustomCommand(string roomID, string command, List<ZegoUser> toUserList, OnIMSendCustomCommandResult onIMSendCustomCommandResult)
@@ -1008,8 +1041,9 @@ namespace ZEGO
 
                 zego_user[] zegoUsers = ChangeZegoUserClassListToStructList(toUserList);
                 int result = IExpressIMInternal.zego_express_send_custom_command(roomID, command, zegoUsers, (uint)zegoUsers.Length);
-                Console.WriteLine(string.Format("SendCustomCommand roomID:{0}  command:{1} result:{2}", roomID, command, result));
+                string log = string.Format("SendCustomCommand roomID:{0}  command:{1} result:{2}", roomID, command, result);
                 onIMSendCustomCommandResultDics.AddOrUpdate(result, onIMSendCustomCommandResult, (key, oldValue) => onIMSendCustomCommandResult);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
         public override void AddPublishCdnUrl(string streamID, string targetURL, OnPublisherUpdateCdnUrlResult onPublisherUpdateCdnUrlResult)
@@ -1018,8 +1052,9 @@ namespace ZEGO
             {
 
                 int result = IExpressPublisherInternal.zego_express_add_publish_cdn_url(streamID, targetURL);
-                Console.WriteLine(string.Format("AddPublishCdnUrl streamID:{0} targetURL:{1} result:{2}", streamID, targetURL, result));
+                string log = string.Format("AddPublishCdnUrl streamID:{0} targetURL:{1} result:{2}", streamID, targetURL, result);
                 onPublisherUpdateCdnUrlResultDics.AddOrUpdate(result, onPublisherUpdateCdnUrlResult, (key, oldValue) => onPublisherUpdateCdnUrlResult);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
         public override void EnableCustomVideoRender(bool enable, ZegoCustomVideoRenderConfig config)
@@ -1030,7 +1065,8 @@ namespace ZEGO
                 IntPtr ptr = ZegoUtil.GetStructPointer(zegoCustomVideo);
                 int result = IExpressCustomVideoInternal.zego_express_enable_custom_video_render(enable, ptr);
                 ZegoUtil.ReleaseStructPointer(ptr);
-                Console.WriteLine(string.Format("EnableCustomVideoRender enable:{0}  result:{1}", enable, result));
+                string log = string.Format("EnableCustomVideoRender enable:{0}  result:{1}", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMVIDEOIO);
             }
         }
 
@@ -1052,8 +1088,9 @@ namespace ZEGO
             {
 
                 int result = IExpressPublisherInternal.zego_express_remove_publish_cdn_url(streamID, targetURL);
-                Console.WriteLine(string.Format("RemovePublishCdnUrl streamID:{0} targetURL:{1} result:{2}", streamID, targetURL, result));
+                string log = string.Format("RemovePublishCdnUrl streamID:{0} targetURL:{1} result:{2}", streamID, targetURL, result);
                 onPublisherUpdateCdnUrlResultDics.AddOrUpdate(result, onPublisherUpdateCdnUrlResult, (key, oldValue) => onPublisherUpdateCdnUrlResult);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
 
@@ -1081,7 +1118,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_stop(index);
-                Console.WriteLine(string.Format("MediaPlayer Stop index:{0}  result:{1} ", index, result));
+                string log = string.Format("MediaPlayer Stop index:{0}  result:{1} ", index, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1092,7 +1130,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 state = IExpressMediaPlayerInternal.zego_express_media_player_get_current_state(index);
-                Console.WriteLine(string.Format("MediaPlayer GetCurrentState index:{0}  result:{1} ", index, state));
+                string log = string.Format("MediaPlayer GetCurrentState index:{0}  result:{1} ", index, state);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
             return state;
         }
@@ -1103,7 +1142,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_resume(index);
-                Console.WriteLine(string.Format("MediaPlayer Resume index:{0}  result:{1} ", index, result));
+                string log = string.Format("MediaPlayer Resume index:{0}  result:{1} ", index, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1113,9 +1153,9 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int seq = IExpressMediaPlayerInternal.zego_express_media_player_seek_to(millisecond, index);
-                Console.WriteLine(string.Format("MediaPlayer SeekTo index:{0} millisecond:{1} result:{2} ", index, millisecond, seq));
+                string log = string.Format("MediaPlayer SeekTo index:{0} millisecond:{1} result:{2} ", index, millisecond, seq);
                 zegoMediaPlayer.seekToTimeCallbackDic.AddOrUpdate(seq, onSeekToTimeCallback, (key, oldValue) => onSeekToTimeCallback);
-
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
         public override void DestroyMediaPlayer(ZegoMediaPlayer mediaPlayer)
@@ -1124,9 +1164,10 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(mediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_destroy_media_player(index);
-                Console.WriteLine(string.Format("MediaPlayer MuteLocal index:{0} result:{1} ", index, result));
+                string log = string.Format("MediaPlayer Destroy index:{0} result:{1} ", index, result);
                 mediaPlayer.seekToTimeCallbackDic.Clear();
                 mediaPlayerAndIndex.TryRemove(index, out _);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
         public static void MuteLocal(ZegoMediaPlayer zegoMediaPlayer, bool mute)
@@ -1135,7 +1176,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_mute_local_audio(mute, index);
-                Console.WriteLine(string.Format("MediaPlayer MuteLocal index:{0} mute:{1} result:{2} ", index, mute, result));
+                string log = string.Format("MediaPlayer MuteLocal index:{0} mute:{1} result:{2} ", index, mute, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1147,8 +1189,9 @@ namespace ZEGO
                 zego_canvas zegoCanvas = ChangeZegoCanvasClassToStruct(canvas);
                 IntPtr ptr = ZegoUtil.GetStructPointer(zegoCanvas);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_player_canvas(ptr, index);
-                Console.WriteLine(string.Format("MediaPlayer SetPlayerCanvas index:{0}  result:{1} ", index, result));
+                string log = string.Format("MediaPlayer SetPlayerCanvas index:{0}  result:{1} ", index, result);
                 ZegoUtil.ReleaseStructPointer(ptr);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1158,7 +1201,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_volume(volume, index);
-                Console.WriteLine(string.Format("MediaPlayer SetVolume index:{0} volume:{1} result:{2} ", index, volume, result));
+                string log = string.Format("MediaPlayer SetVolume index:{0} volume:{1} result:{2} ", index, volume, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1168,7 +1212,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_progress_interval(millisecond, index);
-                Console.WriteLine(string.Format("MediaPlayer SetProgressInterval index:{0} millisecond:{1} result:{2} ", index, millisecond, result));
+                string log = string.Format("MediaPlayer SetProgressInterval index:{0} millisecond:{1} result:{2} ", index, millisecond, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1179,7 +1224,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_total_duration(index);
-                Console.WriteLine(string.Format("MediaPlayer GetTotalDuration index:{0} result:{1} ", index, result));
+                string log = string.Format("MediaPlayer GetTotalDuration index:{0} result:{1} ", index, result);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
             }
             return result;
@@ -1192,8 +1238,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_current_progress(index);
-                Console.WriteLine(string.Format("MediaPlayer GetCurrentProgress index:{0} result:{1} ", index, result));
-
+                string log = string.Format("MediaPlayer GetCurrentProgress index:{0} result:{1} ", index, result);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
             return result;
         }
@@ -1217,8 +1263,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_volume(index);
-                Console.WriteLine(string.Format("MediaPlayer GetVolume index:{0} result:{1} ", index, result));
-
+                string log = string.Format("MediaPlayer GetVolume index:{0} result:{1} ", index, result);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
             return result;
         }
@@ -1229,7 +1275,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_enable_aux(enable, index);
-                Console.WriteLine(string.Format("MediaPlayer EnableAux index:{0} result:{1} enable{2}", index, result, enable));
+                string log = string.Format("MediaPlayer EnableAux index:{0} result:{1} enable{2}", index, result, enable);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1239,7 +1286,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_pause(index);
-                Console.WriteLine(string.Format("MediaPlayer Pause index:{0} result:{1}", index, result));
+                string log = string.Format("MediaPlayer Pause index:{0} result:{1}", index, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1249,7 +1297,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_start(index);
-                Console.WriteLine(string.Format("MediaPlayer Start index:{0} result:{1}", index, result));
+                string log = string.Format("MediaPlayer Start index:{0} result:{1}", index, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1259,7 +1308,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_enable_repeat(enable, index);
-                Console.WriteLine(string.Format("EnableRepeat enable:{0} result:{1}", enable, result));
+                string log = string.Format("EnableRepeat enable:{0} result:{1}", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
 
@@ -1267,7 +1317,9 @@ namespace ZEGO
         {
             if (enginePtr == null || enginePtr.onPublisherStateUpdate == null) return;
 
-            Console.WriteLine(string.Format("onPublisherStateUpdate streamId:{0}  state:{1}  errorCode:{2} extendedData{3}", streamId, state, errorCode, extendedData));
+            string log = string.Format("onPublisherStateUpdate streamId:{0}  state:{1}  errorCode:{2} extendedData{3}", streamId, state, errorCode, extendedData);
+
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -1287,7 +1339,8 @@ namespace ZEGO
             {
                 ZegoMediaPlayerInstanceIndex curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_load_resource(path, curIndex);
-                Console.WriteLine(string.Format("LoadResource result:{0}  path:{1} ", result, path));
+                string log = string.Format("LoadResource result:{0}  path:{1} ", result, path);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
         private static ZegoMediaPlayerInstanceIndex GetIndexFromZegoMediaPlayer(ZegoMediaPlayer zegoMediaPlayer)
@@ -1312,7 +1365,8 @@ namespace ZEGO
         public static void zego_on_publisher_update_cdn_url_result([System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string stream_id, int error_code, int seq, System.IntPtr user_context)
         {
             if (enginePtr == null || onPublisherUpdateCdnUrlResultDics == null) return;
-            Console.WriteLine(string.Format("onPublisherUpdateCdnUrlResult streamId:{0}  errorCode:{1} seq{2}", stream_id, error_code, seq));
+            string log = string.Format("onPublisherUpdateCdnUrlResult streamId:{0}  errorCode:{1} seq{2}", stream_id, error_code, seq);
+            ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             OnPublisherUpdateCdnUrlResult onPublisherUpdateCdnUrlResult = GetCallbackFromSeq<OnPublisherUpdateCdnUrlResult>(onPublisherUpdateCdnUrlResultDics, seq);
             if (onPublisherUpdateCdnUrlResult == null)
             {
@@ -1336,7 +1390,8 @@ namespace ZEGO
             ZegoUtil.GetStructListByPtr<zego_stream_relay_cdn_info>(ref infos, cdn_info_list, info_count);//get StructLists by pointer
             List<ZegoStreamRelayCDNInfo> infoList = ChangeZegoStreamRelayCDNInfoStructListToClassList(infos);
 
-            Console.WriteLine(string.Format("onPublisherRelayCDNStateUpdate streamId:{0}  info_count:{1}", stream_id, info_count));
+            string log = string.Format("onPublisherRelayCDNStateUpdate streamId:{0}  info_count:{1}", stream_id, info_count);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -1377,7 +1432,8 @@ namespace ZEGO
                 IntPtr ptr = ZegoUtil.GetStructPointer(canvas);
                 int result = IExpressPublisherInternal.zego_express_start_preview(ptr, channel);
                 ZegoUtil.ReleaseStructPointer(ptr);
-                Console.WriteLine(string.Format("StartPreview  channel:{0} result:{1}", channel, result));
+                string log = string.Format("StartPreview  channel:{0} result:{1}", channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
 
             }
         }
@@ -1403,8 +1459,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_stop_preview(channel);
-                Console.WriteLine(string.Format("StopPreview  channel:{0} result:{1}", channel, result));
-
+                string log = string.Format("StopPreview  channel:{0} result:{1}", channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void StartPlayingStream(string streamId, ZegoCanvas canvas, ZegoPlayerConfig config = null)
@@ -1425,7 +1481,8 @@ namespace ZEGO
                     Console.WriteLine("StartPlayingStream ZegoPlayerConfig is null");
                     result = IExpressPlayerInternal.zego_express_start_playing_stream(streamId, ptr);
                 }
-                Console.WriteLine(string.Format("StartPlayingStream streamId:{0} result:{1}", streamId, result));
+                string log = string.Format("StartPlayingStream streamId:{0} result:{1}", streamId, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PLAYER);
             }
         }
 
@@ -1465,7 +1522,8 @@ namespace ZEGO
                 IntPtr ptr = ZegoUtil.GetStructPointer(ChangeCDNConfigClassToStruct(config));
                 int result = IExpressPublisherInternal.zego_express_enable_publish_direct_to_cdn(enable, ptr, channel);
                 ZegoUtil.ReleaseStructPointer(ptr);
-                Console.WriteLine(string.Format("EnablePublishDirectToCDN enable:{0} channel:{1} result:{2}", enable, channel, result));
+                string log = string.Format("EnablePublishDirectToCDN enable:{0} channel:{1} result:{2}", enable, channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
 
@@ -1474,7 +1532,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_set_app_orientation(orientation, channel);
-                Console.WriteLine(string.Format("SetAppOrientation orientation:{0} channel:{1} result:{2}", orientation, channel, result));
+                string log = string.Format("SetAppOrientation orientation:{0} channel:{1} result:{2}", orientation, channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
 
@@ -1483,7 +1542,7 @@ namespace ZEGO
         {
             if (enginePtr == null || enginePtr.onPlayerStateUpdate == null) return;
 
-            Console.WriteLine(string.Format("onPlayerStateUpdate streamId:{0}  state:{1} errorCode:{2} extendedData:{3}", streamId, state, errorCode, extendedData));
+            string log = string.Format("onPlayerStateUpdate streamId:{0}  state:{1} errorCode:{2} extendedData:{3}", streamId, state, errorCode, extendedData);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -1492,7 +1551,7 @@ namespace ZEGO
 
             }), null);
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
 
         }
@@ -1502,7 +1561,7 @@ namespace ZEGO
             if (enginePtr == null || enginePtr.onPublisherQualityUpdate == null) return;
             ZegoPublishStreamQuality result = ChangePublishQualityToClass(quality);
 
-            Console.WriteLine(string.Format("onPublisherQualityUpdate streamId:{0} quality:{1}", streamId, quality));
+            string log = string.Format("onPublisherQualityUpdate streamId:{0} quality:{1}", streamId, quality);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -1511,7 +1570,7 @@ namespace ZEGO
 
             }), null);
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
 
         }
@@ -1573,7 +1632,7 @@ namespace ZEGO
         {
             if (enginePtr == null || enginePtr.onPublisherVideoSizeChanged == null) return;
 
-            Console.WriteLine(string.Format("onPublisherVideoSizeChanged width:{0} height:{1} channel{2}", width, height, channel));
+            string log = string.Format("onPublisherVideoSizeChanged width:{0} height:{1} channel{2}", width, height, channel);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -1583,7 +1642,7 @@ namespace ZEGO
             }), null);
 
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
         }
 
@@ -1594,7 +1653,7 @@ namespace ZEGO
             ZegoUtil.GetStructListByPtr<zego_user>(ref users, userList, userCount);//get StructLists by pointer
             List<ZegoUser> result = ChangeZegoUserStructListToClassList(users);
 
-            Console.WriteLine(string.Format("onRoomUserUpdate roomId:{0} updateType:{1} userCount{2}", roomId, updateType, userCount));
+            string log = string.Format("onRoomUserUpdate roomId:{0} updateType:{1} userCount{2}", roomId, updateType, userCount);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -1603,7 +1662,7 @@ namespace ZEGO
 
             }), null);
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
         }
         public override void StartMixerTask(ZegoMixerTask task, OnMixerStartResult onMixerStartResult)
@@ -1611,11 +1670,12 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 zego_mixer_task zego_Mixer_Task = ChangeZegoMixerTaskClassToStruct(task);
-                int result = IExpressMixerInternal.zego_express_start_mixer_task(zego_Mixer_Task);
-                Console.WriteLine(string.Format("StartMixerTask  result:{0}", result));
+                int result = IExpressMixerInternal.zego_express_start_mixer_task(zego_Mixer_Task);//result is seq
+                string log = string.Format("StartMixerTask  result:{0}", result);
                 ZegoUtil.ReleaseAllStructPointers(arrayList);
                 ZegoUtil.ReleaseStructPointer(zego_Mixer_Task.watermark);
                 onMixerStartResultDics.AddOrUpdate(result, onMixerStartResult, (key, oldValue) => onMixerStartResult);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
 
@@ -1769,10 +1829,11 @@ namespace ZEGO
             {
                 zego_mixer_task zego_Mixer_Task = ChangeZegoMixerTaskClassToStruct(task);
                 int result = IExpressMixerInternal.zego_express_stop_mixer_task(zego_Mixer_Task);
-                Console.WriteLine(string.Format("StopMixerTask  result:{0}", result));
+                string log = string.Format("StopMixerTask  result:{0}", result);
                 ZegoUtil.ReleaseAllStructPointers(arrayList);
                 ZegoUtil.ReleaseStructPointer(zego_Mixer_Task.watermark);
                 onMixerStopResultDics.AddOrUpdate(result, onMixerStopResult, (key, oldValue) => onMixerStopResult);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
 
         }
@@ -1801,7 +1862,7 @@ namespace ZEGO
             ZegoUtil.GetStructListByPtr<zego_stream>(ref zego_streams, streamInfoList, streamInfoCount);//get StructLists by pointer
             List<ZegoStream> result = ChangeZegoStreamStructListToClassList(zego_streams);
 
-            Console.WriteLine(string.Format("onRoomStreamUpdate roomId:{0} updateType:{1} userCount{2}", roomId, updateType, streamInfoList));
+            string log = string.Format("onRoomStreamUpdate roomId:{0} updateType:{1} userCount{2}", roomId, updateType, streamInfoList);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -1810,7 +1871,7 @@ namespace ZEGO
 
             }), null);
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
         }
 
@@ -1947,7 +2008,7 @@ namespace ZEGO
 
             if (enginePtr == null || enginePtr.onPlayerVideoSizeChanged == null) return;
 
-            Console.WriteLine(string.Format("onPlayerVideoSizeChanged streamId:{0} width:{1} height:{2}", streamId, width, height));
+            string log = string.Format("onPlayerVideoSizeChanged streamId:{0} width:{1} height:{2}", streamId, width, height);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -1956,7 +2017,7 @@ namespace ZEGO
 
             }), null);
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
 
         }
@@ -1967,7 +2028,8 @@ namespace ZEGO
             {
 
                 int result = IExpressPlayerInternal.zego_express_stop_playing_stream(streamId);
-                Console.WriteLine(string.Format("StopPlayingStream streamId:{0} result:{1}", streamId, result));
+                string log = string.Format("StopPlayingStream streamId:{0} result:{1}", streamId, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PLAYER);
             }
         }
 
@@ -1976,7 +2038,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_set_video_config(ChangeVideoConfigClassToStruct(config), channel);
-                Console.WriteLine(string.Format("SetVideoConfig channel:{0}  result:{1}", channel, result));
+                string log = string.Format("SetVideoConfig channel:{0}  result:{1}", channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         private zego_video_config ChangeVideoConfigClassToStruct(ZegoVideoConfig config)
@@ -2004,7 +2067,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_set_video_mirror_mode(mirrorMode, channel);
-                Console.WriteLine(string.Format("SetVideoMirrorMode mirrorMode:{0}  channel:{1}  result:{2}", mirrorMode, channel, result));
+                string log = string.Format("SetVideoMirrorMode mirrorMode:{0}  channel:{1}  result:{2}", mirrorMode, channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void SetAudioConfig(ZegoAudioConfig config)
@@ -2012,7 +2076,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_set_audio_config(ChangeAudioConfigClassToStruct(config));
-                Console.WriteLine(string.Format("SetAudioConfig result:{0}", result));
+                string log = string.Format("SetAudioConfig result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         private zego_audio_config ChangeAudioConfigClassToStruct(ZegoAudioConfig config)
@@ -2035,7 +2100,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_mute_publish_stream_audio(mute, channel);
-                Console.WriteLine(string.Format("MutePublishStreamAudio mute:{0} channel:{1} result:{2}", mute, channel, result));
+                string log = string.Format("MutePublishStreamAudio mute:{0} channel:{1} result:{2}", mute, channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void MutePublishStreamVideo(bool mute, ZegoPublishChannel channel = ZegoPublishChannel.Main)
@@ -2043,7 +2109,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_mute_publish_stream_video(mute, channel);
-                Console.WriteLine(string.Format("MutePublishStreamVideo mute:{0} channel:{1} result:{2}", mute, channel, result));
+                string log = string.Format("MutePublishStreamVideo mute:{0} channel:{1} result:{2}", mute, channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void EnableTrafficControl(bool enable, int property)
@@ -2051,7 +2118,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_enable_traffic_control(enable, property);
-                Console.WriteLine(string.Format("EnableTrafficControl enable:{0} property:{1} result:{2}", enable, property, result));
+                string log = string.Format("EnableTrafficControl enable:{0} property:{1} result:{2}", enable, property, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void SetMinVideoBitrateForTrafficControl(int bitrate, ZegoTrafficControlMinVideoBitrateMode mode)
@@ -2059,7 +2127,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_set_min_video_bitrate_for_traffic_control(bitrate, mode);
-                Console.WriteLine(string.Format("SetMinVideoBitrateForTrafficControl bitrate:{0} mode:{1} result:{2}", bitrate, mode, result));
+                string log = string.Format("SetMinVideoBitrateForTrafficControl bitrate:{0} mode:{1} result:{2}", bitrate, mode, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void SetCaptureVolume(int volume)
@@ -2067,7 +2136,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_set_capture_volume(volume);
-                Console.WriteLine(string.Format("SetCaptureVolume volume:{0} result:{1}", volume, result));
+                string log = string.Format("SetCaptureVolume volume:{0} result:{1}", volume, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void EnableHardwareEncoder(bool enable)
@@ -2075,20 +2145,21 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_enable_hardware_encoder(enable);
-                Console.WriteLine(string.Format("EnableHardwareEncoder enable:{0} result:{1}", enable, result));
+                string log = string.Format("EnableHardwareEncoder enable:{0} result:{1}", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public static new string GetVersion()
         {
 
-            string reuslt = ZegoUtil.PtrToString(IExpressEngineInternal.zego_express_get_version());
-            Console.WriteLine(string.Format("GetVersion SDK version:{0}", reuslt));
-            return reuslt;
+            string result = ZegoUtil.PtrToString(IExpressEngineInternal.zego_express_get_version());
+            string log = string.Format("GetVersion SDK version:{0}", result);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            return result;
 
         }
         public static new ZegoExpressEngine GetEngine()
         {
-            Console.WriteLine("GetEngine");
             return enginePtr;
         }
         public override void UploadLog()
@@ -2096,15 +2167,15 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 IExpressEngineInternal.zego_express_upload_log();
-                Console.WriteLine("UploadLog");
             }
         }
         public override void SetCapturePipelineScaleMode(ZegoCapturePipelineScaleMode mode)
         {
             if (enginePtr != null)
             {
-                IExpressPublisherInternal.zego_express_set_capture_pipeline_scale_mode(mode);
-                Console.WriteLine(string.Format("SetCapturePipelineScaleMode mode:{0}", mode));
+                int result = IExpressPublisherInternal.zego_express_set_capture_pipeline_scale_mode(mode);
+                string log = string.Format("SetCapturePipelineScaleMode mode:{0} result:{1}", mode, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
         public override void SetDebugVerbose(bool enable, ZegoLanguage language)
@@ -2112,47 +2183,53 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 IExpressEngineInternal.zego_express_set_debug_verbose(enable, language);
-                Console.WriteLine(string.Format("SetDebugVerbose enable:{0} language:{1}", enable, language));
+                string log = string.Format("SetDebugVerbose enable:{0} language:{1}", enable, language);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
         public override void SetPlayVolume(string streamId, int volume)
         {
             if (enginePtr != null)
             {
-                IExpressPlayerInternal.zego_express_set_play_volume(streamId, volume);
-                Console.WriteLine(string.Format("SetPlayVolume streamId:{0} volume:{1}", streamId, volume));
+                int result = IExpressPlayerInternal.zego_express_set_play_volume(streamId, volume);
+                string log = string.Format("SetPlayVolume streamId:{0} volume:{1} result:{2}", streamId, volume, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PLAYER);
             }
         }
         public override void MutePlayStreamAudio(string streamId, bool mute)
         {
             if (enginePtr != null)
             {
-                IExpressPlayerInternal.zego_express_mute_play_stream_audio(streamId, mute);
-                Console.WriteLine(string.Format("MutePlayStreamAudio streamId:{0} mute:{1}", streamId, mute));
+                int result = IExpressPlayerInternal.zego_express_mute_play_stream_audio(streamId, mute);
+                string log = string.Format("MutePlayStreamAudio streamId:{0} mute:{1}", streamId, mute);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PLAYER);
             }
         }
         public override void MutePlayStreamVideo(string streamId, bool mute)
         {
             if (enginePtr != null)
             {
-                IExpressPlayerInternal.zego_express_mute_play_stream_video(streamId, mute);
-                Console.WriteLine(string.Format("MutePlayStreamVideo streamId:{0} mute:{1}", streamId, mute));
+                int result = IExpressPlayerInternal.zego_express_mute_play_stream_video(streamId, mute);
+                string log = string.Format("MutePlayStreamVideo streamId:{0} mute:{1} result:{2}", streamId, mute, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PLAYER);
             }
         }
         public override void EnableCheckPoc(bool enable)
         {
             if (enginePtr != null)
             {
-                IExpressPlayerInternal.zego_express_enable_check_poc(enable);
-                Console.WriteLine(string.Format("EnableCheckPoc enable:{0} ", enable));
+                int result = IExpressPlayerInternal.zego_express_enable_check_poc(enable);
+                string log = string.Format("EnableCheckPoc enable:{0} result:{1}", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PLAYER);
             }
         }
         public override void UseFrontCamera(bool enable, ZegoPublishChannel channel = ZegoPublishChannel.Main)
         {
             if (enginePtr != null)
             {
-                IExpressDeviceInternal.zego_express_use_front_camera(enable, channel);
-                Console.WriteLine(string.Format("UseFrontCamera enable:{0} channel:{1}", enable, channel));
+                int result = IExpressDeviceInternal.zego_express_use_front_camera(enable, channel);
+                string log = string.Format("UseFrontCamera enable:{0} channel:{1} result:{2}", enable, channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
         public override void EnableBeautify(int featureBitmask, ZegoPublishChannel channel = ZegoPublishChannel.Main)
@@ -2185,8 +2262,9 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                IExpressPlayerInternal.zego_express_enable_hardware_decoder(enable);
-                Console.WriteLine(string.Format("EnableHardwareDecoder enable:{0} ", enable));
+                int result = IExpressPlayerInternal.zego_express_enable_hardware_decoder(enable);
+                string log = string.Format("EnableHardwareDecoder enable:{0} result:{1}", enable, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PLAYER);
             }
         }
         public override void SendSEI(byte[] data, ZegoPublishChannel channel = ZegoPublishChannel.Main)
@@ -2194,7 +2272,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressPublisherInternal.zego_express_send_sei(Marshal.UnsafeAddrOfPinnedArrayElement(data, 0), (uint)data.Length, channel);
-                Console.WriteLine(string.Format("SendSEI channel:{0} result:{1}", channel, result));
+                string log = string.Format("SendSEI channel:{0} result:{1}", channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER, false);
             }
         }
 
@@ -2206,7 +2285,7 @@ namespace ZEGO
             ZegoUtil.GetStructListByPtr<zego_barrage_message_info>(ref zego_messages, message_info_list, message_count);//get StructLists by pointer
             List<ZegoBarrageMessageInfo> result = ChangeBarrageMessageStructListToClassList(zego_messages);
 
-            Console.WriteLine(string.Format("onIMRecvBarrageMessage room_id:{0} message_count:{1} ", room_id, message_count));
+            string log = string.Format("onIMRecvBarrageMessage room_id:{0} message_count:{1} ", room_id, message_count);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -2215,7 +2294,7 @@ namespace ZEGO
 
             }), null);
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
         }
         public static List<ZegoBarrageMessageInfo> ChangeBarrageMessageStructListToClassList(zego_barrage_message_info[] infos)
@@ -2279,7 +2358,7 @@ namespace ZEGO
         public static void zego_on_custom_video_capture_start(ZegoPublishChannel channel, System.IntPtr user_context)
         {
             if (enginePtr == null || enginePtr.onCustomVideoCaptureStart == null) return;
-            Console.WriteLine(string.Format("onCustomVideoCaptureStart channel:{0}  ", channel));
+            string log = string.Format("onCustomVideoCaptureStart channel:{0}  ", channel);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -2287,7 +2366,7 @@ namespace ZEGO
                 enginePtr?.onCustomVideoCaptureStart?.Invoke(channel);
 
             }), null);
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
         }
 
         /// Return Type: void
@@ -2297,7 +2376,7 @@ namespace ZEGO
         public static void zego_on_custom_video_capture_stop(ZegoPublishChannel channel, System.IntPtr user_context)
         {
             if (enginePtr == null || enginePtr.onCustomVideoCaptureStop == null) return;
-            Console.WriteLine(string.Format("onCustomVideoCaptureStop channel:{0}  ", channel));
+            string log = string.Format("onCustomVideoCaptureStop channel:{0}  ", channel);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -2305,7 +2384,7 @@ namespace ZEGO
                 enginePtr?.onCustomVideoCaptureStop?.Invoke(channel);
 
             }), null);
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
         }
         public static void zego_on_captured_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, System.IntPtr user_context)
@@ -2338,7 +2417,7 @@ namespace ZEGO
             ZegoUtil.GetStructListByPtr<zego_broadcast_message_info>(ref zego_messages, message_info_list, message_count);//get StructLists by pointer
             List<ZegoBroadcastMessageInfo> result = ChangeBroadMessageStructListToClassList(zego_messages);
 
-            Console.WriteLine(string.Format("onIMRecvBroadcastMessage room_id:{0} message_count:{1} ", room_id, message_count));
+            string log = string.Format("onIMRecvBroadcastMessage room_id:{0} message_count:{1} ", room_id, message_count);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -2347,7 +2426,7 @@ namespace ZEGO
 
             }), null);
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
         }
         public static List<ZegoBroadcastMessageInfo> ChangeBroadMessageStructListToClassList(zego_broadcast_message_info[] infos)
@@ -2377,7 +2456,7 @@ namespace ZEGO
             if (enginePtr == null || enginePtr.onIMRecvCustomCommand == null) return;
             ZegoUser result = ChangeZegoUserStructToClass(from_user);
 
-            Console.WriteLine(string.Format("onIMRecvCustomCommand room_id:{0} content:{1}", room_id, content));
+            string log = string.Format("onIMRecvCustomCommand room_id:{0} content:{1}", room_id, content);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -2386,7 +2465,7 @@ namespace ZEGO
 
             }), null);
 
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
         }
 
@@ -2394,7 +2473,8 @@ namespace ZEGO
         {
 
             if (enginePtr == null || onIMSendBarrageMessageResultDics == null) return;
-            Console.WriteLine(string.Format("onIMSendBarrageMessageResult room_id:{0} message_id:{1} error_code:{2} seq:{3}", room_id, message_id, error_code, seq));
+            string log = string.Format("onIMSendBarrageMessageResult room_id:{0} message_id:{1} error_code:{2} seq:{3}", room_id, message_id, error_code, seq);
+            ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_IM);
             OnIMSendBarrageMessageResult onIMSendBarrageMessageResult = GetCallbackFromSeq<OnIMSendBarrageMessageResult>(onIMSendBarrageMessageResultDics, seq);
             if (onIMSendBarrageMessageResult == null)
             {
@@ -2426,14 +2506,14 @@ namespace ZEGO
             if (zegoMediaPlayer.onMediaPlayerStateUpdate != null)
             {
 
-                Console.WriteLine(string.Format("zego_on_mediaplayer_state_update mediaplayerID:{0} state:{1}", instance_index, state));
+                string log = string.Format("zego_on_mediaplayer_state_update mediaplayerID:{0} state:{1}", instance_index, state);
                 context?.Post(new SendOrPostCallback((o) =>
                 {
 
                     zegoMediaPlayer?.onMediaPlayerStateUpdate?.Invoke(zegoMediaPlayer, state, error_code);
 
                 }), null);
-
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
             else
             {
@@ -2451,13 +2531,14 @@ namespace ZEGO
             if (zegoMediaPlayer.onMediaPlayerNetworkEvent != null)
             {
 
-                Console.WriteLine(string.Format("zego_on_mediaplayer_network_event mediaplayerID:{0}", instance_index));
+                string log = string.Format("zego_on_mediaplayer_network_event mediaplayerID:{0}", instance_index);
                 context?.Post(new SendOrPostCallback((o) =>
                 {
 
                     zegoMediaPlayer?.onMediaPlayerNetworkEvent?.Invoke(zegoMediaPlayer, net_event);
 
                 }), null);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
             }
             else
@@ -2474,14 +2555,14 @@ namespace ZEGO
             if (zegoMediaPlayer.onMediaPlayerPlayingProgress != null)
             {
 
-                Console.WriteLine(string.Format("zego_on_mediaplayer_playing_progress mediaplayerID:{0}", instance_index));
+                string log = string.Format("zego_on_mediaplayer_playing_progress mediaplayerID:{0}", instance_index);
                 context?.Post(new SendOrPostCallback((o) =>
                 {
 
                     zegoMediaPlayer?.onMediaPlayerPlayingProgress?.Invoke(zegoMediaPlayer, millisecond);
 
                 }), null);
-
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
             else
             {
@@ -2498,7 +2579,8 @@ namespace ZEGO
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
             if (zegoMediaPlayer.seekToTimeCallbackDic != null)
             {
-                Console.WriteLine(string.Format("zego_on_mediaplayer_seek_to_time_result mediaplayerID:{0} seq:{1} error_code:{2}", instance_index, seq, error_code));
+                string log = string.Format("zego_on_mediaplayer_seek_to_time_result mediaplayerID:{0} seq:{1} error_code:{2}", instance_index, seq, error_code);
+                ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
                 ZegoMediaPlayer.OnSeekToTimeCallback callback = GetCallbackFromSeq<ZegoMediaPlayer.OnSeekToTimeCallback>(zegoMediaPlayer.seekToTimeCallbackDic, seq);
                 if (callback == null)
                 {
@@ -2531,7 +2613,7 @@ namespace ZEGO
             byte[] result = new byte[data_length];
             ZegoUtil.GetStructListByPtr<byte>(ref result, data, data_length);
 
-            Console.WriteLine(string.Format("onPlayerRecvSEI stream_id:{0}  data_length:{1}", stream_id, data_length));
+            string log = string.Format("onPlayerRecvSEI stream_id:{0}  data_length:{1}", stream_id, data_length);
 
             context?.Post(new SendOrPostCallback((o) =>
             {
@@ -2539,7 +2621,7 @@ namespace ZEGO
                 enginePtr?.onPlayerRecvSEI?.Invoke(stream_id, result);
 
             }), null);
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
 
         }
@@ -2548,7 +2630,8 @@ namespace ZEGO
         {
 
             if (enginePtr == null || onIMSendBroadcastMessageResultDics == null) return;
-            Console.WriteLine(string.Format("onIMSendBroadcastMessageResult room_id:{0} message_id:{1} error_code:{2} seq:{3}", room_id, message_id, error_code, seq));
+            string log = string.Format("onIMSendBroadcastMessageResult room_id:{0} message_id:{1} error_code:{2} seq:{3}", room_id, message_id, error_code, seq);
+            ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_IM);
             OnIMSendBroadcastMessageResult onIMSendBroadcastMessageResult = GetCallbackFromSeq<OnIMSendBroadcastMessageResult>(onIMSendBroadcastMessageResultDics, seq);
             if (onIMSendBroadcastMessageResult == null)
             {
@@ -2560,6 +2643,7 @@ namespace ZEGO
                 onIMSendBroadcastMessageResult?.Invoke(error_code, message_id);
                 onIMSendBroadcastMessageResultDics?.TryRemove(seq, out _);
             }), null);
+
 
         }
         private static T GetCallbackFromSeq<T>(ConcurrentDictionary<int, T> dics, int seq)
@@ -2573,7 +2657,8 @@ namespace ZEGO
         {
 
             if (enginePtr == null || onPublisherSetStreamExtraInfoResultDics == null) return;
-            Console.WriteLine(string.Format("onPublisherSetStreamExtraInfoResult error_code:{0}  seq:{1}", error_code, seq));
+            string log = string.Format("onPublisherSetStreamExtraInfoResult error_code:{0}  seq:{1}", error_code, seq);
+            ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             OnPublisherSetStreamExtraInfoResult onPublisherSetStreamExtraInfoResult = GetCallbackFromSeq<OnPublisherSetStreamExtraInfoResult>(onPublisherSetStreamExtraInfoResultDics, seq);
             if (onPublisherSetStreamExtraInfoResult == null)
             {
@@ -2593,8 +2678,8 @@ namespace ZEGO
 
             if (enginePtr == null || onIMSendCustomCommandResultDics == null) return;
 
-            Console.WriteLine(string.Format("onIMSendCustomCommandResult room_id:{0} message_id:{1} seq:{2}", room_id, error_code, seq));
-
+            string log = string.Format("onIMSendCustomCommandResult room_id:{0} message_id:{1} seq:{2}", room_id, error_code, seq);
+            ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_IM);
             OnIMSendCustomCommandResult onIMSendCustomCommandResult = GetCallbackFromSeq<OnIMSendCustomCommandResult>(onIMSendCustomCommandResultDics, seq);
             if (onIMSendCustomCommandResult == null)
             {
@@ -2725,7 +2810,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressDeviceInternal.zego_express_start_audio_spectrum_monitor(milliSecond);
-                Console.WriteLine(string.Format("StartAudioSpectrumMonitor result:{0}", result));
+                string log = string.Format("StartAudioSpectrumMonitor result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
         public override void StartSoundLevelMonitor(uint milliSecond = 100)
@@ -2733,7 +2819,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressDeviceInternal.zego_express_start_sound_level_monitor(milliSecond);
-                Console.WriteLine(string.Format("StartSoundLevelMonitor result:{0}", result));
+                string log = string.Format("StartSoundLevelMonitor result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
         public override void StopAudioSpectrumMonitor()
@@ -2741,7 +2828,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressDeviceInternal.zego_express_stop_audio_spectrum_monitor();
-                Console.WriteLine(string.Format("StopAudioSpectrumMonitor result:{0}", result));
+                string log = string.Format("StopAudioSpectrumMonitor result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
         public override void StopSoundLevelMonitor()
@@ -2749,7 +2837,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressDeviceInternal.zego_express_stop_sound_level_monitor();
-                Console.WriteLine(string.Format("StopSoundLevelMonitor result:{0}", result));
+                string log = string.Format("StopSoundLevelMonitor result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
         public override void MuteMicrophone(bool mute)
@@ -2757,7 +2846,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressDeviceInternal.zego_express_mute_microphone(mute);
-                Console.WriteLine(string.Format("MuteMicrophone mute:{0} result:{1}", mute, result));
+                string log = string.Format("MuteMicrophone mute:{0} result:{1}", mute, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
         public override void MuteSpeaker(bool mute)
@@ -2765,7 +2855,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressDeviceInternal.zego_express_mute_speaker(mute);
-                Console.WriteLine(string.Format("MuteSpeaker mute:{0} result:{1}", mute, result));
+                string log = string.Format("MuteSpeaker mute:{0} result:{1}", mute, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
         public override void EnableCamera(bool enable, ZegoPublishChannel channel = ZegoPublishChannel.Main)
@@ -2773,7 +2864,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressDeviceInternal.zego_express_enable_camera(enable, channel);
-                Console.WriteLine(string.Format("EnableCamera enable:{0} channel:{1} result:{2}", enable, channel, result));
+                string log = string.Format("EnableCamera enable:{0} channel:{1} result:{2}", enable, channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
         public override ZegoMediaPlayer CreateMediaPlayer()
@@ -2781,7 +2873,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 ZegoMediaPlayerInstanceIndex result = IExpressMediaPlayerInternal.zego_express_create_media_player();
-                Console.WriteLine(string.Format("CreateMediaPlayer  result:{0}", result));
+                string log = string.Format("CreateMediaPlayer  result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
                 if (result >= 0)
                 {
                     ZegoMediaPlayer zegoMediaPlayer = new ZegoMediaPlayer();
@@ -2866,7 +2959,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressRecordInternal.zego_express_start_recording_captured_data(ChangeZegoDataRecordConfigClassToStruct(config), channel);
-                Console.WriteLine(string.Format("StartRecordingCapturedData channel:{0} result:{1}", channel, result));
+                string log = string.Format("StartRecordingCapturedData channel:{0} result:{1}", channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_RECORD);
             }
         }
 
@@ -2875,7 +2969,8 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = IExpressRecordInternal.zego_express_stop_recording_captured_data(channel);
-                Console.WriteLine(string.Format("StopRecordingCapturedData channel:{0} result:{1}", channel, result));
+                string log = string.Format("StopRecordingCapturedData channel:{0} result:{1}", channel, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_RECORD);
             }
         }
 
@@ -2883,13 +2978,13 @@ namespace ZEGO
         {
             if (enginePtr == null || enginePtr.onCapturedDataRecordStateUpdate == null) return;
             ZegoDataRecordConfig zegoDataRecordConfig = ChangeZegoDataRecordConfigStructToClass(config);
-            Console.WriteLine(string.Format("onCapturedDataRecordStateUpdate state:{0} error_code:{1} channel:{2}", state, error_code, channel));
+            string log = string.Format("onCapturedDataRecordStateUpdate state:{0} error_code:{1} channel:{2}", state, error_code, channel);
             context?.Post(new SendOrPostCallback((o) =>
                 {
                     enginePtr?.onCapturedDataRecordStateUpdate?.Invoke(state, error_code, zegoDataRecordConfig, channel);
 
                 }), null);
-
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
         }
 
         public static void zego_on_captured_data_record_progress_update(zego_data_record_progress progress, zego_data_record_config config, ZegoPublishChannel channel, IntPtr user_context)

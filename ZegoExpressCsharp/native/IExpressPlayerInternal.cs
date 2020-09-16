@@ -34,15 +34,15 @@ namespace ZEGO
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_player_state_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_player_state_update_callback(zego_on_player_state_update callback_func, System.IntPtr user_context);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_play_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_express_set_play_volume([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, int volume);
+        public static extern int zego_express_set_play_volume([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, int volume);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_mute_play_stream_audio", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_express_mute_play_stream_audio([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, bool mute);
+        public static extern int zego_express_mute_play_stream_audio([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, bool mute);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_mute_play_stream_video", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_express_mute_play_stream_video([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, bool mute);
+        public static extern int zego_express_mute_play_stream_video([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, bool mute);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_hardware_decoder", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_express_enable_hardware_decoder(bool enable);
+        public static extern int zego_express_enable_hardware_decoder(bool enable);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_check_poc", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_express_enable_check_poc(bool enable);
+        public static extern int zego_express_enable_check_poc(bool enable);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_player_quality_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_player_quality_update_callback(zego_on_player_quality_update callback_func, System.IntPtr user_context);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_player_media_event_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]

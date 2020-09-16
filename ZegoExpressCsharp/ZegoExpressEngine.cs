@@ -476,7 +476,9 @@ namespace ZEGO
          * After starting monitoring, you can receive local audio spectrum via [onCapturedAudioSpectrumUpdate] callback, and receive remote audio spectrum via [onRemoteAudioSpectrumUpdate] callback.
          * [onCapturedAudioSpectrumUpdate] and [onRemoteAudioSpectrumUpdate] callback notification period is 100 ms.
          */
-        public abstract void StartAudioSpectrumMonitor(uint milliSecond=100);
+
+        public abstract void StartAudioSpectrumMonitor(uint milliSecond = 100);
+
 
 
 
