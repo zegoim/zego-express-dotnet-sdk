@@ -829,7 +829,7 @@ namespace ZEGO
             }
         }
 
-        public static void SetAudioHandler(ZegoMediaPlayer zegoMediaPlayer, ZegoMediaPlayer.OnAudioFrame onAudioFrame)
+        public static void SetAudioHandler(ZegoMediaPlayer zegoMediaPlayer, OnAudioFrame onAudioFrame)
         {
             if (enginePtr != null)
             {
@@ -851,7 +851,7 @@ namespace ZEGO
             }
         }
 
-        public static void SetVideoHandler(ZegoMediaPlayer zegoMediaPlayer, ZegoVideoFrameFormat format, ZegoMediaPlayer.OnVideoFrame onVideoFrame)
+        public static void SetVideoHandler(ZegoMediaPlayer zegoMediaPlayer, ZegoVideoFrameFormat format, OnVideoFrame onVideoFrame)
         {
             if (enginePtr != null)
             {
@@ -1147,7 +1147,7 @@ namespace ZEGO
             }
         }
 
-        public static void SeekTo(ZegoMediaPlayer zegoMediaPlayer, ulong millisecond, ZegoMediaPlayer.OnSeekToTimeCallback onSeekToTimeCallback)
+        public static void SeekTo(ZegoMediaPlayer zegoMediaPlayer, ulong millisecond, OnSeekToTimeCallback onSeekToTimeCallback)
         {
             if (enginePtr != null)
             {
@@ -2581,7 +2581,7 @@ namespace ZEGO
             {
                 string log = string.Format("zego_on_mediaplayer_seek_to_time_result mediaplayerID:{0} seq:{1} error_code:{2}", instance_index, seq, error_code);
                 ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
-                ZegoMediaPlayer.OnSeekToTimeCallback callback = GetCallbackFromSeq<ZegoMediaPlayer.OnSeekToTimeCallback>(zegoMediaPlayer.seekToTimeCallbackDic, seq);
+                OnSeekToTimeCallback callback = GetCallbackFromSeq<OnSeekToTimeCallback>(zegoMediaPlayer.seekToTimeCallbackDic, seq);
                 if (callback == null)
                 {
                     return;
@@ -2877,7 +2877,7 @@ namespace ZEGO
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
                 if (result >= 0)
                 {
-                    ZegoMediaPlayer zegoMediaPlayer = new ZegoMediaPlayer();
+                    ZegoMediaPlayer zegoMediaPlayer = new ZegoMediaPlayerImpl();
                     mediaPlayerAndIndex.AddOrUpdate(result, zegoMediaPlayer, (key, oldValue) => zegoMediaPlayer);
                     return zegoMediaPlayer;
                 }

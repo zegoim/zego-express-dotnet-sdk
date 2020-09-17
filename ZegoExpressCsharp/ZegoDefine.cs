@@ -84,7 +84,7 @@ namespace ZEGO
 
         Video,
     }
-  
+
     public enum ZegoEngineState
     {
         Start,
@@ -255,7 +255,7 @@ namespace ZEGO
         Stereo,
     }
 
-    
+
     public enum ZegoTrafficControlMinVideoBitrateMode
     {
         /** Stop video transmission when current bitrate is lower than the set minimum bitrate */
@@ -290,7 +290,7 @@ namespace ZEGO
 
 
 
-    
+
 
     public enum ZegoAudioCodecId
     {
@@ -418,7 +418,7 @@ namespace ZEGO
     {
         /// char[512]
         /** message content */
-         public string message;
+        public string message;
 
         /// char[64]
         /** message id */
@@ -452,7 +452,7 @@ namespace ZEGO
 
         /// char[64]
         /** message id */
-       
+
         public ulong messageId;
 
         /** Message send time */
@@ -471,7 +471,7 @@ namespace ZEGO
 
         /// char[512]
         /** Auth param of URL */
-       public string authParam;
+        public string authParam;
     }
     /**
     * Advanced engine configuration
@@ -680,13 +680,13 @@ namespace ZEGO
         public ZegoUser user;
 
         /** Stream ID, a string of up to 256 characters. You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
-       
+
         public string streamId;
 
 
 
         /** Stream extra info */
-        
+
         public string extraInfo;
 
     }
@@ -694,7 +694,7 @@ namespace ZEGO
     {
         /// char[1024]
         /** URL of publishing stream to CDN */
-        
+
         public string url;
 
         /// zego_stream_relay_cdn_state
@@ -768,8 +768,8 @@ namespace ZEGO
     public class ZegoWatermark
     {
         /// char[512]
-         /** Watermark image URL */
-       
+        /** Watermark image URL */
+
         public string imageUrl;
 
         /// zego_rect
@@ -807,123 +807,7 @@ namespace ZEGO
 
         public int rotation;
     }
-    public class ZegoMediaPlayer
-    {
-        /**
-         * 播放器播放状态回调
-         *
-         * @param mediaPlayer 回调的播放器实例
-         * @param state 播放器状态
-         * @param errorCode 错误码，详情请参考常用错误码文档 [https://doc-zh.zego.im/zh/308.html]
-         */
-        public delegate void OnMediaPlayerStateUpdate(ZegoMediaPlayer mediaPlayer, ZegoMediaPlayerState state, int errorCode);
-        public OnMediaPlayerStateUpdate onMediaPlayerStateUpdate;
-        /**
-         * 播放器网络状态事件回调
-         *
-         * @param mediaPlayer 回调的播放器实例
-         * @param networkEvent 网络状态事件
-         */
-        public delegate void OnMediaPlayerNetworkEvent(ZegoMediaPlayer mediaPlayer, ZegoMediaPlayerNetworkEvent networkEvent);
-        public OnMediaPlayerNetworkEvent onMediaPlayerNetworkEvent;
-        /**
-         * 播放器播放进度回调
-         *
-         * @param mediaPlayer 回调的播放器实例
-         * @param millisecond 进度，单位为毫秒
-         */
-        public delegate void OnMediaPlayerPlayingProgress(ZegoMediaPlayer mediaPlayer, ulong millisecond);
-        public OnMediaPlayerPlayingProgress onMediaPlayerPlayingProgress;
 
-        public delegate void OnLoadResourceCallback(int errorCode);
-        public OnLoadResourceCallback onLoadResourceCallback;
-        public void LoadResource(string path, OnLoadResourceCallback onLoadResourceCallback)
-        {
-            this.onLoadResourceCallback = onLoadResourceCallback;
-            ZegoExpressEngineImpl.LoadResource(this, path);
-        }
-        public void EnableRepeat(bool enable)
-        {
-            ZegoExpressEngineImpl.EnableRepeat(this, enable);
-        }
-        public void Start()
-        {
-            ZegoExpressEngineImpl.Start(this);
-        }
-        public void Pause()
-        {
-            ZegoExpressEngineImpl.Pause(this);
-        }
-        public void Resume()
-        {
-            ZegoExpressEngineImpl.Resume(this);
-        }
-        public void Stop()
-        {
-            ZegoExpressEngineImpl.Stop(this);
-        }
-        public ZegoMediaPlayerState GetCurrentState()
-        {
-            return ZegoExpressEngineImpl.GetCurrentState(this);
-        }
-        public delegate void OnSeekToTimeCallback(int errorCode);
-        public ConcurrentDictionary<int, OnSeekToTimeCallback> seekToTimeCallbackDic = new ConcurrentDictionary<int, OnSeekToTimeCallback>();
-        
-        public void SeekTo(ulong millisecond, OnSeekToTimeCallback onSeekToTimeCallback)
-        {
-            ZegoExpressEngineImpl.SeekTo(this, millisecond,onSeekToTimeCallback);
-        }
-        public void EnableAux(bool enable){
-            ZegoExpressEngineImpl.EnableAux(this,enable);
-        }
-        public void MuteLocal(bool mute)
-        {
-            ZegoExpressEngineImpl.MuteLocal(this,mute);
-        }
-         public void SetPlayerCanvas(ZegoCanvas canvas)
-        {
-            ZegoExpressEngineImpl.SetPlayerCanvas(this,canvas);
-         }
-        public void SetVolume(int volume)
-        {
-            ZegoExpressEngineImpl.SetVolume(this,volume);
-        }
-        public void SetProgressInterval(ulong millisecond)
-        {
-            ZegoExpressEngineImpl.SetProgressInterval(this,millisecond);
-        }
-        public int GetVolume()
-        {
-            return ZegoExpressEngineImpl.GetVolume(this);
-        }
-        public ulong GetTotalDuration()
-        {
-            return ZegoExpressEngineImpl.GetTotalDuration(this);
-        }
-        public ulong GetCurrentProgress()
-        {
-            return ZegoExpressEngineImpl.GetCurrentProgress(this);
-        }
-        public int GetIndex()
-        {
-            return ZegoExpressEngineImpl.GetIndex(this);
-        }
-
-        public delegate void OnAudioFrame(ZegoMediaPlayer mediaPlayer, IntPtr data, uint dataLength, ZegoAudioFrameParam param);
-        public OnAudioFrame onAudioFrame;
-        public delegate void OnVideoFrame(ZegoMediaPlayer mediaPlayer, IntPtr[] data, uint[] dataLength, ZegoVideoFrameParam param);//dataLength is uint array,fixed Length is 4
-        public OnVideoFrame onVideoFrame;
-        public void SetVideoHandler(OnVideoFrame onVideoFrame, ZegoVideoFrameFormat format)
-        {
-            this.onVideoFrame = onVideoFrame;
-            ZegoExpressEngineImpl.SetVideoHandler(this,format,onVideoFrame);
-        }
-        public void SetAudioHandler(OnAudioFrame onAudioFrame)
-        {
-            this.onAudioFrame = onAudioFrame;
-            ZegoExpressEngineImpl.SetAudioHandler(this,onAudioFrame);
-        }
-    }
     public class ZegoAudioFrameParam
     {
 
@@ -954,16 +838,16 @@ namespace ZEGO
             this.fps = 15;
             this.bitrate = 600;
         }
-        public ZegoMixerVideoConfig(int resolutionWidth, int resolutionHeight,int bitrate, int fps)
+        public ZegoMixerVideoConfig(int resolutionWidth, int resolutionHeight, int bitrate, int fps)
         {
             this.resolutionWidth = resolutionWidth;
-            this.resolutionHeight =resolutionHeight ;
+            this.resolutionHeight = resolutionHeight;
             this.fps = fps;
             this.bitrate = bitrate;
         }
     }
     public class ZegoMixerTask
-    {      
+    {
         public string taskId;
 
         /// zego_mixer_input*
@@ -982,7 +866,7 @@ namespace ZEGO
         /// zego_watermark*
         public ZegoWatermark watermark;
 
-       
+
         public string backgroundImageUrl;
 
         /// boolean
@@ -1014,13 +898,13 @@ namespace ZEGO
         {
 
         }
-        public ZegoMixerInput(string streamId,ZegoMixerInputContentType contentType,ZegoRect layout)
+        public ZegoMixerInput(string streamId, ZegoMixerInputContentType contentType, ZegoRect layout)
         {
             this.streamId = streamId;
             this.contentType = contentType;
             this.layout = layout;
         }
-        public ZegoMixerInput(string streamId, ZegoMixerInputContentType contentType, ZegoRect layout,uint soundLevelId)
+        public ZegoMixerInput(string streamId, ZegoMixerInputContentType contentType, ZegoRect layout, uint soundLevelId)
         {
             this.streamId = streamId;
             this.contentType = contentType;
@@ -1044,14 +928,15 @@ namespace ZEGO
     {
 
         /// int
-        public int bitrate=48;
+        public int bitrate = 48;
 
         /// zego_audio_channel
         public ZegoAudioChannel channel;
 
         /// ZegoAudioCodecId
         public ZegoAudioCodecId audioCodecId;
-        public ZegoMixerAudioConfig() {
+        public ZegoMixerAudioConfig()
+        {
             this.channel = ZegoAudioChannel.Mono;
             this.audioCodecId = ZegoAudioCodecId.Default;
         }
@@ -1105,9 +990,9 @@ namespace ZEGO
     }
     public enum ZegoAudioDataCallbackBitMask
     {
-        CAPTURED=1,
-        REMOTE=2,
-        MIXED=4,
+        CAPTURED = 1,
+        REMOTE = 2,
+        MIXED = 4,
     }
     public enum ZegoAudioSourceType
     {
