@@ -413,6 +413,45 @@ namespace ZEGO
         /// ZegoAudioCodecId
         /** codec ID, default is ZegoAudioCodecIDDefault */
         public ZegoAudioCodecId audioCodecId;
+
+        /**
+         * Create a default audio configuration (ZegoAudioConfigPresetStandardQuality, 48 kbps, Mono, ZegoAudioCodecIDDefault)
+         */
+        public ZegoAudioConfig() : this(ZegoAudioConfigPreset.StandardQuality)
+        {
+
+        }
+
+        /**
+         * Create a audio configuration with preset enumeration values
+         */
+        public ZegoAudioConfig(ZegoAudioConfigPreset presetType)
+        {
+            audioCodecId = ZegoAudioCodecId.Default;
+            switch (presetType)
+            {
+                case ZegoAudioConfigPreset.BasicQuality:
+                    bitrate = 16;
+                    channel = ZegoAudioChannel.Mono;
+                    break;
+                case ZegoAudioConfigPreset.StandardQuality:
+                    bitrate = 48;
+                    channel = ZegoAudioChannel.Mono;
+                    break;
+                case ZegoAudioConfigPreset.StandardQualityStereo:
+                    bitrate = 56;
+                    channel = ZegoAudioChannel.Stereo;
+                    break;
+                case ZegoAudioConfigPreset.HighQuality:
+                    bitrate = 128;
+                    channel = ZegoAudioChannel.Mono;
+                    break;
+                case ZegoAudioConfigPreset.HighQualityStereo:
+                    bitrate = 192;
+                    channel = ZegoAudioChannel.Stereo;
+                    break;
+            }
+        }
     }
     public class ZegoBarrageMessageInfo
     {
@@ -762,6 +801,75 @@ namespace ZEGO
         /// zego_video_codec_id
         /** codec ID */
         public ZegoVideoCodecId videoCodecId;
+
+        /**
+         * Create video configuration with preset enumeration values
+         */
+        public ZegoVideoConfig(ZegoVideoConfigPreset preset)
+        {
+            videoCodecId = ZegoVideoCodecId.Default;
+            switch (preset)
+            {
+                case ZegoVideoConfigPreset.Preset180P:
+                    captureResolutionWidth = 180;
+                    captureResolutionHeight = 320;
+                    encodeResolutionWidth = 180;
+                    encodeResolutionHeight = 320;
+                    bitrate = 300;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset270P:
+                    captureResolutionWidth = 270;
+                    captureResolutionHeight = 480;
+                    encodeResolutionWidth = 270;
+                    encodeResolutionHeight = 480;
+                    bitrate = 400;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset360P:
+                    captureResolutionWidth = 360;
+                    captureResolutionHeight = 640;
+                    encodeResolutionWidth = 360;
+                    encodeResolutionHeight = 640;
+                    bitrate = 600;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset540P:
+                    captureResolutionWidth = 540;
+                    captureResolutionHeight = 960;
+                    encodeResolutionWidth = 540;
+                    encodeResolutionHeight = 960;
+                    bitrate = 1200;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset720P:
+                    captureResolutionWidth = 720;
+                    captureResolutionHeight = 1280;
+                    encodeResolutionWidth = 720;
+                    encodeResolutionHeight = 1280;
+                    bitrate = 1500;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset1080P:
+                    captureResolutionWidth = 1080;
+                    captureResolutionHeight = 1920;
+                    encodeResolutionWidth = 1080;
+                    encodeResolutionHeight = 1920;
+                    bitrate = 3000;
+                    fps = 15;
+                    break;
+            }
+        }
+
+        /**
+         * Create default video configuration(360p, 15fps, 600000bps)
+         *
+         * 360p, 15fps, 600kbps
+         */
+        public ZegoVideoConfig() : this(ZegoVideoConfigPreset.Preset360P)
+        {
+
+        }
     }
 
 
@@ -1108,5 +1216,35 @@ namespace ZEGO
         /// Current recording file size in byte
         /// </summary>
         public ulong currentFileSize;
+    }
+    /** Audio Config Preset */
+    public enum ZegoAudioConfigPreset
+    {
+        /** Basic sound quality (16 kbps, Mono, ZegoAudioCodecIDDefault) */
+        BasicQuality,
+        /** Standard sound quality (48 kbps, Mono, ZegoAudioCodecIDDefault) */
+        StandardQuality,
+        /** Standard sound quality (56 kbps, Stereo, ZegoAudioCodecIDDefault) */
+        StandardQualityStereo,
+        /** High sound quality (128 kbps, Mono, ZegoAudioCodecIDDefault) */
+        HighQuality,
+        /** High sound quality (192 kbps, Stereo, ZegoAudioCodecIDDefault) */
+        HighQualityStereo
+    }
+    /** Video configuration resolution and bitrate preset enumeration. The preset resolutions are adapted for mobile and desktop. On mobile, height is longer than width, and desktop is the opposite. For example, 1080p is actually 1080(w) x 1920(h) on mobile and 1920(w) x 1080(h) on desktop. */
+    public enum ZegoVideoConfigPreset
+    {
+        /** Set the resolution to 320x180, the default is 15 fps, the code rate is 300 kbps */
+        Preset180P,
+        /** Set the resolution to 480x270, the default is 15 fps, the code rate is 400 kbps */
+        Preset270P,
+        /** Set the resolution to 640x360, the default is 15 fps, the code rate is 600 kbps */
+        Preset360P,
+        /** Set the resolution to 960x540, the default is 15 fps, the code rate is 1200 kbps */
+        Preset540P,
+        /** Set the resolution to 1280x720, the default is 15 fps, the code rate is 1500 kbps */
+        Preset720P,
+        /** Set the resolution to 1920x1080, the default is 15 fps, the code rate is 3000 kbps */
+        Preset1080P
     }
 }
