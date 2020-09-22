@@ -811,50 +811,50 @@ namespace ZEGO
             switch (preset)
             {
                 case ZegoVideoConfigPreset.Preset180P:
-                    captureResolutionWidth = 180;
-                    captureResolutionHeight = 320;
-                    encodeResolutionWidth = 180;
-                    encodeResolutionHeight = 320;
+                    captureResolutionWidth = 320;
+                    captureResolutionHeight = 180;
+                    encodeResolutionWidth = 320;
+                    encodeResolutionHeight = 180;
                     bitrate = 300;
                     fps = 15;
                     break;
                 case ZegoVideoConfigPreset.Preset270P:
-                    captureResolutionWidth = 270;
-                    captureResolutionHeight = 480;
-                    encodeResolutionWidth = 270;
-                    encodeResolutionHeight = 480;
+                    captureResolutionWidth = 480;
+                    captureResolutionHeight = 270;
+                    encodeResolutionWidth = 480;
+                    encodeResolutionHeight = 270;
                     bitrate = 400;
                     fps = 15;
                     break;
                 case ZegoVideoConfigPreset.Preset360P:
-                    captureResolutionWidth = 360;
-                    captureResolutionHeight = 640;
-                    encodeResolutionWidth = 360;
-                    encodeResolutionHeight = 640;
+                    captureResolutionWidth = 640;
+                    captureResolutionHeight = 360;
+                    encodeResolutionWidth = 640;
+                    encodeResolutionHeight = 360;
                     bitrate = 600;
                     fps = 15;
                     break;
                 case ZegoVideoConfigPreset.Preset540P:
-                    captureResolutionWidth = 540;
-                    captureResolutionHeight = 960;
-                    encodeResolutionWidth = 540;
-                    encodeResolutionHeight = 960;
+                    captureResolutionWidth = 960;
+                    captureResolutionHeight = 540;
+                    encodeResolutionWidth = 960;
+                    encodeResolutionHeight = 540;
                     bitrate = 1200;
                     fps = 15;
                     break;
                 case ZegoVideoConfigPreset.Preset720P:
-                    captureResolutionWidth = 720;
-                    captureResolutionHeight = 1280;
-                    encodeResolutionWidth = 720;
-                    encodeResolutionHeight = 1280;
+                    captureResolutionWidth = 1280;
+                    captureResolutionHeight = 720;
+                    encodeResolutionWidth = 1280;
+                    encodeResolutionHeight = 720;
                     bitrate = 1500;
                     fps = 15;
                     break;
                 case ZegoVideoConfigPreset.Preset1080P:
-                    captureResolutionWidth = 1080;
-                    captureResolutionHeight = 1920;
-                    encodeResolutionWidth = 1080;
-                    encodeResolutionHeight = 1920;
+                    captureResolutionWidth = 1920;
+                    captureResolutionHeight = 1080;
+                    encodeResolutionWidth = 1920;
+                    encodeResolutionHeight = 1080;
                     bitrate = 3000;
                     fps = 15;
                     break;
