@@ -75,5 +75,13 @@ namespace ZEGO
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_fetch_custom_audio_render_pcm_data", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_fetch_custom_audio_render_pcm_data(byte[] data, uint data_length, zego_audio_frame_param param);
+
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public delegate void zego_on_playback_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, System.IntPtr user_context);
+
+
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_playback_audio_data_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_playback_audio_data_callback(zego_on_playback_audio_data callback_func, System.IntPtr user_context);
     }
 }

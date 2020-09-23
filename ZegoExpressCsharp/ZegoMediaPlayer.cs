@@ -61,6 +61,7 @@ namespace ZEGO
         public abstract void SetVolume(int volume);
 
         public abstract void SetProgressInterval(ulong millisecond);
+        [Obsolete("Please use GetPlayVolume or GetPublishVolume instead")]
         public abstract int GetVolume();
         public abstract ulong GetTotalDuration();
         public abstract ulong GetCurrentProgress();
@@ -70,5 +71,10 @@ namespace ZEGO
         public abstract void SetVideoHandler(OnVideoFrame onVideoFrame, ZegoVideoFrameFormat format);
 
         public abstract void SetAudioHandler(OnAudioFrame onAudioFrame);
+        public abstract void SetPlayVolume(int volume);
+        public abstract void SetPublishVolume(int volume);
+
+        public abstract int GetPlayVolume();
+        public abstract int GetPublishVolume();
     }
 }

@@ -1099,7 +1099,7 @@ namespace ZEGO
     public enum ZegoAudioDataCallbackBitMask
     {
         CAPTURED = 1,
-        REMOTE = 2,
+        PLAYBACK = 2,
         MIXED = 4,
     }
     public enum ZegoAudioSourceType

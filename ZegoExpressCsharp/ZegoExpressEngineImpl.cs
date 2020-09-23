@@ -77,6 +77,7 @@ namespace ZEGO
         private static IExpressCustomAudioIO.zego_on_mixed_audio_data zegoOnMixedAudioData;
         private static IExpressRecordInternal.zego_on_captured_data_record_state_update zegoOnCapturedDataRecordStateUpdate;
         private static IExpressRecordInternal.zego_on_captured_data_record_progress_update zegoOnCapturedDataRecordProgressUpdate;
+        private static IExpressCustomAudioIO.zego_on_playback_audio_data zegoOnPlaybackAudioData;
         private ArrayList arrayList;
         public static new void SetEngineConfig(ZegoEngineConfig config)
         {
@@ -337,6 +338,9 @@ namespace ZEGO
 
                         zegoOnMixedAudioData = new IExpressCustomAudioIO.zego_on_mixed_audio_data(zego_on_mixed_audio_data);
                         IExpressCustomAudioIO.zego_register_mixed_audio_data_callback(zegoOnMixedAudioData, IntPtr.Zero);
+
+                        zegoOnPlaybackAudioData = new IExpressCustomAudioIO.zego_on_playback_audio_data(zego_on_playback_audio_data);
+                        IExpressCustomAudioIO.zego_register_playback_audio_data_callback(zegoOnPlaybackAudioData, IntPtr.Zero);
 
                         zegoOnCapturedDataRecordStateUpdate = new IExpressRecordInternal.zego_on_captured_data_record_state_update(zego_on_captured_data_record_state_update);
                         IExpressRecordInternal.zego_register_captured_data_record_state_update_callback(zegoOnCapturedDataRecordStateUpdate, IntPtr.Zero);
@@ -1258,7 +1262,7 @@ namespace ZEGO
 
         public static int GetVolume(ZegoMediaPlayer zegoMediaPlayer)
         {
-            int result = 0;
+            int result = -1;
             if (enginePtr != null)
             {
                 ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
@@ -2409,6 +2413,12 @@ namespace ZEGO
             ZegoAudioFrameParam zegoAudioFrameParam = ChangeZegoAudioFrameStructToClass(param);
             enginePtr.onMixedAudioData(data, data_length, zegoAudioFrameParam);
         }
+        public static void zego_on_playback_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, System.IntPtr user_context)
+        {
+            if (enginePtr == null || enginePtr.onPlaybackAudioData == null) return;
+            ZegoAudioFrameParam zegoAudioFrameParam = ChangeZegoAudioFrameStructToClass(param);
+            enginePtr.onPlaybackAudioData(data, data_length, zegoAudioFrameParam);
+        }
         public static void zego_on_im_recv_broadcast_message([System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, System.IntPtr message_info_list, uint message_count, System.IntPtr user_context)
         {
 
@@ -2999,6 +3009,51 @@ namespace ZEGO
 
             }), null);
 
+        }
+
+        public static void SetMediaPlayerPlayVolume(ZegoMediaPlayer zegoMediaPlayer, int volume)
+        {
+            if (enginePtr != null)
+            {
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                int result = IExpressMediaPlayerInternal.zego_express_media_player_set_play_volume(volume, index);
+                string log = string.Format("MediaPlayer SetMediaPlayerPlayVolume index:{0} volume:{1} result:{2} ", index, volume, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
+            }
+        }
+        public static void SetMediaPlayerPublishVolume(ZegoMediaPlayer zegoMediaPlayer, int volume)
+        {
+            if (enginePtr != null)
+            {
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                int result = IExpressMediaPlayerInternal.zego_express_media_player_set_publish_volume(volume, index);
+                string log = string.Format("MediaPlayer SetMediaPlayerPublishVolume index:{0} volume:{1} result:{2} ", index, volume, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
+            }
+        }
+        public static int GetMediaPlayerPlayVolume(ZegoMediaPlayer zegoMediaPlayer)
+        {
+            int result = -1;
+            if (enginePtr != null)
+            {
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                result = IExpressMediaPlayerInternal.zego_express_media_player_get_play_volume(index);
+                string log = string.Format("MediaPlayer GetMediaPlayerPlayVolume index:{0} result:{1} ", index, result);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            }
+            return result;
+        }
+        public static int GetMediaPlayerPublishVolume(ZegoMediaPlayer zegoMediaPlayer)
+        {
+            int result = -1;
+            if (enginePtr != null)
+            {
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                result = IExpressMediaPlayerInternal.zego_express_media_player_get_publish_volume(index);
+                string log = string.Format("MediaPlayer GetMediaPlayerPublishVolume index:{0} result:{1} ", index, result);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            }
+            return result;
         }
 
 

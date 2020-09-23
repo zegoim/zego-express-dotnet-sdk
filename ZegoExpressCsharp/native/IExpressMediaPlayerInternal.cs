@@ -250,6 +250,30 @@ namespace ZEGO
             [In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] uint[] data_length, zego_video_frame_param param,
             ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
 
+        /// Return Type: int
+        ///volume: int
+        ///instance_index: zego_media_player_instance_index
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_set_play_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_media_player_set_play_volume(int volume, ZegoMediaPlayerInstanceIndex instance_index);
+
+
+        /// Return Type: int
+        ///volume: int
+        ///instance_index: zego_media_player_instance_index
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_set_publish_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_media_player_set_publish_volume(int volume, ZegoMediaPlayerInstanceIndex instance_index);
+
+
+        /// Return Type: int
+        ///instance_index: zego_media_player_instance_index
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_play_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_media_player_get_play_volume(ZegoMediaPlayerInstanceIndex instance_index);
+
+
+        /// Return Type: int
+        ///instance_index: zego_media_player_instance_index
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_publish_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_media_player_get_publish_volume(ZegoMediaPlayerInstanceIndex instance_index);
 
 
     }

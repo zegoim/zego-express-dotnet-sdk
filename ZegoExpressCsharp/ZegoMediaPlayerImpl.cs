@@ -60,10 +60,12 @@ namespace ZEGO
         {
             ZegoExpressEngineImpl.SetVolume(this, volume);
         }
+      
         public override void SetProgressInterval(ulong millisecond)
         {
             ZegoExpressEngineImpl.SetProgressInterval(this, millisecond);
         }
+        [Obsolete("Please use GetPlayVolume or GetPublishVolume instead")]
         public override int GetVolume()
         {
             return ZegoExpressEngineImpl.GetVolume(this);
@@ -89,6 +91,26 @@ namespace ZEGO
         {
             this.onAudioFrame = onAudioFrame;
             ZegoExpressEngineImpl.SetAudioHandler(this, onAudioFrame);
+        }
+
+        public override void SetPlayVolume(int volume)
+        {
+            ZegoExpressEngineImpl.SetMediaPlayerPlayVolume(this, volume);
+        }
+
+        public override void SetPublishVolume(int volume)
+        {
+            ZegoExpressEngineImpl.SetMediaPlayerPublishVolume(this, volume);
+        }
+
+        public override int GetPlayVolume()
+        {
+            return ZegoExpressEngineImpl.GetMediaPlayerPlayVolume(this);
+        }
+
+        public override int GetPublishVolume()
+        {
+            return ZegoExpressEngineImpl.GetMediaPlayerPublishVolume(this);
         }
     }
 }
