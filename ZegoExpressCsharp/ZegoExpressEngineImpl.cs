@@ -1581,18 +1581,18 @@ namespace ZEGO
         private static ZegoPublishStreamQuality ChangePublishQualityToClass(zego_publish_stream_quality quality)
         {
             ZegoPublishStreamQuality publishStreamQuality = new ZegoPublishStreamQuality();
-            publishStreamQuality.quality = quality.quality;
             publishStreamQuality.videoCaptureFps = quality.video_capture_fps;
             publishStreamQuality.videoEncodeFps = quality.video_encode_fps;
             publishStreamQuality.videoSendFps = quality.video_send_fps;
             publishStreamQuality.videoKbps = quality.video_kbps;
-
             publishStreamQuality.audioCaptureFps = quality.audio_capture_fps;
             publishStreamQuality.audioSendFps = quality.audio_send_fps;
             publishStreamQuality.audioKbps = quality.audio_kbps;
             publishStreamQuality.rtt = quality.rtt;
             publishStreamQuality.packetLostRate = quality.packet_lost_rate;
+            publishStreamQuality.level = quality.level;
             publishStreamQuality.isHardwareEncode = quality.is_hardware_encode;
+            publishStreamQuality.videoCodecId = quality.video_codec_id;
             publishStreamQuality.totalSendBytes = quality.total_send_bytes;
             publishStreamQuality.audioSendBytes = quality.audio_send_bytes;
             publishStreamQuality.videoSendBytes = quality.video_send_bytes;
@@ -1917,20 +1917,25 @@ namespace ZEGO
         private static ZegoPlayStreamQuality ChangePlayerQualityStructToClass(zego_play_stream_quality quality)
         {
             ZegoPlayStreamQuality playStreamQuality = new ZegoPlayStreamQuality();
-            playStreamQuality.quality = quality.quality;
             playStreamQuality.videoRecvFps = quality.video_recv_fps;
+            playStreamQuality.videoDejitterFps = quality.video_dejitter_fps;
             playStreamQuality.videoDecodeFps = quality.video_decode_fps;
             playStreamQuality.videoRenderFps = quality.video_render_fps;
             playStreamQuality.videoKbps = quality.video_kbps;
+            playStreamQuality.videoBreakRate = quality.video_break_rate;
             playStreamQuality.audioRecvFps = quality.audio_recv_fps;
+            playStreamQuality.audioDejitterFps = quality.audio_dejitter_fps;
             playStreamQuality.audioDecodeFps = quality.audio_decode_fps;
             playStreamQuality.audioRenderFps = quality.audio_render_fps;
             playStreamQuality.audioKbps = quality.audio_kbps;
+            playStreamQuality.audioBreakRate = quality.audio_break_rate;
             playStreamQuality.rtt = quality.rtt;
             playStreamQuality.packetLostRate = quality.packet_lost_rate;
             playStreamQuality.peerToPeerDelay = quality.peer_to_peer_delay;
-            playStreamQuality.peerToPeerPktLostRate = quality.peer_to_peer_packet_lost_rate;
+            playStreamQuality.peerToPeerPacketLostRate = quality.peer_to_peer_packet_lost_rate;
+            playStreamQuality.level = quality.level;
             playStreamQuality.delay = quality.delay;
+            playStreamQuality.videoCodecId = quality.video_codec_id;
             playStreamQuality.isHardwareDecode = quality.is_hardware_decode;
             playStreamQuality.totalRecvBytes = quality.total_recv_bytes;
             playStreamQuality.audioRecvBytes = quality.audio_recv_bytes;

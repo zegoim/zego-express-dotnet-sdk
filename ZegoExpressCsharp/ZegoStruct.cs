@@ -120,11 +120,16 @@ namespace ZEGO
 
         /// double
         public double packet_lost_rate;
-        /** Published stream quality level */
-        public ZegoStreamQuality quality;
+
+        /// zego_stream_quality_level
+        public ZegoStreamQuality  level;
+
         /// boolean
         [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool is_hardware_encode;
+
+        /// zego_video_codec_id
+        public ZegoVideoCodecId video_codec_id;
 
         /// double
         public double total_send_bytes;
@@ -182,6 +187,9 @@ namespace ZEGO
         public double video_recv_fps;
 
         /// double
+        public double video_dejitter_fps;
+
+        /// double
         public double video_decode_fps;
 
         /// double
@@ -191,7 +199,13 @@ namespace ZEGO
         public double video_kbps;
 
         /// double
+        public double video_break_rate;
+
+        /// double
         public double audio_recv_fps;
+
+        /// double
+        public double audio_dejitter_fps;
 
         /// double
         public double audio_decode_fps;
@@ -201,6 +215,9 @@ namespace ZEGO
 
         /// double
         public double audio_kbps;
+
+        /// double
+        public double audio_break_rate;
 
         /// int
         public int rtt;
@@ -214,7 +231,8 @@ namespace ZEGO
         /// double
         public double peer_to_peer_packet_lost_rate;
 
-        public ZegoStreamQuality quality;
+        /// zego_stream_quality_level
+        public ZegoStreamQuality level;
 
         /// int
         public int delay;
@@ -222,6 +240,9 @@ namespace ZEGO
         /// boolean
         [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool is_hardware_decode;
+
+        /// zego_video_codec_id
+        public ZegoVideoCodecId video_codec_id;
 
         /// double
         public double total_recv_bytes;
@@ -232,6 +253,7 @@ namespace ZEGO
         /// double
         public double video_recv_bytes;
     }
+
 
 
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]

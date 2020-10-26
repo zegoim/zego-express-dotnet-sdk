@@ -545,76 +545,97 @@ namespace ZEGO
 
     public class ZegoPlayStreamQuality
     {
-        /// zego_stream_quality
-        /** Published stream quality level */
-        public ZegoStreamQuality quality;
-
         /// double
-        /** Video reception frame rate. The unit of frame rate is f/s */
+        ///  /** Video receiving frame rate. The unit of frame rate is f/s */
         public double videoRecvFps;
 
         /// double
-        /** Video decoding frame rate. The unit of frame rate is f/s */
+        ///   /** Video dejitter frame rate. The unit of frame rate is f/s */
+        public double videoDejitterFps;
+
+        /// double
+        ///  /** Video decoding frame rate. The unit of frame rate is f/s */
         public double videoDecodeFps;
 
         /// double
-        /** Video rendering frame rate. The unit of frame rate is f/s */
+        ///   /** Video rendering frame rate. The unit of frame rate is f/s */
         public double videoRenderFps;
 
         /// double
-        /** Video bit rate in kbps */
+        ///     /** Video bit rate in kbps */
         public double videoKbps;
 
         /// double
-        /** Audio reception frame rate. The unit of frame rate is f/s */
+        ///   /** Video break rate, the unit is (number of breaks / every 10 seconds) */
+        public double videoBreakRate;
+
+        /// double
+        ///  /** Audio receiving frame rate. The unit of frame rate is f/s */
         public double audioRecvFps;
 
         /// double
-        /** Audio decoding frame rate. The unit of frame rate is f/s */
+        /// /** Audio dejitter frame rate. The unit of frame rate is f/s */
+        public double audioDejitterFps;
+
+        /// double
+        ///  /** Audio decoding frame rate. The unit of frame rate is f/s */
         public double audioDecodeFps;
 
         /// double
-        /** Audio rendering frame rate. The unit of frame rate is f/s */
+        /// /** Audio rendering frame rate. The unit of frame rate is f/s */
         public double audioRenderFps;
 
         /// double
-        /** Audio bit rate in kbps */
+        ///  /** Audio bit rate in kbps */
         public double audioKbps;
 
-        /// int
-        /** Server to local delay, in milliseconds */
+        /// double
+        ///  /** Audio break rate, the unit is (number of breaks / every 10 seconds) */
+        public double audioBreakRate;
+
+        /// int 
+        ///     /** Server to local delay, in milliseconds */
         public int rtt;
 
         /// double
-        /** Packet loss rate, in percentage, 0.0 ~ 1.0 */
+        ///    /** Packet loss rate, in percentage, 0.0 ~ 1.0 */
         public double packetLostRate;
 
         /// int
-        /** Delay from peer to peer, in milliseconds */
+        ///     /** Delay from peer to peer, in milliseconds */
         public int peerToPeerDelay;
 
         /// double
-        /** Packet loss rate from peer to peer, in percentage, 0.0 ~ 1.0 */
-        public double peerToPeerPktLostRate;
+        ///  /** Packet loss rate from peer to peer, in percentage, 0.0 ~ 1.0 */
+        public double peerToPeerPacketLostRate;
+
+        /// zego_stream_quality_level
+        ///  /** Published stream quality level */
+        public ZegoStreamQuality level;
 
         /// int
-        /** Delay after the data is received by the local end, in milliseconds */
+        ///  /** Delay after the data is received by the local end, in milliseconds */
         public int delay;
 
         /// boolean
-        /** Whether to enable hardware decoding */
+        ///     /** Whether to enable hardware decoding */
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool isHardwareDecode;
 
+        /// zego_video_codec_id
+        ///  /** Video codec ID */
+        public ZegoVideoCodecId videoCodecId;
+
         /// double
-        /** Total number of bytes received, including audio, video, SEI */
+        ///   /** Total number of bytes received, including audio, video, SEI */
         public double totalRecvBytes;
 
         /// double
-        /** Number of audio bytes received */
+        ///  /** Number of audio bytes received */
         public double audioRecvBytes;
 
         /// double
-        /** Number of video bytes received */
+        ///     /** Number of video bytes received */
         public double videoRecvBytes;
     }
 
@@ -622,9 +643,7 @@ namespace ZEGO
 
     public class ZegoPublishStreamQuality
     {
-        /// zego_stream_quality
-        /** Published stream quality level */
-        public ZegoStreamQuality quality;
+        
 
         /// double
         /** Video capture frame rate. The unit of frame rate is f/s */
@@ -662,9 +681,17 @@ namespace ZEGO
         /** Packet loss rate, in percentage, 0.0 ~ 1.0 */
         public double packetLostRate;
 
+
+        /// zego_stream_quality
+        /** Published stream quality level */
+        public ZegoStreamQuality level;
+
         /// boolean
         /** Whether to enable hardware encoding */
         public bool isHardwareEncode;
+
+        /** Video codec ID */
+        public ZegoVideoCodecId videoCodecId;
 
         /// double
         /** Total number of bytes sent, including audio, video, SEI */
