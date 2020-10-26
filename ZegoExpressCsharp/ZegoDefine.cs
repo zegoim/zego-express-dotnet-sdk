@@ -619,7 +619,6 @@ namespace ZEGO
 
         /// boolean
         ///     /** Whether to enable hardware decoding */
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool isHardwareDecode;
 
         /// zego_video_codec_id
