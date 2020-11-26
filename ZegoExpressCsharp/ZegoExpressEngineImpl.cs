@@ -1858,26 +1858,23 @@ namespace ZEGO
             zegoUser.userName = ZegoUtil.GetUTF8String(user.user_name);
             return zegoUser;
         }
-
-        public static void zego_on_room_stream_update([InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string roomId, ZegoUpdateType updateType, System.IntPtr streamInfoList, uint streamInfoCount, System.IntPtr userContext)
+       
+        public static void zego_on_room_stream_update([InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string roomId, ZegoUpdateType updateType, System.IntPtr streamInfoList, uint streamInfoCount, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string extend_data, System.IntPtr userContext)
         {
             if (enginePtr == null || enginePtr.onRoomStreamUpdate == null) return;
             zego_stream[] zego_streams = new zego_stream[streamInfoCount];
             ZegoUtil.GetStructListByPtr<zego_stream>(ref zego_streams, streamInfoList, streamInfoCount);//get StructLists by pointer
             List<ZegoStream> result = ChangeZegoStreamStructListToClassList(zego_streams);
-
-            string log = string.Format("onRoomStreamUpdate roomId:{0} updateType:{1} userCount{2}", roomId, updateType, streamInfoList);
-
+            string log = string.Format("onRoomStreamUpdate roomId:{0} updateType:{1} userCount{2} extend_data{3}", roomId, updateType, streamInfoCount, extend_data);
             context?.Post(new SendOrPostCallback((o) =>
             {
 
-                enginePtr?.onRoomStreamUpdate?.Invoke(roomId, updateType, result, streamInfoCount);
+                enginePtr?.onRoomStreamUpdate?.Invoke(roomId, updateType, result, extend_data);
 
             }), null);
-
             ZegoUtil.ZegoPrivateLog(0, log, false, 0);
-
         }
+
 
         private static List<ZegoStream> ChangeZegoStreamStructListToClassList(zego_stream[] streams)
         {
@@ -1935,6 +1932,7 @@ namespace ZEGO
             playStreamQuality.peerToPeerPacketLostRate = quality.peer_to_peer_packet_lost_rate;
             playStreamQuality.level = quality.level;
             playStreamQuality.delay = quality.delay;
+            playStreamQuality.avTimestampDiff = quality.av_times_tamp_diff;
             playStreamQuality.videoCodecId = quality.video_codec_id;
             playStreamQuality.isHardwareDecode = quality.is_hardware_decode;
             playStreamQuality.totalRecvBytes = quality.total_recv_bytes;
@@ -3060,7 +3058,15 @@ namespace ZEGO
             }
             return result;
         }
-
+        public override void SetPlayStreamVideoLayer(string streamID, ZegoPlayerVideoLayer videoLayer)
+        {
+            if (enginePtr != null)
+            {
+                int result = IExpressPlayerInternal.zego_express_set_play_stream_video_layer(streamID, videoLayer);
+                string log = string.Format("SetPlayStreamVideoLayer streamId:{0} videoLayer:{1} result:{2}", streamID, videoLayer, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PLAYER);
+            }
+        }
 
     }
 }

@@ -61,6 +61,12 @@ namespace ZEGO
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_player_recv_sei_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_player_recv_sei_callback(zego_on_player_recv_sei callback_func, System.IntPtr user_context);
 
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_play_stream_video_layer", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_set_play_stream_video_layer([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoPlayerVideoLayer video_layer);
+
+
+
     }
 }
 

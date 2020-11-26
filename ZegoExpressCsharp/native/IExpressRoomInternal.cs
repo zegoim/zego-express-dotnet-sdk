@@ -14,7 +14,7 @@ namespace ZEGO
 
 
         [UnmanagedFunctionPointer(ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_room_stream_update([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string room_id, ZegoUpdateType update_type, System.IntPtr stream_info_list, uint stream_info_count, System.IntPtr user_context);
+        public delegate void zego_on_room_stream_update([InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string room_id, ZegoUpdateType update_type, System.IntPtr stream_info_list, uint stream_info_count, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string extend_data, System.IntPtr user_context);
 
         [UnmanagedFunctionPointer(ZEGO_CALINGCONVENTION)]
         public delegate void zego_on_room_stream_extra_info_update([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string room_id,System.IntPtr stream_info_list, uint stream_info_count, System.IntPtr user_context);

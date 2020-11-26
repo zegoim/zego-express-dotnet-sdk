@@ -29,17 +29,18 @@ namespace ZEGO
 
 
         /**
-         * Notification of increase or decrease of streams published by other users in the same room
-         *
-         * When a user logs in to a room for the first time, there are other users in the room who are publishing streams, and will receive a stream list of the added type.
-         * When the user is already in the room, other users in this room will trigger this callback to notify the changed stream list when adding or deleting streams.
-         * Developers can use this callback to determine if there are other users in the same room who have added or stopped streaming, in order to implement active play stream [startPlayingStream] or active stop playing stream [stopPlayingStream], and use simultaneous Changes to Streaming render UI widget;
-         *
-         * @param roomID Room ID where the user is logged in, a string of up to 128 bytes in length.
-         * @param updateType Update type (add/delete)
-         * @param streamList Updated stream list
-         */
-        public delegate void OnRoomStreamUpdate(string roomId, ZegoUpdateType updateType, List<ZegoStream> streamInfoList, uint streamInfoCount);
+        * The callback triggered when the number of streams published by the other users in the same room increases or decreases.
+        *
+        * When a user logs in to a room for the first time, there are other users in the room who are publishing streams, and will receive a stream list of the added type.
+        * When the user is already in the room, other users in this room will trigger this callback to notify the changed stream list when adding or deleting streams.
+        * Developers can use this callback to determine if there are other users in the same room who have added or stopped streaming, in order to implement active play stream [startPlayingStream] or active stop playing stream [stopPlayingStream], and use simultaneous Changes to Streaming render UI widget;
+        *
+        * @param roomID Room ID where the user is logged in, a string of up to 128 bytes in length.
+        * @param updateType Update type (add/delete)
+        * @param streamList Updated stream list
+        * @param extendedData Extended information with stream updates.
+        */
+        public delegate void OnRoomStreamUpdate(string roomID, ZegoUpdateType updateType, List<ZegoStream> streamList, string extendedData);
 
 
         /**

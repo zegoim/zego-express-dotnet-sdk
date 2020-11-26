@@ -774,6 +774,20 @@ namespace ZEGO
         /// </param>
         public abstract void StopRecordingCapturedData(ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
+
+
+        /**
+         * Set the selected video layer of playing stream.
+         *
+         * When the publisher has set the codecID to SVC through [setVideoConfig], the player can dynamically set whether to use the standard layer or the base layer (the resolution of the base layer is one-half of the standard layer)
+         * Under normal circumstances, when the network is weak or the rendered UI form is small, you can choose to use the video that plays the base layer to save bandwidth.
+         * It can be set before and after playing stream.
+         *
+         * @param streamID Stream ID.
+         * @param videoLayer Video layer of playing stream. AUTO by default.
+         */
+        public abstract void SetPlayStreamVideoLayer(string streamID, ZegoPlayerVideoLayer videoLayer);
+
         public OnCustomVideoCaptureStart onCustomVideoCaptureStart;
         public OnCustomVideoCaptureStop onCustomVideoCaptureStop;
         public OnRoomStateUpdate onRoomStateUpdate;
