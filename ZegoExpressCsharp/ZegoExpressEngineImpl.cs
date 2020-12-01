@@ -1432,8 +1432,12 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_canvas canvas = ChangeZegoCanvasClassToStruct(zegoCanvas);
-                IntPtr ptr = ZegoUtil.GetStructPointer(canvas);
+                IntPtr ptr = IntPtr.Zero;
+                if (zegoCanvas != null)
+                {
+                    zego_canvas canvas = ChangeZegoCanvasClassToStruct(zegoCanvas);
+                    ptr = ZegoUtil.GetStructPointer(canvas);
+                }
                 int result = IExpressPublisherInternal.zego_express_start_preview(ptr, channel);
                 ZegoUtil.ReleaseStructPointer(ptr);
                 string log = string.Format("StartPreview  channel:{0} result:{1}", channel, result);
@@ -1446,7 +1450,7 @@ namespace ZEGO
         {
             if (zegoCanvas == null)
             {
-                throw new Exception("StartPreview ZegoCanvas should not be null");
+                throw new Exception("ZegoCanvas should not be null");
             }
             else
             {
@@ -1472,8 +1476,12 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 int result = 0;
-                zego_canvas zegoCanvas = ChangeZegoCanvasClassToStruct(canvas);
-                IntPtr ptr = ZegoUtil.GetStructPointer(zegoCanvas);
+                IntPtr ptr = IntPtr.Zero;
+                if (canvas != null)
+                {
+                    zego_canvas zegoCanvas = ChangeZegoCanvasClassToStruct(canvas);
+                    ptr = ZegoUtil.GetStructPointer(zegoCanvas);
+                }
                 if (config != null)
                 {
                     zego_player_config zegoPlayerConfig = ChangeZegoPlayerConfigClassToStruct(config);
