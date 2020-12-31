@@ -34,6 +34,9 @@ namespace ZEGO
         // 日志属性，默认为空（size 为 5M，路径为默认k路径）
         public IntPtr log_config;
 
+        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
+        public string advanced_config;//结构体new 的时候string默认为null,引用类型
+
         // 外部采集主通道选项设置，默认为空（不开启主通道外部采集）
         public IntPtr custom_video_capture_config;
 
@@ -42,10 +45,6 @@ namespace ZEGO
 
         // 外部渲染选项设置，默认为空（不开启外部渲染）
         public IntPtr custom_video_render_config;
-
-        // 隐藏功能开关。多个key-value使用';'隔开，如"config1=A;config2=B"
-        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
-        public string advanced_config;//结构体new 的时候string默认为null,引用类型
     }
     public struct zego_user
     {

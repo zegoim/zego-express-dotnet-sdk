@@ -61,8 +61,6 @@ namespace ZEGO
         public abstract void SetVolume(int volume);
 
         public abstract void SetProgressInterval(ulong millisecond);
-        [Obsolete("Please use GetPlayVolume or GetPublishVolume instead")]
-        public abstract int GetVolume();
         public abstract ulong GetTotalDuration();
         public abstract ulong GetCurrentProgress();
 

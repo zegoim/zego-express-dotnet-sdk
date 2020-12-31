@@ -59,10 +59,7 @@ namespace ZEGO
         public static extern int zego_express_media_player_set_volume(int volume, ZegoMediaPlayerInstanceIndex instance_index);
 
 
-        /// Return Type: int
-        ///instance_index: zego_mediaplayer_instance_index
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_get_volume(ZegoMediaPlayerInstanceIndex instance_index);
+        
 
 
         /// Return Type: unsigned int

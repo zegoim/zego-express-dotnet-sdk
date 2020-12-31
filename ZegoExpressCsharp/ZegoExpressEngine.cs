@@ -819,8 +819,6 @@ namespace ZEGO
         public OnCapturedVideoFrameRawData onCapturedVideoFrameRawData;
         public OnRemoteVideoFrameRawData onRemoteVideoFrameRawData;
         public OnCapturedAudioData onCapturedAudioData;
-        [Obsolete("Please use onPlaybackAudioData instead")]
-        public OnRemoteAudioData onRemoteAudioData;
         public OnMixedAudioData onMixedAudioData;
         public OnPlaybackAudioData onPlaybackAudioData;
         public OnCapturedDataRecordStateUpdate onCapturedDataRecordStateUpdate;

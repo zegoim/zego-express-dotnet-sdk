@@ -19,8 +19,7 @@ namespace ZEGO
         ///data_length: unsigned int
         ///param: zego_audio_frame_param
         ///user_context: void*
-        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_remote_audio_data(IntPtr  data, uint data_length, zego_audio_frame_param param, System.IntPtr user_context);
+      
 
         /// Return Type: void
         ///data: char*
@@ -43,8 +42,7 @@ namespace ZEGO
         /// Return Type: void
         ///callback_func: zego_on_remote_audio_data
         ///user_context: void*
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_remote_audio_data_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_register_remote_audio_data_callback(zego_on_remote_audio_data callback_func, System.IntPtr user_context);
+       
 
 
         /// Return Type: void

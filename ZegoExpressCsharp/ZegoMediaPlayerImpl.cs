@@ -65,11 +65,7 @@ namespace ZEGO
         {
             ZegoExpressEngineImpl.SetProgressInterval(this, millisecond);
         }
-        [Obsolete("Please use GetPlayVolume or GetPublishVolume instead")]
-        public override int GetVolume()
-        {
-            return ZegoExpressEngineImpl.GetVolume(this);
-        }
+       
         public override ulong GetTotalDuration()
         {
             return ZegoExpressEngineImpl.GetTotalDuration(this);

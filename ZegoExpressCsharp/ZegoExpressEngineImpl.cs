@@ -73,7 +73,6 @@ namespace ZEGO
         private static IExpressCustomVideoInternal.zego_on_custom_video_capture_start zegoOnCustomVideoCaptureStart;
         private static IExpressCustomVideoInternal.zego_on_custom_video_capture_stop zegoOnCustomVideoCaptureStop;
         private static IExpressCustomAudioIO.zego_on_captured_audio_data zegoOnCapturedAudioData;
-        private static IExpressCustomAudioIO.zego_on_remote_audio_data zegoOnRemoteAudioData;
         private static IExpressCustomAudioIO.zego_on_mixed_audio_data zegoOnMixedAudioData;
         private static IExpressRecordInternal.zego_on_captured_data_record_state_update zegoOnCapturedDataRecordStateUpdate;
         private static IExpressRecordInternal.zego_on_captured_data_record_progress_update zegoOnCapturedDataRecordProgressUpdate;
@@ -330,11 +329,6 @@ namespace ZEGO
 
                         zegoOnCapturedAudioData = new IExpressCustomAudioIO.zego_on_captured_audio_data(zego_on_captured_audio_data);
                         IExpressCustomAudioIO.zego_register_captured_audio_data_callback(zegoOnCapturedAudioData, IntPtr.Zero);
-
-
-                        zegoOnRemoteAudioData = new IExpressCustomAudioIO.zego_on_remote_audio_data(zego_on_remote_audio_data);
-                        IExpressCustomAudioIO.zego_register_remote_audio_data_callback(zegoOnRemoteAudioData, IntPtr.Zero);
-
 
                         zegoOnMixedAudioData = new IExpressCustomAudioIO.zego_on_mixed_audio_data(zego_on_mixed_audio_data);
                         IExpressCustomAudioIO.zego_register_mixed_audio_data_callback(zegoOnMixedAudioData, IntPtr.Zero);
@@ -1260,18 +1254,7 @@ namespace ZEGO
             return (int)index;
         }
 
-        public static int GetVolume(ZegoMediaPlayer zegoMediaPlayer)
-        {
-            int result = -1;
-            if (enginePtr != null)
-            {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
-                result = IExpressMediaPlayerInternal.zego_express_media_player_get_volume(index);
-                string log = string.Format("MediaPlayer GetVolume index:{0} result:{1} ", index, result);
-                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
-            }
-            return result;
-        }
+      
 
         public static void EnableAux(ZegoMediaPlayer zegoMediaPlayer, bool enable)
         {
@@ -2410,13 +2393,7 @@ namespace ZEGO
             enginePtr.onCapturedAudioData(data, data_length, zegoAudioFrameParam);
 
         }
-        public static void zego_on_remote_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, System.IntPtr user_context)
-        {
-            if (enginePtr == null || enginePtr.onRemoteAudioData == null) return;
-            //Console.WriteLine(string.Format("onRemoteAudioData data_length:{0}  ", data_length));
-            ZegoAudioFrameParam zegoAudioFrameParam = ChangeZegoAudioFrameStructToClass(param);
-            enginePtr.onRemoteAudioData(data, data_length, zegoAudioFrameParam);
-        }
+     
         public static void zego_on_mixed_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, System.IntPtr user_context)
         {
             if (enginePtr == null || enginePtr.onMixedAudioData == null) return;
