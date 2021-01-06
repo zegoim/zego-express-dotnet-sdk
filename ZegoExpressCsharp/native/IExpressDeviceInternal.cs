@@ -106,5 +106,77 @@ namespace ZEGO
         ///device_id: char*
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_use_audio_device", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_use_audio_device(ZegoAudioDeviceType device_type, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string device_id);
+
+
+
+        /// Return Type: boolean
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_is_microphone_muted", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [return: MarshalAs(UnmanagedType.I1)]
+        public static extern bool zego_express_is_microphone_muted();
+
+
+        /// Return Type: boolean
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_is_speaker_muted", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [return: MarshalAs(UnmanagedType.I1)]
+        public static extern bool zego_express_is_speaker_muted();
+
+
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_audio_capture_device", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_enable_audio_capture_device([MarshalAs(UnmanagedType.I1)] bool enable);
+
+
+        /// Return Type: int
+        ///enable: boolean
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_headphone_monitor", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_enable_headphone_monitor([MarshalAs(UnmanagedType.I1)] bool enable);
+
+
+        /// Return Type: int
+        ///volume: int
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_headphone_monitor_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_set_headphone_monitor_volume(int volume);
+
+
+
+        /// Return Type: void
+        ///error_code: int
+        ///device_name: char*
+        ///user_context: void*
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public delegate void zego_on_device_error(int error_code, [In()][MarshalAs(UnmanagedType.LPStr)] string device_name, System.IntPtr user_context);
+
+        /// Return Type: void
+        ///stream_id: char*
+        ///state: zego_remote_device_state
+        ///user_context: void*
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public delegate void zego_on_remote_camera_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, System.IntPtr user_context);
+
+        /// Return Type: void
+        ///stream_id: char*
+        ///state: zego_remote_device_state
+        ///user_context: void*
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public delegate void zego_on_remote_mic_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, System.IntPtr user_context);
+
+        /// Return Type: void
+        ///callback_func: zego_on_device_error
+        ///user_context: void*
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_device_error_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_device_error_callback(zego_on_device_error callback_func, System.IntPtr user_context);
+
+
+        /// Return Type: void
+        ///callback_func: zego_on_remote_camera_state_update
+        ///user_context: void*
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_remote_camera_state_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_remote_camera_state_update_callback(zego_on_remote_camera_state_update callback_func, System.IntPtr user_context);
+
+
+        /// Return Type: void
+        ///callback_func: zego_on_remote_mic_state_update
+        ///user_context: void*
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_remote_mic_state_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_remote_mic_state_update_callback(zego_on_remote_mic_state_update callback_func, System.IntPtr user_context);
     }
 }

@@ -788,6 +788,60 @@ namespace ZEGO
          */
         public abstract void SetPlayStreamVideoLayer(string streamID, ZegoPlayerVideoLayer videoLayer);
 
+
+
+        /**
+         * Checks whether the microphone is muted.
+         *
+         * Can be used with [muteMicrophone], determine whether the microphone is muted.
+         *
+         * @return Whether the microphone is muted; true: the microphone is muted; false: the microphone is enable (not muted)
+         */
+        public abstract bool IsMicrophoneMuted();
+
+        /**
+        * Checks whether the audio output speaker is muted.
+        *
+        * Can be used with [muteSpeaker], determine whether the speaker audio output is muted.
+        *
+        * @return Whether the speaker is muted; true: the speaker is muted; false: the speaker is enable (not muted)
+        */
+        public abstract bool IsSpeakerMuted();
+
+
+      
+
+        /**
+        * Enables or disables the audio capture device.
+        *
+        * This function is used to control whether to release the audio collection device. When the audio collection device is turned off, the SDK will no longer occupy the audio device. Of course, if the stream is being published at this time, there is no audio data.
+        * Occupying the audio capture device and giving up Occupying the audio device is a relatively heavy operation, and the [muteMicrophone] function is generally recommended.
+        *
+        * @param enable Whether to enable the audio capture device, true: disable audio capture device, false: enable audio capture device
+        */
+        public abstract void EnableAudioCaptureDevice(bool enable);
+
+
+        /**
+         * Enables or disables headphone monitoring.
+         *
+         * enable/disable headphone monitor, this setting takes effect when the headset is connected.
+         *
+         * @param enable Whether to use headphone monitor, true: enable, false: disable
+         */
+        public abstract void EnableHeadphoneMonitor(bool enable);
+
+        /**
+         * Sets the headphone monitor volume.
+         *
+         * set headphone monitor volume, this setting takes effect when the headset is connected.
+         *
+         * @param volume headphone monitor volume, range from 0 to 200, 100 as default
+         */
+        public abstract void SetHeadphoneMonitorVolume(int volume);
+
+
+
         public OnCustomVideoCaptureStart onCustomVideoCaptureStart;
         public OnCustomVideoCaptureStop onCustomVideoCaptureStop;
         public OnRoomStateUpdate onRoomStateUpdate;
@@ -823,5 +877,8 @@ namespace ZEGO
         public OnPlaybackAudioData onPlaybackAudioData;
         public OnCapturedDataRecordStateUpdate onCapturedDataRecordStateUpdate;
         public OnCapturedDataRecordProgressUpdate onCapturedDataRecordProgressUpdate;
+        public OnDeviceError onDeviceError;
+        public OnRemoteCameraStateUpdate onRemoteCameraStateUpdate;
+        public OnRemoteMicStateUpdate onRemoteMicStateUpdate;
     }
 }

@@ -1275,4 +1275,38 @@ namespace ZEGO
         /** Set the resolution to 1920x1080, the default is 15 fps, the code rate is 3000 kbps */
         Preset1080P
     }
+    /** Remote device status. */
+    public enum ZegoRemoteDeviceState
+    {
+        /** Device on */
+        Open,
+        /** General device error */
+        GenericError,
+        /** Invalid device ID */
+        InvalidID,
+        /** No permission */
+        NoAuthorization,
+        /** Captured frame rate is 0 */
+        ZeroFPS,
+        /** The device is occupied */
+        InUseByOther,
+        /** The device is not plugged in or unplugged */
+        Unplugged,
+        /** The system needs to be restarted */
+        RebootRequired,
+        /** System media services stop, such as under the iOS platform, when the system detects that the current pressure is huge (such as playing a lot of animation), it is possible to disable all media related services. */
+        SystemMediaServicesLost,
+        /** Capturing disabled */
+        Disable,
+        /** The remote device is muted */
+        Mute,
+        /** The device is interrupted, such as a phone call interruption, etc. */
+        Interruption,
+        /** There are multiple apps at the same time in the foreground, such as the iPad app split screen, the system will prohibit all apps from using the camera. */
+        InBackground,
+        /** CDN server actively disconnected */
+        MultiForegroundApp,
+        /** The system is under high load pressure and may cause abnormal equipment. */
+        BySystemPressure
+    }
 }

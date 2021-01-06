@@ -77,6 +77,9 @@ namespace ZEGO
         private static IExpressRecordInternal.zego_on_captured_data_record_state_update zegoOnCapturedDataRecordStateUpdate;
         private static IExpressRecordInternal.zego_on_captured_data_record_progress_update zegoOnCapturedDataRecordProgressUpdate;
         private static IExpressCustomAudioIO.zego_on_playback_audio_data zegoOnPlaybackAudioData;
+        private static IExpressDeviceInternal.zego_on_device_error zegoOnDeviceError;
+        private static IExpressDeviceInternal.zego_on_remote_camera_state_update zegoOnRemoteCameraStateUpdate;
+        private static IExpressDeviceInternal.zego_on_remote_mic_state_update zegoOnRemoteMicStateUpdate;
         private ArrayList arrayList;
         public static new void SetEngineConfig(ZegoEngineConfig config)
         {
@@ -341,6 +344,17 @@ namespace ZEGO
 
                         zegoOnCapturedDataRecordProgressUpdate = new IExpressRecordInternal.zego_on_captured_data_record_progress_update(zego_on_captured_data_record_progress_update);
                         IExpressRecordInternal.zego_register_captured_data_record_progress_update_callback(zegoOnCapturedDataRecordProgressUpdate, IntPtr.Zero);
+
+
+                        zegoOnDeviceError = new IExpressDeviceInternal.zego_on_device_error(zego_on_device_error);
+                        IExpressDeviceInternal.zego_register_device_error_callback(zegoOnDeviceError, IntPtr.Zero);
+
+
+                        zegoOnRemoteCameraStateUpdate = new IExpressDeviceInternal.zego_on_remote_camera_state_update(zego_on_remote_camera_state_update);
+                        IExpressDeviceInternal.zego_register_remote_camera_state_update_callback(zegoOnRemoteCameraStateUpdate, IntPtr.Zero);
+
+                        zegoOnRemoteMicStateUpdate = new IExpressDeviceInternal.zego_on_remote_mic_state_update(zego_on_remote_mic_state_update);
+                        IExpressDeviceInternal.zego_register_remote_mic_state_update_callback(zegoOnRemoteMicStateUpdate,IntPtr.Zero);
 
                         int createResult = IExpressEngineInternal.zego_express_engine_init(appId, appSign, isTestEnv, scenario);
                         if (createResult != 0)
@@ -3051,6 +3065,98 @@ namespace ZEGO
                 string log = string.Format("SetPlayStreamVideoLayer streamId:{0} videoLayer:{1} result:{2}", streamID, videoLayer, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PLAYER);
             }
+        }
+        public override bool IsMicrophoneMuted()
+        {
+            bool result = false;
+            if (enginePtr != null)
+            {
+                result = IExpressDeviceInternal.zego_express_is_microphone_muted();
+                string log = string.Format("IsMicrophoneMuted  result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            }
+            return result;
+        }
+        public override bool IsSpeakerMuted()
+        {
+            bool result = false;
+            if (enginePtr != null)
+            {
+                result = IExpressDeviceInternal.zego_express_is_speaker_muted();
+                string log = string.Format("IsSpeakerMuted  result:{0}", result);
+                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            }
+            return result;
+        }
+        public override void EnableAudioCaptureDevice(bool enable)
+        {
+            if (enginePtr != null)
+            {
+                int result = IExpressDeviceInternal.zego_express_enable_audio_capture_device(enable);
+                string log = string.Format("EnableAudioCaptureDevice  result:{0} enable:{1}", result, enable);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
+            }
+        }
+
+
+        public override void EnableHeadphoneMonitor(bool enable)
+        {
+            if (enginePtr != null)
+            {
+                int result = IExpressDeviceInternal.zego_express_enable_headphone_monitor(enable);
+                string log = string.Format("EnableHeadphoneMonitor  result:{0} enable:{1}", result, enable);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
+            }
+        }
+
+        public override void SetHeadphoneMonitorVolume(int volume)
+        {
+            if (enginePtr != null)
+            {
+                int result = IExpressDeviceInternal.zego_express_set_headphone_monitor_volume(volume);
+                string log = string.Format("SetHeadphoneMonitorVolume  result:{0} volume:{1}", result, volume);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
+            }
+        }
+
+       
+        public static void zego_on_device_error(int error_code, [In()][MarshalAs(UnmanagedType.LPStr)] string device_name, System.IntPtr user_context)
+        {
+
+            if (enginePtr == null || enginePtr.onDeviceError == null) return;
+            string log = string.Format("zego_on_device_error  error_code:{0} device_name:{1}", error_code, device_name);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+                enginePtr?.onDeviceError?.Invoke(error_code, device_name);
+
+            }), null);
+        }
+   
+        public static void zego_on_remote_camera_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, System.IntPtr user_context)
+        {
+
+            if (enginePtr == null || enginePtr.onRemoteCameraStateUpdate == null) return;
+            string log = string.Format("zego_on_remote_camera_state_update  stream_id:{0} state:{1}", stream_id, state);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+                enginePtr?.onRemoteCameraStateUpdate?.Invoke(stream_id, state);
+
+            }), null);
+        }
+
+        public static void zego_on_remote_mic_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, System.IntPtr user_context)
+        {
+
+            if (enginePtr == null || enginePtr.onRemoteMicStateUpdate == null) return;
+            string log = string.Format("zego_on_remote_mic_state_update  stream_id:{0} state:{1}", stream_id, state);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+                enginePtr?.onRemoteMicStateUpdate?.Invoke(stream_id, state);
+
+            }), null);
         }
 
     }

@@ -493,5 +493,39 @@ namespace ZEGO
         /// Context of user.
         /// </param>
         public delegate void OnCapturedDataRecordProgressUpdate(ZegoDataRecordProgress progress, ZegoDataRecordConfig config, ZegoPublishChannel channel);
+
+
+
+        /**
+        * The callback triggered when a device exception occurs.
+        *
+        * This callback is triggered when an exception occurs when reading or writing the audio and video device.
+        *
+        * @param errorCode The error code corresponding to the status change of the playing stream, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+        * @param deviceName device name
+        */
+        public delegate void OnDeviceError(int errorCode, string deviceName);
+
+        /**
+         * The callback triggered when the state of the remote camera changes.
+         *
+         * When the state of the remote camera device changes, such as switching the camera, by monitoring this callback, it is possible to obtain an event related to the far-end camera, which can be used to prompt the user that the video may be abnormal.
+         * Developers of 1v1 education scenarios or education small class scenarios and similar scenarios can use this callback notification to determine whether the camera device of the remote publishing stream device is working normally, and preliminary understand the cause of the device problem according to the corresponding state.
+         *
+         * @param streamID Stream ID
+         * @param state Remote camera status
+         */
+        public delegate void OnRemoteCameraStateUpdate(string streamID, ZegoRemoteDeviceState state);
+
+        /**
+         * The callback triggered when the state of the remote microphone changes.
+         *
+         * When the state of the remote microphone device is changed, such as switching a microphone, etc., by listening to the callback, it is possible to obtain an event related to the remote microphone, which can be used to prompt the user that the audio may be abnormal.
+         * Developers of 1v1 education scenarios or education small class scenarios and similar scenarios can use this callback notification to determine whether the microphone device of the remote publishing stream device is working normally, and preliminary understand the cause of the device problem according to the corresponding state.
+         *
+         * @param streamID Stream ID
+         * @param state Remote microphone status
+         */
+        public delegate void OnRemoteMicStateUpdate(string streamID, ZegoRemoteDeviceState state);
     }
 }
