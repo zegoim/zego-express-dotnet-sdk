@@ -16,7 +16,7 @@ namespace ZEGO
     // 外部采集主/辅助通道选项设置，默认为空（不开启主/辅助通道外部采集）
     public struct zego_custom_video_capture_config
     {
-        public ZegoVideoBufferType type;
+        public ZegoVideoBufferType buffer_type;
     }
     // 外部渲染选项设置，默认为空（不开启外部渲染）
     public struct zego_custom_video_render_config
@@ -24,7 +24,7 @@ namespace ZEGO
         /** 自定义视频渲染视频帧数据类型 */
         public ZegoVideoBufferType type;
         /** 自定义视频渲染视频帧数据格式 */
-        public ZegoCustomVideoRenderSeries series;
+        public ZegoVideoFrameFormatSeries series;
         /** 是否在自定义视频渲染的同时，引擎也渲染，默认为 [false] */
         [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool is_internal_render;
@@ -48,10 +48,10 @@ namespace ZEGO
     }
     public struct zego_user
     {
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_USERID_LEN)]
-        public byte[] user_id;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_USERNAME_LEN)]
-        public byte[] user_name;
+        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_USERID_LEN)]
+        public string user_id;
+        [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_USERNAME_LEN)]
+        public string user_name;
 
     }
     public struct zego_stream
@@ -121,14 +121,14 @@ namespace ZEGO
         public double packet_lost_rate;
 
         /// zego_stream_quality_level
-        public ZegoStreamQuality  level;
+        public ZegoStreamQualityLevel level;
 
         /// boolean
         [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
         public bool is_hardware_encode;
 
         /// zego_video_codec_id
-        public ZegoVideoCodecId video_codec_id;
+        public ZegoVideoCodecID video_codec_id;
 
         /// double
         public double total_send_bytes;
@@ -162,7 +162,7 @@ namespace ZEGO
 
 
         /// zego_video_codec_id
-        public ZegoVideoCodecId video_codec_id;
+        public ZegoVideoCodecID video_codec_id;
     }
 
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
@@ -176,7 +176,7 @@ namespace ZEGO
         public ZegoAudioChannel channel;
 
         /// ZegoAudioCodecId
-        public ZegoAudioCodecId audio_codec_id;
+        public ZegoAudioCodecID audio_codec_id;
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct zego_play_stream_quality
@@ -231,7 +231,7 @@ namespace ZEGO
         public double peer_to_peer_packet_lost_rate;
 
         /// zego_stream_quality_level
-        public ZegoStreamQuality level;
+        public ZegoStreamQualityLevel level;
 
         /// int
         public int delay;
@@ -244,7 +244,7 @@ namespace ZEGO
         public bool is_hardware_decode;
 
         /// zego_video_codec_id
-        public ZegoVideoCodecId video_codec_id;
+        public ZegoVideoCodecID video_codec_id;
 
         /// double
         public double total_recv_bytes;
@@ -289,12 +289,17 @@ namespace ZEGO
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct zego_player_config
     {
+        public ZegoStreamResourceMode resource_mode;
 
         /// zego_cdn_config*
         public System.IntPtr cdn_config;
 
         /// zego_player_video_layer
         public ZegoPlayerVideoLayer video_layer;
+
+        /// char[128]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN)]
+        public string room_id;
     }
 
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
@@ -318,10 +323,10 @@ namespace ZEGO
         public string url;
 
         /// zego_stream_relay_cdn_state
-        public ZegoStreamRelayCdnState cdn_state;
+        public ZegoStreamRelayCDNState cdn_state;
 
         /// zego_stream_relay_cdn_update_reason
-        public ZegoStreamRelayCdnUpdateReason update_reason;
+        public ZegoStreamRelayCDNUpdateReason update_reason;
 
         /// unsigned int
         public ulong state_time;
@@ -338,6 +343,19 @@ namespace ZEGO
         /// float
         public float sound_level;
     }
+
+    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
+    public struct zego_sound_level_config
+    {
+        /** Monitoring time period of the sound level, in milliseconds, has a value range of [100, 3000]. Default is 100 ms. */
+        public uint millisecond;
+
+        /** Set whether the sound level callback includes the VAD detection result. */
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
+        public bool enable_vad;
+
+    };
+
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
     public struct zego_audio_spectrum_info
     {
@@ -383,19 +401,19 @@ namespace ZEGO
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct zego_rect
     {
-
-        /// int
+        /** The value at the left of the horizontal axis of the rectangle */
         public int left;
 
-        /// int
+        /** The value at the top of the vertical axis of the rectangle */
         public int top;
 
-        /// int
+        /** The value at the right of the horizontal axis of the rectangle */
         public int right;
 
-        /// int
+        /** The value at the bottom of the vertical axis of the rectangle */
         public int bottom;
-    }
+
+    };
 
 
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
@@ -411,6 +429,20 @@ namespace ZEGO
         /// int
         public int background_color;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct zego_publisher_config
+    {
+        /** The Room ID */
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN)]
+        public string room_id;
+
+        /** Whether to synchronize the network time when pushing streams. 1 is synchronized with 0 is not synchronized. And must be used with setStreamAlignmentProperty. It is used to align multiple streams at the mixed stream service or streaming end, such as the chorus scene of KTV. */
+        //int force_synchronous_network_time;
+
+    };
+
+
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct zego_audio_frame_param
     {
@@ -419,7 +451,7 @@ namespace ZEGO
         /// ZegoAudioChannel
         public ZegoAudioChannel channel;
 
-        
+
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
     public struct zego_mixer_task
@@ -462,9 +494,6 @@ namespace ZEGO
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
     public struct zego_mixer_input
     {
-
-       
-
         /// char[256]
         [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN)]
         public string stream_id;
@@ -475,13 +504,19 @@ namespace ZEGO
 
         /// unsigned int
         public uint sound_level_id;
+
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)]
+        public bool is_audio_focus;
+
+        /** The direction of the audio. Valid direction is between 0 to 360. Set -1 means disable. Default value is -1 */
+        public int audio_direction;
     }
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
     public struct zego_mixer_output
     {
 
         /// char[1024]
-       [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
         public string target;
     }
 
@@ -500,7 +535,7 @@ namespace ZEGO
         /// int
         public int bitrate;
 
-        
+
     }
 
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
@@ -514,35 +549,39 @@ namespace ZEGO
         public ZegoAudioChannel channel;
 
         /// ZegoAudioCodecId
-        public ZegoAudioCodecId audio_codec_id;
+        public ZegoAudioCodecID audio_codec_id;
     }
-    
+
+    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
     public struct zego_device_info
     {
 
         /// char[]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
-        public byte[] device_id;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
+        public string device_id;
 
         /// char[]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
-        public byte[] device_name;
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
+        public string device_name;
 
     }
     public struct zego_custom_audio_config
     {
         /** Audio capture source type */
-        public  ZegoAudioSourceType source_type;        
+        public ZegoAudioSourceType source_type;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct zego_data_record_config
     {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
-        public byte[] file_path;
 
+        /// char[1024]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
+        public string file_path;
+
+        /// zego_data_record_type
         public ZegoDataRecordType record_type;
-    };
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct zego_data_record_progress
@@ -556,5 +595,30 @@ namespace ZEGO
         /// Current recording file size in byte
         /// </summary>
         public ulong current_file_size;
+    }
+
+    /**
+     * Profile for create engine
+     *
+     * Profile for create engine
+     */
+    [StructLayout(LayoutKind.Sequential)]
+    public struct zego_engine_profile
+    {
+        /** Application ID issued by ZEGO for developers, please apply from the ZEGO Admin Console https://console-express.zego.im The value ranges from 0 to 4294967295. */
+        public uint app_id;
+
+        /** Application signature for each AppID, please apply from the ZEGO Admin Console. Application signature is a 64 character string. Each character has a range of '0' ~ '9', 'a' ~ 'z'. */
+        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_APPSIGN_LEN + 1)]
+        public string app_sign;
+
+        /** The application scenario. Developers can choose one of ZegoScenario based on the scenario of the app they are developing, and the engine will preset a more general setting for specific scenarios based on the set scenario. After setting specific scenarios, developers can still call specific functions to set specific parameters if they have customized parameter settings.The recommended configuration for different application scenarios can be referred to: https://doc-zh.zego.im/faq/profile_difference. */
+        public ZegoScenario scenario;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct zego_custom_video_process_config
+    {
+        public ZegoVideoBufferType buffer_type;
     }
 }

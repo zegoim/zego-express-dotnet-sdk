@@ -51,8 +51,6 @@ namespace ZEGO
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_publishing_stream", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_start_publishing_stream([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, ZegoPublishChannel channel);
 
-        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_publishing_stream_with_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_start_publishing_stream_with_config([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, zego_publisher_config config, ZegoPublishChannel channel);
 
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_stop_publishing_stream", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
@@ -222,15 +220,6 @@ namespace ZEGO
         ///user_context: void*
         [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_publisher_update_stream_extra_info_result_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_publisher_update_stream_extra_info_result_callback(zego_on_publisher_update_stream_extra_info_result callback_func, System.IntPtr user_context);
-
-        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_audio_capture_stereo_mode", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_set_audio_capture_stereo_mode(ZegoAudioCaptureStereoMode mode);
-
-        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_audio_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern zego_audio_config zego_express_get_audio_config();
-
-        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_video_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern zego_video_config zego_express_get_video_config(ZegoPublishChannel channel);
 
     }
 }

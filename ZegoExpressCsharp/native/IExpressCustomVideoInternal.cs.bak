@@ -61,11 +61,16 @@ namespace ZEGO
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_custom_video_capture_stop_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_custom_video_capture_stop_callback(zego_on_custom_video_capture_stop callback_func, System.IntPtr user_context);
 
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_custom_video_processing", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_enable_custom_video_processing(bool enable, IntPtr config, ZegoPublishChannel channel);
-
+        /// Return Type: int
+        ///data: char*
+        ///data_length: unsigned int
+        ///param: zego_video_frame_param
+        ///reference_time: unsigned int
+        ///reference_time_scale: unsigned int
+        ///channel: zego_publish_channel
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_custom_video_capture_raw_data", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_send_custom_video_capture_raw_data(byte[] data, uint data_length, zego_video_frame_param param, ulong reference_time, uint reference_time_scale, ZegoPublishChannel channel);
+
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_custom_video_capture_raw_data", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_send_custom_video_capture_raw_data(IntPtr data, uint data_length, zego_video_frame_param param, ulong reference_time, uint reference_time_scale, ZegoPublishChannel channel);

@@ -42,10 +42,6 @@ namespace ZEGO
         public static extern int zego_express_enable_ans([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable);
 
 
-        [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_transient_ans", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_enable_transient_ans([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable);
-
-
         /// Return Type: int
         ///mode: ZegoAnsMode
         [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_ans_mode", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]

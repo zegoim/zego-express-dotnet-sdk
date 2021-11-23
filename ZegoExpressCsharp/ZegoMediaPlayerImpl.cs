@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ZEGO
 {
-    public class ZegoMediaPlayerImpl:ZegoMediaPlayer
-    {  
+    public class ZegoMediaPlayerImpl : ZegoMediaPlayer
+    {
         public override void LoadResource(string path, OnLoadResourceCallback onLoadResourceCallback)
         {
             this.onLoadResourceCallback = onLoadResourceCallback;
@@ -38,8 +38,8 @@ namespace ZEGO
         {
             return ZegoExpressEngineImpl.GetCurrentState(this);
         }
-        
-       
+
+
         public override void SeekTo(ulong millisecond, OnSeekToTimeCallback onSeekToTimeCallback)
         {
             ZegoExpressEngineImpl.SeekTo(this, millisecond, onSeekToTimeCallback);
@@ -60,12 +60,12 @@ namespace ZEGO
         {
             ZegoExpressEngineImpl.SetVolume(this, volume);
         }
-      
+
         public override void SetProgressInterval(ulong millisecond)
         {
             ZegoExpressEngineImpl.SetProgressInterval(this, millisecond);
         }
-       
+
         public override ulong GetTotalDuration()
         {
             return ZegoExpressEngineImpl.GetTotalDuration(this);
@@ -77,7 +77,7 @@ namespace ZEGO
         public override int GetIndex()
         {
             return ZegoExpressEngineImpl.GetIndex(this);
-        }        
+        }
         public override void SetVideoHandler(OnVideoFrame onVideoFrame, ZegoVideoFrameFormat format)
         {
             this.onVideoFrame = onVideoFrame;

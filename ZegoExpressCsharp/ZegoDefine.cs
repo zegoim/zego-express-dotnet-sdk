@@ -1,269 +1,84 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 
 namespace ZEGO
 {
-    public class ZegoConstans
-    {
 
-
-        public const string LIB_NAME = "ZegoExpressEngine";
-        public const string ZEGO_CALLBACK_GAME_OBJ_NAME = "ZEGO_CALLBACK_GAME_OBJECT";
-
-        public const CallingConvention ZEGO_CALINGCONVENTION = CallingConvention.Cdecl;
-        public const int ZEGO_EXPRESS_MAX_COMMON_LEN = 512;
-        public const int ZEGO_EXPRESS_MAX_APPSIGN_LEN = 64;
-        public const int ZEGO_EXPRESS_MAX_USERID_LEN = 64;
-        public const int ZEGO_EXPRESS_MAX_USERNAME_LEN = 256;
-        public const int ZEGO_EXPRESS_MAX_ROOMID_LEN = 128;
-        public const int ZEGO_EXPRESS_MAX_TOKEN_LEN = 512;
-        public const int ZEGO_EXPRESS_MAX_MIX_INPUT_COUNT = 12;
-        public const int ZEGO_EXPRESS_MAX_STREAM_LEN = 256;
-        public const int ZEGO_EXPRESS_MAX_MIXER_TASK_LEN = 256;
-        public const int ZEGO_EXPRESS_MAX_EXTRA_INFO_LEN = 1024;
-        public const int ZEGO_EXPRESS_MAX_DEVICE_ID_LEN = 256;
-        public const int ZEGO_EXPRESS_MAX_URL_COUNT = 10;
-        public const int ZEGO_EXPRESS_MAX_URL_LEN = 1024;
-        public const int ZEGO_EXPRESS_MAX_IMAGE_PATH = 512;
-        public const int ZEGO_EXPRESS_MAX_MESSAGE_LEN = 1024;
-        public const int ZEGO_EXPRESS_MAX_CUSTOM_CMD_LEN = 1024;
-        public const int ZEGO_EXPRESS_MAX_MEDIAPLAYER_INSTANCE_COUNT = 4;
-        public const string MOUDLE = "dotnet";
-
-        //module
-        /// ZEGO_EXPRESS_MODULE_COMMON -> (0)
-        public const int ZEGO_EXPRESS_MODULE_COMMON = 0;
-
-        /// ZEGO_EXPRESS_MODULE_ENGINE -> (1)
-        public const int ZEGO_EXPRESS_MODULE_ENGINE = 1;
-
-        /// ZEGO_EXPRESS_MODULE_ROOM -> (2)
-        public const int ZEGO_EXPRESS_MODULE_ROOM = 2;
-
-        /// ZEGO_EXPRESS_MODULE_PUBLISHER -> (3)
-        public const int ZEGO_EXPRESS_MODULE_PUBLISHER = 3;
-
-        /// ZEGO_EXPRESS_MODULE_PLAYER -> (4)
-        public const int ZEGO_EXPRESS_MODULE_PLAYER = 4;
-
-        /// ZEGO_EXPRESS_MODULE_MIXER -> (5)
-        public const int ZEGO_EXPRESS_MODULE_MIXER = 5;
-
-        /// ZEGO_EXPRESS_MODULE_DEVICE -> (6)
-        public const int ZEGO_EXPRESS_MODULE_DEVICE = 6;
-
-        /// ZEGO_EXPRESS_MODULE_PREPROCESS -> (7)
-        public const int ZEGO_EXPRESS_MODULE_PREPROCESS = 7;
-
-        /// ZEGO_EXPRESS_MODULE_MEDIAPLAYER -> (8)
-        public const int ZEGO_EXPRESS_MODULE_MEDIAPLAYER = 8;
-
-        /// ZEGO_EXPRESS_MODULE_IM -> (9)
-        public const int ZEGO_EXPRESS_MODULE_IM = 9;
-
-        /// ZEGO_EXPRESS_MODULE_RECORD -> (10)
-        public const int ZEGO_EXPRESS_MODULE_RECORD = 10;
-
-        /// ZEGO_EXPRESS_MODULE_CUSTOMVIDEOIO -> (11)
-        public const int ZEGO_EXPRESS_MODULE_CUSTOMVIDEOIO = 11;
-
-        /// ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO -> (12)
-        public const int ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO = 12;
-
-        /// ZEGO_EXPRESS_MODULE_MEDIAPUBLISHER -> (13)
-        public const int ZEGO_EXPRESS_MODULE_MEDIAPUBLISHER = 13;
-
-
-    }
-    public enum ZegoMixerInputContentType
-    {
-
-        Audio,
-
-        Video,
-    }
-
-    public enum ZegoEngineState
-    {
-        Start,
-        Stop
-    }
-
-    public enum ZegoVideoBufferType
-    {
-        Unknown = 0,
-        RawData = 1,
-    }
-
-    public enum ZegoCustomVideoRenderSeries
-    {
-        RGB,
-        YUV
-    }
-
-    // MODULE: ENGINE
+    /** Application scenario. */
     public enum ZegoScenario
     {
         /** General scenario */
-        General,
+        General = 0,
         /** Communication scenario */
-        Communication,
+        Communication = 1,
         /** Live scenario */
-        Live
+        Live = 2
     }
+
+    /** Language. */
     public enum ZegoLanguage
     {
-        English,
-        Chinese
+        /** English */
+        English = 0,
+        /** Chinese */
+        Chinese = 1
     }
+
+    /** Room mode. */
+    public enum ZegoRoomMode
+    {
+        /** Single room mode. */
+        SingleRoom = 0,
+        /** Multiple room mode. */
+        MultiRoom = 1
+    }
+
+    /** engine state. */
+    public enum ZegoEngineState
+    {
+        /** The engine has started */
+        Start,
+        /** The engine has stoped */
+        Stop
+    }
+
+    /** Room state. */
     public enum ZegoRoomState
     {
+        /** Unconnected state, enter this state before logging in and after exiting the room. If there is a steady state abnormality in the process of logging in to the room, such as AppID and AppSign are incorrect, or if the same user name is logged in elsewhere and the local end is KickOut, it will enter this state. */
         Disconnected,
+        /** The state that the connection is being requested. It will enter this state after successful execution login room function. The display of the UI is usually performed using this state. If the connection is interrupted due to poor network quality, the SDK will perform an internal retry and will return to the requesting connection status. */
         Connecting,
+        /** The status that is successfully connected. Entering this status indicates that the login to the room has been successful. The user can receive the callback notification of the user and the stream information in the room. */
         Connected
     }
-    public enum ZegoUpdateType
-    {
-        /** Add */
-        TypeAdd,
-        /** Delete */
-        Delete
-    }
 
-    public enum ZegoPublisherState
-    {
-        /** The state is not published, and it is in this state before publishing the stream. If a steady-state exception occurs in the publish process, such as AppID and AppSign are incorrect, or if other users are already publishing the stream, there will be a failure and enter this state. */
-        NoPublish,
-        /** The state that it is requesting to publish the stream. After the publish stream interface is successfully called, and the application interface is usually displayed using the state. If the connection is interrupted due to poor network quality, the SDK will perform an internal retry and will return to the requesting state. */
-        PublishRequesting,
-        /** The state that the stream is being published, entering the state indicates that the stream has been successfully published, and the user can communicate normally. */
-        Publishing
-    }
+    /** Publish channel. */
     public enum ZegoPublishChannel
     {
-        /** Main publish channel */
+        /** The main (default/first) publish channel. */
         Main,
-        /** Main publish channel */
-        Aux
+        /** The auxiliary (second) publish channel */
+        Aux,
+        /** The third publish channel */
+        Third,
+        /** The fourth publish channel */
+        Fourth
     }
-    /** Video frame flip mode */
-    public enum ZegoVideoFlipMode
+
+    /** Video rendering fill mode. */
+    public enum ZegoViewMode
     {
-        /** No flip */
-        None,
-        /** X-axis flip */
-        ModeX,
-        /** Y-axis flip */
-        ModeY,
-        /** X and Y-axis flip */
-        ModeXY,
+        /** The proportional scaling up, there may be black borders */
+        AspectFit,
+        /** The proportional zoom fills the entire View and may be partially cut */
+        AspectFill,
+        /** Fill the entire view, the image may be stretched */
+        ScaleToFill
     }
 
-    public enum ZegoVideoFrameFormat
-    {
-        Unknown,
-        I420,
-        NV12,
-        NV21,
-        BGRA32,
-        RGBA32,
-        ARGB32,
-        ABGR32,
-        I422
-    }
-    public enum ZegoOrientation
-    {
-        /** Not rotate */
-        ZegoOrientation_0,
-        /** Rotate 90 degrees counterclockwise */
-        ZegoOrientation_90,
-        /** Rotate 180 degrees counterclockwise */
-        ZegoOrientation_180,
-        /** Rotate 270 degrees counterclockwise */
-        ZegoOrientation_270
-    }
-    public enum ZegoPlayerState
-    {
-        /** The state of the flow is not played, and it is in this state before the stream is played. If the steady flow anomaly occurs during the playing process, such as AppID and AppSign are incorrect, it will enter this state. */
-        NoPlay,
-        /** The state that the stream is being requested for playing. After the stream playing interface is successfully called, it will enter the state, and the application interface is usually displayed using this state. If the connection is interrupted due to poor network quality, the SDK will perform an internal retry and will return to the requesting state. */
-        PlayRequesting,
-        /** The state that the stream is being playing, entering the state indicates that the stream has been successfully played, and the user can communicate normally. */
-        Playing
-    }
-
-
-    public enum ZegoMediaPlayerInstanceIndex
-    {
-
-        /// ZegoMediaPlayerInstanceIndex_null -> -1
-        Null = -1,
-
-        /// ZegoMediaPlayerInstanceIndex_first -> 0
-        First = 0,
-
-        /// ZegoMediaPlayerInstanceIndex_second -> 1
-
-        Second = 1,
-
-        /// ZegoMediaPlayerInstanceIndex_third -> 2
-        Third = 2,
-
-        /// ZegoMediaPlayerInstanceIndex_forth -> 3
-        Forth = 3,
-    }
-    public enum ZegoStreamQuality
-    {
-
-        Excellent,
-
-        Good,
-
-        Medium,
-
-        Bad,
-
-        Die,
-    }
-    public enum ZegoMediaPlayerState
-    {
-
-        NoPlay,
-
-        Playing,
-
-        Pausing,
-
-        PlayEnd,
-    }
-
-    public enum ZegoMediaPlayerNetworkEvent
-    {
-
-        BufferBegin,
-
-        BufferEnd,
-    }
-    public enum ZegoAudioChannel
-    {
-        Unknown,
-
-        Mono,
-
-        Stereo,
-    }
-
-
-    public enum ZegoTrafficControlMinVideoBitrateMode
-    {
-        /** Stop video transmission when current bitrate is lower than the set minimum bitrate */
-        NoVideo,
-        /** Video is sent at a very low frequency (no more than 2fps) which is lower than the set minimum bitrate */
-        UltraLowFps,
-    }
-
+    /** Mirror mode for previewing or playing the of the stream. */
     public enum ZegoVideoMirrorMode
     {
         /** The mirror image only for previewing locally. This mode is used by default. */
@@ -273,992 +88,91 @@ namespace ZEGO
         /** Both the video previewed locally and the far end playing the stream will not see mirror image. */
         NoMirror,
         /** The mirror image only for far end playing the stream. */
-        OnlyPublishMirror,
+        OnlyPublishMirror
     }
 
-
-
-    public enum ZegoVideoCodecId
+    /** SEI type */
+    public enum ZegoSEIType
     {
-
-        Default,
-
-        SVC,
-
-        VP8,
+        /** Using H.264 SEI (nalu type = 6, payload type = 243) type packaging, this type is not specified by the SEI standard, there is no conflict with the video encoder or the SEI in the video file, users do not need to follow the SEI content Do filtering, SDK uses this type by default. */
+        ZegoDefined,
+        /** SEI (nalu type = 6, payload type = 5) of H.264 is used for packaging. The H.264 standard has a prescribed format for this type: startcode + nalu type (6) + payload type (5) + len + payload (uuid + content) + trailing bits. Because the video encoder itself generates an SEI with a payload type of 5, or when a video file is used for streaming, such SEI may also exist in the video file, so when using this type, the user needs to use uuid + context as a buffer sending SEI. At this time, in order to distinguish the SEI generated by the video encoder itself, when the App sends this type of SEI, it can fill in the service-specific uuid (uuid length is 16 bytes). When the receiver uses the SDK to parse the SEI of the payload type 5, it will set filter string filters out the SEI matching the uuid and throws it to the business. If the filter string is not set, the SDK will throw all received SEI to the developer. uuid filter string setting function, [ZegoEngineConfig.advancedConfig("unregister_sei_filter","XXXXXX")], where unregister_sei_filter is the key, and XXXXX is the uuid filter string to be set. */
+        UserUnregister
     }
 
-
-
-
-
-    public enum ZegoAudioCodecId
+    /** Publish stream status. */
+    public enum ZegoPublisherState
     {
-
-        Default,
-
-        Normal,
-
-        Normal2,
-
-        Normal3,
-
-        Low,
-
-        Low2,
-
-        Low3,
-    }
-    public enum ZegoCapturePipelineScaleMode
-    {
-        /** Zoom immediately after acquisition, default */
-        PreScale,
-        /** Scaling while encoding */
-        PostScale
+        /** The state is not published, and it is in this state before publishing the stream. If a steady-state exception occurs in the publish process, such as AppID and AppSign are incorrect, or if other users are already publishing the stream, there will be a failure and enter this state. */
+        NoPublish,
+        /** The state that it is requesting to publish the stream after the [startPublishingStream] function is successfully called. The UI is usually displayed through this state. If the connection is interrupted due to poor network quality, the SDK will perform an internal retry and will return to the requesting state. */
+        PublishRequesting,
+        /** The state that the stream is being published, entering the state indicates that the stream has been successfully published, and the user can communicate normally. */
+        Publishing
     }
 
-
-    public enum ZegoPlayerMediaEvent
+    /** Voice changer preset value. */
+    public enum ZegoVoiceChangerPreset
     {
-        /** Audio stuck event when playing */
-        AudioBreakOccur,
-        /** Audio stuck event recovery when playing */
-        AudioBreakResume,
-        /** Video stuck event when playing */
-        VideoBreakOccur,
-        /** Video stuck event recovery when playing */
-        VideoBreakResume
-    }
-
-    public enum ZegoPlayerVideoLayer
-    {
-        /** The layer to be played depends on the network status */
-        Auto,
-        /** Play the base layer (small resolution) */
-        Base,
-        /** Play the extend layer (big resolution) */
-        Extend,
-    }
-
-
-    public enum ZegoStreamRelayCdnState
-    {
-        /** The state indicates that there is no CDN relay */
-        NoRelay,
-        /** The CDN relay is being requested */
-        RelayRequesting,
-        /** Entering this status indicates that the CDN relay has been successful */
-        Relaying,
-    }
-
-    public enum ZegoStreamRelayCdnUpdateReason
-    {
-        /** No error */
+        /** No Voice changer */
         None,
-        /** Server error */
-        ServerError,
-        /** Handshake error */
-        HandshakeFailed,
-        /** Access point error */
-        AccessPointError,
-        /** Stream create failure */
-        CreateStreamFailed,
-        /** Bad name */
-        BadName,
-        /** CDN server actively disconnected */
-        CdnServerDisconnected,
-        /** Active disconnect */
-        Disconnected,
+        /** Male to child voice (loli voice effect) */
+        MenToChild,
+        /** Male to female voice (kindergarten voice effect) */
+        MenToWomen,
+        /** Female to child voice */
+        WomenToChild,
+        /** Female to male voice */
+        WomenToMen,
+        /** Foreigner voice effect */
+        Foreigner,
+        /** Autobot Optimus Prime voice effect */
+        OptimusPrime,
+        /** Android robot voice effect */
+        Android,
+        /** Ethereal voice effect */
+        Ethereal,
+        /** Magnetic(Male) voice effect */
+        MaleMagnetic,
+        /** Fresh(Female) voice effect */
+        FemaleFresh,
+        /** Electronic effects in C major voice effect */
+        MajorC,
+        /** Electronic effects in A minor voice effect */
+        MinorA,
+        /** Electronic effects in harmonic minor voice effect */
+        HarmonicMinor
     }
 
-    /** 美颜特性 */
-    public enum ZegoBeautifyFeature
+    /** Reverberation preset value. */
+    public enum ZegoReverbPreset
     {
-        /** No beautifying */
-        None = 0,
-        /** Polish */
-        Polish = 1,
-        /** Whiten */
-        Whiten = 2,
-        /** Skin whiten */
-        SkinWhiten = 4,
-        /** Sharpen */
-        Sharpen = 8
-
+        /** No Reverberation */
+        None,
+        /** Soft room reverb effect */
+        SoftRoom,
+        /** Large room reverb effect */
+        LargeRoom,
+        /** Concert hall reverb effect */
+        ConcertHall,
+        /** Valley reverb effect */
+        Valley,
+        /** Recording studio reverb effect */
+        RecordingStudio,
+        /** Basement reverb effect */
+        Basement,
+        /** KTV reverb effect */
+        KTV,
+        /** Popular reverb effect */
+        Popular,
+        /** Rock reverb effect */
+        Rock,
+        /** Vocal concert reverb effect */
+        VocalConcert,
+        /** Gramophone reverb effect */
+        GramoPhone
     }
 
-
-
-    public enum ZegoViewMode
-    {
-
-        Fit,
-
-        AspectFill,
-
-        ScaleToFill
-    }
-
-
-    public class ZegoAudioConfig
-    {
-        /// int
-        /** Audio bitrate in kbps, default is 48 kbps */
-        public int bitrate;
-
-        /// ZegoAudioChannel
-         /** Audio channel, default is Mono */
-        public ZegoAudioChannel channel;
-
-        /// ZegoAudioCodecId
-        /** codec ID, default is ZegoAudioCodecIDDefault */
-        public ZegoAudioCodecId audioCodecId;
-
-        /**
-         * Create a default audio configuration (ZegoAudioConfigPresetStandardQuality, 48 kbps, Mono, ZegoAudioCodecIDDefault)
-         */
-        public ZegoAudioConfig() : this(ZegoAudioConfigPreset.StandardQuality)
-        {
-
-        }
-
-        /**
-         * Create a audio configuration with preset enumeration values
-         */
-        public ZegoAudioConfig(ZegoAudioConfigPreset presetType)
-        {
-            audioCodecId = ZegoAudioCodecId.Default;
-            switch (presetType)
-            {
-                case ZegoAudioConfigPreset.BasicQuality:
-                    bitrate = 16;
-                    channel = ZegoAudioChannel.Mono;
-                    break;
-                case ZegoAudioConfigPreset.StandardQuality:
-                    bitrate = 48;
-                    channel = ZegoAudioChannel.Mono;
-                    break;
-                case ZegoAudioConfigPreset.StandardQualityStereo:
-                    bitrate = 56;
-                    channel = ZegoAudioChannel.Stereo;
-                    break;
-                case ZegoAudioConfigPreset.HighQuality:
-                    bitrate = 128;
-                    channel = ZegoAudioChannel.Mono;
-                    break;
-                case ZegoAudioConfigPreset.HighQualityStereo:
-                    bitrate = 192;
-                    channel = ZegoAudioChannel.Stereo;
-                    break;
-            }
-        }
-    }
-    public class ZegoBarrageMessageInfo
-    {
-        /// char[512]
-        /** message content */
-        public string message;
-
-        /// char[64]
-        /** message id */
-        public string messageId;
-
-        /** Message send time */
-        public ulong sendTime;
-        /// zego_user
-        /** Message sender */
-        public ZegoUser fromUser;
-    }
-    public class ZegoBeautifyOption
-    {
-        /// double
-        /** The sample step size of beauty peeling, the value range is [0,1], default 0.2 */
-        public double polishStep;
-
-        /// double
-        /** Brightness parameter for beauty and whitening, the larger the value, the brighter the brightness, ranging from [0,1], default 0.5 */
-        public double whitenFactor;
-
-        /// double
-        /** Beauty sharpening parameter, the larger the value, the stronger the sharpening, value range [0,1], default 0.1 */
-        public double sharpenFactor;
-    }
-    public class ZegoBroadcastMessageInfo
-    {
-        /// char[512]
-        /** message content */
-        public string message;
-
-        /// char[64]
-        /** message id */
-
-        public ulong messageId;
-
-        /** Message send time */
-        public ulong sendTime;
-
-        /// zego_user
-        /** Message sender */
-        public ZegoUser fromUser;
-    }
-
-    public class ZegoCDNConfig
-    {
-        /// char[1024]
-        /** CDN URL */
-        public string url;
-
-        /// char[512]
-        /** Auth param of URL */
-        public string authParam;
-    }
-    /**
-    * Advanced engine configuration
-    *
-    * When you need to use the advanced functions of SDK, such as custom video capture, custom video rendering and other advanced functions, you need to set the instance corresponding to the advanced function configuration to the corresponding field of this type of instance to achieve the purpose of enabling the corresponding advanced functions of ZegoExpressEngine.
-    * The configuration of the corresponding advanced functions needs to be set before [createEngine], and it is invalid to set after [createEngine].
-    */
-    public class ZegoEngineConfig
-    {
-        /** Log configuration, if not set, use the default configuration */
-        public ZegoLogConfig logConfig;
-        /** Other special function switches, if not set, no other special functions are used by default. The special functions referred to here do not include the functions listed in the other parameter fields of the custom video capture function and custom video rendering described above. */
-        public Dictionary<string, string> advancedConfig;
-    }
-    public class ZegoLogConfig
-    {
-        /// char[512]
-        /** Log file save path */
-        public string logPath;
-        /// ULONGLONG->unsigned __int64
-        /** The maximum log file size (Bytes). The default maximum size is 5MB (5 * 1024 * 1024 Bytes) */
-        public ulong logSize;
-    }
-    public class ZegoPlayerConfig
-    {
-        /** The CDN configuration for playing stream. If set, the stream is play according to the URL instead of the streamID. After that, the streamID is only used as the ID of SDK internal onLoadResourceCallback. */
-        public ZegoCDNConfig cDNConfig;
-        /** Set the video layer for playing the stream */
-        public ZegoPlayerVideoLayer videoLayer;
-    }
-
-
-    public class ZegoPlayStreamQuality
-    {
-        /// double
-        ///  /** Video receiving frame rate. The unit of frame rate is f/s */
-        public double videoRecvFps;
-
-        /// double
-        ///   /** Video dejitter frame rate. The unit of frame rate is f/s */
-        public double videoDejitterFps;
-
-        /// double
-        ///  /** Video decoding frame rate. The unit of frame rate is f/s */
-        public double videoDecodeFps;
-
-        /// double
-        ///   /** Video rendering frame rate. The unit of frame rate is f/s */
-        public double videoRenderFps;
-
-        /// double
-        ///     /** Video bit rate in kbps */
-        public double videoKbps;
-
-        /// double
-        ///   /** Video break rate, the unit is (number of breaks / every 10 seconds) */
-        public double videoBreakRate;
-
-        /// double
-        ///  /** Audio receiving frame rate. The unit of frame rate is f/s */
-        public double audioRecvFps;
-
-        /// double
-        /// /** Audio dejitter frame rate. The unit of frame rate is f/s */
-        public double audioDejitterFps;
-
-        /// double
-        ///  /** Audio decoding frame rate. The unit of frame rate is f/s */
-        public double audioDecodeFps;
-
-        /// double
-        /// /** Audio rendering frame rate. The unit of frame rate is f/s */
-        public double audioRenderFps;
-
-        /// double
-        ///  /** Audio bit rate in kbps */
-        public double audioKbps;
-
-        /// double
-        ///  /** Audio break rate, the unit is (number of breaks / every 10 seconds) */
-        public double audioBreakRate;
-
-        /// int 
-        ///     /** Server to local delay, in milliseconds */
-        public int rtt;
-
-        /// double
-        ///    /** Packet loss rate, in percentage, 0.0 ~ 1.0 */
-        public double packetLostRate;
-
-        /// int
-        ///     /** Delay from peer to peer, in milliseconds */
-        public int peerToPeerDelay;
-
-        /// double
-        ///  /** Packet loss rate from peer to peer, in percentage, 0.0 ~ 1.0 */
-        public double peerToPeerPacketLostRate;
-
-        /// zego_stream_quality_level
-        ///  /** Published stream quality level */
-        public ZegoStreamQuality level;
-
-        /// int
-        ///  /** Delay after the data is received by the local end, in milliseconds */
-        public int delay;
-        /** The difference between the video timestamp and the audio timestamp, used to reflect the synchronization of audio and video, in milliseconds. This value is less than 0 means the number of milliseconds that the video leads the audio, greater than 0 means the number of milliseconds that the video lags the audio, and 0 means no difference. When the absolute value is less than 200, it can basically be regarded as synchronized audio and video, when the absolute value is greater than 200 for 10 consecutive seconds, it can be regarded as abnormal */
-        public int avTimestampDiff;
-
-        /// boolean
-        ///     /** Whether to enable hardware decoding */
-        public bool isHardwareDecode;
-
-        /// zego_video_codec_id
-        ///  /** Video codec ID */
-        public ZegoVideoCodecId videoCodecId;
-
-        /// double
-        ///   /** Total number of bytes received, including audio, video, SEI */
-        public double totalRecvBytes;
-
-        /// double
-        ///  /** Number of audio bytes received */
-        public double audioRecvBytes;
-
-        /// double
-        ///     /** Number of video bytes received */
-        public double videoRecvBytes;
-    }
-
-
-
-    public class ZegoPublishStreamQuality
-    {
-        
-
-        /// double
-        /** Video capture frame rate. The unit of frame rate is f/s */
-        public double videoCaptureFps;
-
-        /// double
-         /** Video encoding frame rate. The unit of frame rate is f/s */
-        public double videoEncodeFps;
-
-        /// double
-        /** Video transmission frame rate. The unit of frame rate is f/s */
-        public double videoSendFps;
-
-        /// double
-        /** Video bit rate in kbps */
-        public double videoKbps;
-
-        /// double
-         /** Audio capture frame rate. The unit of frame rate is f/s */
-        public double audioCaptureFps;
-
-        /// double
-        /** Audio transmission frame rate. The unit of frame rate is f/s */
-        public double audioSendFps;
-
-        /// double
-        /** Audio bit rate in kbps */
-        public double audioKbps;
-
-        /// int
-        /** Local to server delay, in milliseconds */
-        public int rtt;
-
-        /// double
-        /** Packet loss rate, in percentage, 0.0 ~ 1.0 */
-        public double packetLostRate;
-
-
-        /// zego_stream_quality
-        /** Published stream quality level */
-        public ZegoStreamQuality level;
-
-        /// boolean
-        /** Whether to enable hardware encoding */
-        public bool isHardwareEncode;
-
-        /** Video codec ID */
-        public ZegoVideoCodecId videoCodecId;
-
-        /// double
-        /** Total number of bytes sent, including audio, video, SEI */
-        public double totalSendBytes;
-
-        /// double
-        /** Number of audio bytes sent */
-        public double audioSendBytes;
-
-        /// double
-        /** Number of video bytes sent */
-        public double videoSendBytes;
-    }
-    public class ZegoRect
-    {
-        /// int
-        public int left;
-
-        /// int
-        public int top;
-
-        /// int
-        public int right;
-
-        /// int
-        public int bottom;
-        public ZegoRect()
-        {
-
-        }
-        public ZegoRect(int left, int top, int right, int bottom)
-        {
-            this.left = left;
-            this.top = top;
-            this.right = right;
-            this.bottom = bottom;
-        }
-    }
-
-    public class ZegoRoomConfig
-    {
-        /** The maximum number of users in the room, Passing 0 means unlimited, the default is unlimited. */
-        public uint maxMemberCount;
-        /** Whether to enable the user in and out of the room onLoadResourceCallback notification [onRoomUserUpdate], the default is off. */
-        public bool isUserStatusNotify;
-        /** The token issued by the developer's business server is used to ensure security. The generation rules are detailed in [https://doc.zego.im/CN/565.html](https://doc.zego.im/CN/565.html). Default is empty string, that is, no authentication */
-        public string token;
-    }
-    public class ZegoStream
-    {
-        /** User object instance */
-        public ZegoUser user;
-
-        /** Stream ID, a string of up to 256 characters. You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
-
-        public string streamId;
-
-
-
-        /** Stream extra info */
-
-        public string extraInfo;
-
-    }
-    public class ZegoStreamRelayCDNInfo
-    {
-        /// char[1024]
-        /** URL of publishing stream to CDN */
-
-        public string url;
-
-        /// zego_stream_relay_cdn_state
-        /** State of relaying to CDN */
-        public ZegoStreamRelayCdnState cdnState;
-
-        /// zego_stream_relay_cdn_update_reason
-        /** Reason for relay state changed */
-        public ZegoStreamRelayCdnUpdateReason updateReason;
-
-        /// unsigned int
-        /** The timestamp when the state changed, in milliseconds */
-        public ulong stateTime;
-    }
-
-    public class ZegoUser
-    {
-        /** User ID, a string with a maximum length of 64 bytes or less. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
-        public string userId;
-
-
-
-
-        /** User Name, a string with a maximum length of 256 bytes or less */
-        public string userName;
-        public ZegoUser()
-        {
-
-        }
-        public ZegoUser(string userId)
-        {
-            this.userId = userId;
-            this.userName = userId;
-        }
-
-    }
-
-
-    public class ZegoVideoConfig
-    {
-        /// int
-        /** Capture resolution width */
-        public int captureResolutionWidth;
-
-        /// int
-        /** Capture resolution height */
-        public int captureResolutionHeight;
-
-        /// int
-        /** Encode resolution width */
-        public int encodeResolutionWidth;
-
-        /// int
-        /** Encode resolution height */
-        public int encodeResolutionHeight;
-
-        /// int
-        /** Bit rate in kbps */
-        public int bitrate;
-
-        /// int
-         /** frame rate */
-        public int fps;
-
-        /// zego_video_codec_id
-        /** codec ID */
-        public ZegoVideoCodecId videoCodecId;
-
-        /**
-         * Create video configuration with preset enumeration values
-         */
-        public ZegoVideoConfig(ZegoVideoConfigPreset preset)
-        {
-            videoCodecId = ZegoVideoCodecId.Default;
-            switch (preset)
-            {
-                case ZegoVideoConfigPreset.Preset180P:
-                    captureResolutionWidth = 320;
-                    captureResolutionHeight = 180;
-                    encodeResolutionWidth = 320;
-                    encodeResolutionHeight = 180;
-                    bitrate = 300;
-                    fps = 15;
-                    break;
-                case ZegoVideoConfigPreset.Preset270P:
-                    captureResolutionWidth = 480;
-                    captureResolutionHeight = 270;
-                    encodeResolutionWidth = 480;
-                    encodeResolutionHeight = 270;
-                    bitrate = 400;
-                    fps = 15;
-                    break;
-                case ZegoVideoConfigPreset.Preset360P:
-                    captureResolutionWidth = 640;
-                    captureResolutionHeight = 360;
-                    encodeResolutionWidth = 640;
-                    encodeResolutionHeight = 360;
-                    bitrate = 600;
-                    fps = 15;
-                    break;
-                case ZegoVideoConfigPreset.Preset540P:
-                    captureResolutionWidth = 960;
-                    captureResolutionHeight = 540;
-                    encodeResolutionWidth = 960;
-                    encodeResolutionHeight = 540;
-                    bitrate = 1200;
-                    fps = 15;
-                    break;
-                case ZegoVideoConfigPreset.Preset720P:
-                    captureResolutionWidth = 1280;
-                    captureResolutionHeight = 720;
-                    encodeResolutionWidth = 1280;
-                    encodeResolutionHeight = 720;
-                    bitrate = 1500;
-                    fps = 15;
-                    break;
-                case ZegoVideoConfigPreset.Preset1080P:
-                    captureResolutionWidth = 1920;
-                    captureResolutionHeight = 1080;
-                    encodeResolutionWidth = 1920;
-                    encodeResolutionHeight = 1080;
-                    bitrate = 3000;
-                    fps = 15;
-                    break;
-            }
-        }
-
-        /**
-         * Create default video configuration(360p, 15fps, 600000bps)
-         *
-         * 360p, 15fps, 600kbps
-         */
-        public ZegoVideoConfig() : this(ZegoVideoConfigPreset.Preset360P)
-        {
-
-        }
-    }
-
-
-    public class ZegoWatermark
-    {
-        /// char[512]
-        /** Watermark image URL */
-
-        public string imageUrl;
-
-        /// zego_rect
-        /** Watermark image layout */
-        public ZegoRect layout;
-    }
-    public class ZegoCanvas
-    {
-        /// void*
-        public System.IntPtr view;
-
-        /// zego_view_mode
-        public ZegoViewMode viewMode;
-
-        /// int
-        public int backgroundColor;
-    }
-    public class ZegoCustomVideoRenderConfig
-    {
-        /** 自定义视频渲染视频帧数据类型 */
-        public ZegoVideoBufferType bufferType;
-        /** 自定义视频渲染视频帧数据格式 */
-        public ZegoCustomVideoRenderSeries frameFormatSeries;
-        /** 是否在自定义视频渲染的同时，引擎也渲染，默认为 [false] */
-        public bool enableEngineRender;
-    }
-    public class ZegoVideoFrameParam
-    {
-        public ZegoVideoFrameFormat format;
-        /// int[4]
-        public int[] strides;
-
-        public int width;
-        public int height;
-
-        public int rotation;
-    }
-
-    public class ZegoAudioFrameParam
-    {
-
-        /// ZegoAudioChannel
-        public ZegoAudioChannel channel;
-
-        /// int
-        public ZegoAudioSampleRate samplesRate;
-    }
-    public class ZegoMixerVideoConfig
-    {
-
-        /// int
-        public int resolutionWidth;
-
-        /// int
-        public int resolutionHeight;
-
-        /// int
-        public int bitrate;
-
-        /// int
-        public int fps;
-        public ZegoMixerVideoConfig()
-        {
-            this.resolutionWidth = 360;
-            this.resolutionHeight = 640;
-            this.fps = 15;
-            this.bitrate = 600;
-        }
-        public ZegoMixerVideoConfig(int resolutionWidth, int resolutionHeight, int bitrate, int fps)
-        {
-            this.resolutionWidth = resolutionWidth;
-            this.resolutionHeight = resolutionHeight;
-            this.fps = fps;
-            this.bitrate = bitrate;
-        }
-    }
-    public class ZegoMixerTask
-    {
-        public string taskId;
-
-        /// zego_mixer_input*
-        public List<ZegoMixerInput> inputList;
-
-
-        /// zego_mixer_output*
-        public List<ZegoMixerOutput> outputList;
-
-        /// zego_mixer_video_config
-        public ZegoMixerVideoConfig videoConfig;
-
-        /// zego_mixer_audio_config
-        public ZegoMixerAudioConfig audioConfig;
-
-        /// zego_watermark*
-        public ZegoWatermark watermark;
-
-
-        public string backgroundImageUrl;
-
-        /// boolean
-        public bool enableSoundLevel;
-        public ZegoMixerTask(string taskId)
-        {
-            this.taskId = taskId;
-        }
-        public ZegoMixerTask()
-        {
-
-        }
-    }
-    public class ZegoMixerInput
-    {
-
-        /// ZegoMixerInputContentType
-        public ZegoMixerInputContentType contentType;
-
-        /// char[256]
-        public string streamId;
-
-        /// zego_rect
-        public ZegoRect layout;
-
-        /// unsigned int
-        public uint soundLevelId;
-        public ZegoMixerInput()
-        {
-
-        }
-        public ZegoMixerInput(string streamId, ZegoMixerInputContentType contentType, ZegoRect layout)
-        {
-            this.streamId = streamId;
-            this.contentType = contentType;
-            this.layout = layout;
-        }
-        public ZegoMixerInput(string streamId, ZegoMixerInputContentType contentType, ZegoRect layout, uint soundLevelId)
-        {
-            this.streamId = streamId;
-            this.contentType = contentType;
-            this.layout = layout;
-            this.soundLevelId = soundLevelId;
-        }
-    }
-    public class ZegoMixerOutput
-    {
-        public string target;
-        public ZegoMixerOutput()
-        {
-
-        }
-        public ZegoMixerOutput(string target)
-        {
-            this.target = target;
-        }
-    }
-    public class ZegoMixerAudioConfig
-    {
-
-        /// int
-        public int bitrate = 48;
-
-        /// zego_audio_channel
-        public ZegoAudioChannel channel;
-
-        /// ZegoAudioCodecId
-        public ZegoAudioCodecId audioCodecId;
-        public ZegoMixerAudioConfig()
-        {
-            this.channel = ZegoAudioChannel.Mono;
-            this.audioCodecId = ZegoAudioCodecId.Default;
-        }
-    }
-    public class ZegoCustomVideoCaptureConfig
-    {
-        public ZegoVideoBufferType type;
-    }
-    public enum ZegoAudioDeviceType
-    {
-
-        Input,
-
-        Output,
-    }
-    public class ZegoDeviceInfo
-    {
-
-        public string deviceId;
-
-        public string deviceName;
-
-    }
-
-    public enum ZegoAudioSampleRate
-    {
-
-        /// zego_audio_sample_rate_unknown -> 0
-        ZegoAudioSampleRateUnknown = 0,
-
-        /// zego_audio_sample_rate_8k -> 8000
-        ZegoAudioSampleRate_8k = 8000,
-
-        /// zego_audio_sample_rate_16k -> 16000
-        ZegoAudioSampleRate_16k = 16000,
-
-        /// zego_audio_sample_rate_22k -> 22050
-        ZegoAudioSampleRate_22k = 22050,
-
-        /// zego_audio_sample_rate_24k -> 24000
-        ZegoAudioSampleRate_24k = 24000,
-
-        /// zego_audio_sample_rate_32k -> 32000
-        ZegoAudioSampleRate_32k = 32000,
-
-        /// zego_audio_sample_rate_44k -> 44100
-        ZegoAudioSampleRate_44k = 44100,
-
-        /// zego_audio_sample_rate_48k -> 48000
-        ZegoAudioSampleRate_48k = 48000,
-    }
-    public enum ZegoAudioDataCallbackBitMask
-    {
-        CAPTURED = 1,
-        PLAYBACK = 2,
-        MIXED = 4,
-    }
-    public enum ZegoAudioSourceType
-    {
-        /** Default audio capture source (the main channel uses custom audio capture by default; the aux channel uses the same sound as main channel by default) */
-        Default = 0,
-
-        /** Use custom audio capture, refer to [enableCustomAudioIO] */
-        Custom = 1,
-
-        /** Use media player as audio source, only support aux channel */
-        MediaPlayer = 2
-
-    };
-    public class ZegoCustomAudioConfig
-    {
-        /** Audio capture source type */
-        public ZegoAudioSourceType sourceType;
-    }
-
-    public enum ZegoAECMode
-    {
-
-        /// zego_aec_mode_aggressive -> 0
-        aggressive = 0,
-
-        /// zego_aec_mode_medium -> 1
-        medium = 1,
-
-        /// zego_aec_mode_soft -> 2
-        soft = 2,
-    }
-
-    public enum ZegoANSMode
-    {
-
-        /// zego_ans_mode_soft -> 0
-        soft = 0,
-
-        /// zego_ans_mode_medium -> 1
-        medium = 1,
-
-        /// zego_ans_mode_aggressive -> 2
-        aggressive = 2,
-    }
-
-    public enum ZegoDataRecordType
-    {
-        /// <summary>
-        /// This field indicates that the audio-only SDK records audio by default, and the audio and video SDK records audio and video by default.
-        /// </summary>
-        Default = 0,
-
-        /// <summary>
-        /// only record audio
-        /// </summary>
-        OnlyAudio = 1,
-
-        /// <summary>
-        /// only record video, Audio-only SDK is invalid.
-        /// </summary>
-        OnlyVideo = 2,
-
-        /// <summary>
-        /// record audio and video, Audio-only SDK will be recorded only audio.
-        /// </summary>
-        AudioAndVideo = 3
-    }
-
-    public class ZegoDataRecordConfig
-    {
-        /// <summary>
-        /// The path to save the recording file, absolute path, need to include the file name, the file name need to specify the suffix,
-        /// currently only support .mp4 or .flv, if multiple recording for the same path, will overwrite the file with the same name.
-        /// The maximum length should be less than 1024 bytes.
-        /// </summary>
-        public string filePath;
-
-        /// <summary>
-        /// Type of recording media
-        /// </summary>
-        public ZegoDataRecordType recordType;
-    }
-
-    public enum ZegoDataRecordState
-    {
-        /// <summary>
-        /// Unrecorded state, which is the state when a recording error occurs or before recording starts.
-        /// </summary>
-        NoRecord = 0,
-
-        /// <summary>
-        /// Recording in progress, in this state after successfully call [startCapturedMediaRecord]
-        /// </summary>
-        Recording = 1,
-
-        /// <summary>
-        /// Record successs
-        /// </summary>
-        Success = 2
-    }
-
-    /// <summary>
-    /// File recording progress
-    /// </summary>
-    public class ZegoDataRecordProgress
-    {
-        /// <summary>
-        /// Current recording duration in milliseconds
-        /// </summary>
-        public ulong duration;
-
-        /// <summary>
-        /// Current recording file size in byte
-        /// </summary>
-        public ulong currentFileSize;
-    }
-    /** Audio Config Preset */
-    public enum ZegoAudioConfigPreset
-    {
-        /** Basic sound quality (16 kbps, Mono, ZegoAudioCodecIDDefault) */
-        BasicQuality,
-        /** Standard sound quality (48 kbps, Mono, ZegoAudioCodecIDDefault) */
-        StandardQuality,
-        /** Standard sound quality (56 kbps, Stereo, ZegoAudioCodecIDDefault) */
-        StandardQualityStereo,
-        /** High sound quality (128 kbps, Mono, ZegoAudioCodecIDDefault) */
-        HighQuality,
-        /** High sound quality (192 kbps, Stereo, ZegoAudioCodecIDDefault) */
-        HighQualityStereo
-    }
     /** Video configuration resolution and bitrate preset enumeration. The preset resolutions are adapted for mobile and desktop. On mobile, height is longer than width, and desktop is the opposite. For example, 1080p is actually 1080(w) x 1920(h) on mobile and 1920(w) x 1080(h) on desktop. */
     public enum ZegoVideoConfigPreset
     {
@@ -1275,6 +189,245 @@ namespace ZEGO
         /** Set the resolution to 1920x1080, the default is 15 fps, the code rate is 3000 kbps */
         Preset1080P
     }
+
+    /** Stream quality level. */
+    public enum ZegoStreamQualityLevel
+    {
+        /** Excellent */
+        Excellent,
+        /** Good */
+        Good,
+        /** Normal */
+        Medium,
+        /** Bad */
+        Bad,
+        /** Failed */
+        Die,
+        /** Unknown */
+        Unknown
+    }
+
+    /** Audio channel type. */
+    public enum ZegoAudioChannel
+    {
+        /** Unknown */
+        Unknown,
+        /** Mono */
+        Mono,
+        /** Stereo */
+        Stereo
+    }
+
+    /** Audio capture stereo mode. */
+    public enum ZegoAudioCaptureStereoMode
+    {
+        /** Disable capture stereo, i.e. capture mono */
+        None,
+        /** Always enable capture stereo */
+        Always,
+        /** Adaptive mode, capture stereo when publishing stream only, capture mono when publishing and playing stream (e.g. talk/intercom scenes) */
+        Adaptive
+    }
+
+    /** Audio Codec ID. */
+    public enum ZegoAudioCodecID
+    {
+        /** default */
+        Default,
+        /** Normal */
+        Normal,
+        /** Normal2 */
+        Normal2,
+        /** Normal3 */
+        Normal3,
+        /** Low */
+        Low,
+        /** Low2 */
+        Low2,
+        /** Low3 */
+        Low3
+    }
+
+    /** Video codec ID. */
+    public enum ZegoVideoCodecID
+    {
+        /** Default (H.264) */
+        Default,
+        /** Scalable Video Coding (H.264 SVC) */
+        SVC,
+        /** VP8 */
+        VP8,
+        /** H.265 */
+        H265
+    }
+
+    /** Video screen rotation direction. */
+    public enum ZegoOrientation
+    {
+        /** Not rotate */
+        ZegoOrientation_0,
+        /** Rotate 90 degrees counterclockwise */
+        ZegoOrientation_90,
+        /** Rotate 180 degrees counterclockwise */
+        ZegoOrientation_180,
+        /** Rotate 270 degrees counterclockwise */
+        ZegoOrientation_270
+    }
+
+    /** Player video layer. */
+    public enum ZegoPlayerVideoLayer
+    {
+        /** The layer to be played depends on the network status */
+        Auto,
+        /** Play the base layer (small resolution) */
+        Base,
+        /** Play the extend layer (big resolution) */
+        BaseExtend
+    }
+
+    /** Audio echo cancellation mode. */
+    public enum ZegoAECMode
+    {
+        /** Aggressive echo cancellation may affect the sound quality slightly, but the echo will be very clean. */
+        Aggressive,
+        /** Moderate echo cancellation, which may slightly affect a little bit of sound, but the residual echo will be less. */
+        Medium,
+        /** Comfortable echo cancellation, that is, echo cancellation does not affect the sound quality of the sound, and sometimes there may be a little echo, but it will not affect the normal listening. */
+        Soft
+    }
+
+    /** Active Noise Suppression mode. */
+    public enum ZegoANSMode
+    {
+        /** Soft ANS. In most instances, the sound quality will not be damaged, but some noise will remain. */
+        Soft,
+        /** Medium ANS. It may damage some sound quality, but it has a good noise reduction effect. */
+        Medium,
+        /** Aggressive ANS. It may significantly impair the sound quality, but it has a good noise reduction effect. */
+        Aggressive
+    }
+
+    /** Traffic control property (bitmask enumeration). */
+    public enum ZegoTrafficControlProperty
+    {
+        /** Basic (Adaptive (reduce) video bitrate) */
+        Basic = 0,
+        /** Adaptive (reduce) video FPS */
+        AdaptiveFPS = 1,
+        /** Adaptive (reduce) video resolution */
+        AdaptiveResolution = 1 << 1,
+        /** Adaptive (reduce) audio bitrate */
+        AdaptiveAudioBitrate = 1 << 2
+    }
+
+    /** Video transmission mode when current bitrate is lower than the set minimum bitrate. */
+    public enum ZegoTrafficControlMinVideoBitrateMode
+    {
+        /** Stop video transmission when current bitrate is lower than the set minimum bitrate */
+        NoVideo,
+        /** Video is sent at a very low frequency (no more than 2fps) which is lower than the set minimum bitrate */
+        UltraLowFPS
+    }
+
+    /** Playing stream status. */
+    public enum ZegoPlayerState
+    {
+        /** The state of the flow is not played, and it is in this state before the stream is played. If the steady flow anomaly occurs during the playing process, such as AppID and AppSign are incorrect, it will enter this state. */
+        NoPlay,
+        /** The state that the stream is being requested for playing. After the [startPlayingStream] function is successfully called, it will enter the state. The UI is usually displayed through this state. If the connection is interrupted due to poor network quality, the SDK will perform an internal retry and will return to the requesting state. */
+        PlayRequesting,
+        /** The state that the stream is being playing, entering the state indicates that the stream has been successfully played, and the user can communicate normally. */
+        Playing
+    }
+
+    /** Media event when playing. */
+    public enum ZegoPlayerMediaEvent
+    {
+        /** Audio stuck event when playing */
+        AudioBreakOccur,
+        /** Audio stuck event recovery when playing */
+        AudioBreakResume,
+        /** Video stuck event when playing */
+        VideoBreakOccur,
+        /** Video stuck event recovery when playing */
+        VideoBreakResume
+    }
+
+    /** Stream Resource Mode */
+    public enum ZegoStreamResourceMode
+    {
+        /** Default mode. The SDK will automatically select the streaming resource according to the cdnConfig parameters set by the player config and the ready-made background configuration. */
+        Default,
+        /** Playing stream only from CDN. */
+        OnlyCDN,
+        /** Playing stream only from L3. */
+        OnlyL3,
+        /** Playing stream only from RTC. */
+        OnlyRTC
+    }
+
+    /** Update type. */
+    public enum ZegoUpdateType
+    {
+        /** Add */
+        Add,
+        /** Delete */
+        Delete
+    }
+
+    /** State of CDN relay. */
+    public enum ZegoStreamRelayCDNState
+    {
+        /** The state indicates that there is no CDN relay */
+        NoRelay,
+        /** The CDN relay is being requested */
+        RelayRequesting,
+        /** Entering this status indicates that the CDN relay has been successful */
+        Relaying
+    }
+
+    /** Reason for state of CDN relay changed. */
+    public enum ZegoStreamRelayCDNUpdateReason
+    {
+        /** No error */
+        None,
+        /** Server error */
+        ServerError,
+        /** Handshake error */
+        HandshakeFailed,
+        /** Access point error */
+        AccessPointError,
+        /** Stream create failure */
+        CreateStreamFailed,
+        /** Bad stream ID */
+        BadName,
+        /** CDN server actively disconnected */
+        CDNServerDisconnected,
+        /** Active disconnect */
+        Disconnected,
+        /** All mixer input streams sessions closed */
+        MixStreamAllInputStreamClosed,
+        /** All mixer input streams have no data */
+        MixStreamAllInputStreamNoData,
+        /** Internal error of stream mixer server */
+        MixStreamServerInternalError
+    }
+
+    /** Beauty feature (bitmask enumeration). */
+    public enum ZegoBeautifyFeature
+    {
+        /** No beautifying */
+        None = 0,
+        /** Polish */
+        Polish = 1 << 0,
+        /** Sharpen */
+        Whiten = 1 << 1,
+        /** Skin whiten */
+        SkinWhiten = 1 << 2,
+        /** Whiten */
+        Sharpen = 1 << 3
+    }
+
     /** Remote device status. */
     public enum ZegoRemoteDeviceState
     {
@@ -1307,6 +460,1566 @@ namespace ZEGO
         /** CDN server actively disconnected */
         MultiForegroundApp,
         /** The system is under high load pressure and may cause abnormal equipment. */
-        BySystemPressure
+        BySystemPressure,
+        /** The remote device is not supported to publish the device state. */
+        NotSupport
     }
+
+    /** Audio device type. */
+    public enum ZegoAudioDeviceType
+    {
+        /** Audio input type */
+        Input,
+        /** Audio output type */
+        Output
+    }
+
+    /** Audio route */
+    public enum ZegoAudioRoute
+    {
+        /** Speaker */
+        Speaker,
+        /** Headphone */
+        Headphone,
+        /** Bluetooth device */
+        Bluetooth,
+        /** Receiver */
+        Receiver,
+        /** External USB audio device */
+        ExternalUSB,
+        /** Apple AirPlay */
+        AirPlay
+    }
+
+    /** Mix stream content type. */
+    public enum ZegoMixerInputContentType
+    {
+        /** Mix stream for audio only */
+        Audio,
+        /** Mix stream for both audio and video */
+        Video,
+        /** Mix stream for video only */
+        VideoOnly
+    }
+
+    /** Capture pipeline scale mode. */
+    public enum ZegoCapturePipelineScaleMode
+    {
+        /** Zoom immediately after acquisition, default */
+        Pre,
+        /** Scaling while encoding */
+        Post
+    }
+
+    /** Video frame format. */
+    public enum ZegoVideoFrameFormat
+    {
+        /** Unknown format, will take platform default */
+        Unknown,
+        /** I420 (YUV420Planar) format */
+        I420,
+        /** NV12 (YUV420SemiPlanar) format */
+        NV12,
+        /** NV21 (YUV420SemiPlanar) format */
+        NV21,
+        /** BGRA32 format */
+        BGRA32,
+        /** RGBA32 format */
+        RGBA32,
+        /** ARGB32 format */
+        ARGB32,
+        /** ABGR32 format */
+        ABGR32,
+        /** I422 (YUV422Planar) format */
+        I422
+    }
+
+    /** Video frame buffer type. */
+    public enum ZegoVideoBufferType
+    {
+        /** Raw data type video frame */
+        Unknown,
+        /** Raw data type video frame */
+        RawData,
+        /** Encoded data type video frame */
+        EncodedData,
+        /** Texture 2D type video frame */
+        GLTexture2D,
+        /** CVPixelBuffer type video frame */
+        CVPixelBuffer,
+        /** Surface Texture type video frame */
+        SurfaceTexture,
+        /** GL_TEXTURE_EXTERNAL_OES type video frame */
+        GLTextureExternalOES
+    }
+
+    /** Video frame format series. */
+    public enum ZegoVideoFrameFormatSeries
+    {
+        /** RGB series */
+        RGB,
+        /** YUV series */
+        YUV
+    }
+
+    /** Video frame flip mode. */
+    public enum ZegoVideoFlipMode
+    {
+        /** No flip */
+        None,
+        /** X-axis flip */
+        X,
+        /** Y-axis flip */
+        Y,
+        /** X-Y-axis flip */
+        XY
+    }
+
+    /** Audio Config Preset. */
+    public enum ZegoAudioConfigPreset
+    {
+        /** Basic sound quality (16 kbps, Mono, ZegoAudioCodecIDDefault) */
+        BasicQuality,
+        /** Standard sound quality (48 kbps, Mono, ZegoAudioCodecIDDefault) */
+        StandardQuality,
+        /** Standard sound quality (56 kbps, Stereo, ZegoAudioCodecIDDefault) */
+        StandardQualityStereo,
+        /** High sound quality (128 kbps, Mono, ZegoAudioCodecIDDefault) */
+        HighQuality,
+        /** High sound quality (192 kbps, Stereo, ZegoAudioCodecIDDefault) */
+        HighQualityStereo
+    }
+
+    /** Player state. */
+    public enum ZegoMediaPlayerState
+    {
+        /** Not playing */
+        NoPlay,
+        /** Playing */
+        Playing,
+        /** Pausing */
+        Pausing,
+        /** End of play */
+        PlayEnded
+    }
+
+    /** Player network event. */
+    public enum ZegoMediaPlayerNetworkEvent
+    {
+        /** Network resources are not playing well, and start trying to cache data */
+        BufferBegin,
+        /** Network resources can be played smoothly */
+        BufferEnded
+    }
+
+    /** Audio channel. */
+    public enum ZegoMediaPlayerAudioChannel
+    {
+        /** Audio channel left */
+        Left,
+        /** Audio channel right */
+        Right,
+        /** Audio channel all */
+        All
+    }
+
+    /** AudioEffectPlayer state. */
+    public enum ZegoAudioEffectPlayState
+    {
+        /** Not playing */
+        NoPlay,
+        /** Playing */
+        Playing,
+        /** Pausing */
+        Pausing,
+        /** End of play */
+        PlayEnded
+    }
+
+    /** audio sample rate. */
+    public enum ZegoAudioSampleRate
+    {
+        /** Unknown */
+        Unknown = 0,
+        /** 8K */
+        ZegoAudioSampleRate8K = 8000,
+        /** 16K */
+        ZegoAudioSampleRate16K = 16000,
+        /** 22.05K */
+        ZegoAudioSampleRate22K = 22050,
+        /** 24K */
+        ZegoAudioSampleRate24K = 24000,
+        /** 32K */
+        ZegoAudioSampleRate32K = 32000,
+        /** 44.1K */
+        ZegoAudioSampleRate44K = 44100,
+        /** 48K */
+        ZegoAudioSampleRate48K = 48000
+    }
+
+    /** Audio capture source type. */
+    public enum ZegoAudioSourceType
+    {
+        /** Default audio capture source (the main channel uses custom audio capture by default; the aux channel uses the same sound as main channel by default) */
+        Default,
+        /** Use custom audio capture, refer to [enableCustomAudioIO] */
+        Custom,
+        /** Use media player as audio source, only support aux channel */
+        MediaPlayer
+    }
+
+    /** Record type. */
+    public enum ZegoDataRecordType
+    {
+        /** This field indicates that the Express-Audio SDK records audio by default, and the Express-Video SDK records audio and video by default. When recording files in .aac format, audio is also recorded by default. */
+        Default,
+        /** only record audio */
+        OnlyAudio,
+        /** only record video, Audio SDK and recording .aac format files are invalid. */
+        OnlyVideo,
+        /** record audio and video. Express-Audio SDK and .aac format files are recorded only audio. */
+        AudioAndVideo
+    }
+
+    /** Record state. */
+    public enum ZegoDataRecordState
+    {
+        /** Unrecorded state, which is the state when a recording error occurs or before recording starts. */
+        NoRecord,
+        /** Recording in progress, in this state after successfully call [startRecordingCapturedData] function */
+        Recording,
+        /** Record successs */
+        Success
+    }
+
+    /** Audio data callback function enable bitmask enumeration. */
+    public enum ZegoAudioDataCallbackBitMask
+    {
+        /** The mask bit of this field corresponds to the enable [onCapturedAudioData] callback function */
+        Captured = 1 << 0,
+        /** The mask bit of this field corresponds to the enable [onPlaybackAudioData] callback function */
+        Playback = 1 << 1,
+        /** The mask bit of this field corresponds to the enable [onMixedAudioData] callback function */
+        Mixed = 1 << 2,
+        /** The mask bit of this field corresponds to the enable [onPlayerAudioData] callback function */
+        Player = 1 << 3
+    }
+
+    /** network speed test type */
+    public enum ZegoNetworkSpeedTestType
+    {
+        /** uplink */
+        Uplink,
+        /** downlink */
+        Downlink
+    }
+
+    public enum ZegoMediaPlayerInstanceIndex
+    {
+
+        /// ZegoMediaPlayerInstanceIndex_null -> -1
+        Null = -1,
+
+        /// ZegoMediaPlayerInstanceIndex_first -> 0
+        First = 0,
+
+        /// ZegoMediaPlayerInstanceIndex_second -> 1
+
+        Second = 1,
+
+        /// ZegoMediaPlayerInstanceIndex_third -> 2
+        Third = 2,
+
+        /// ZegoMediaPlayerInstanceIndex_forth -> 3
+        Forth = 3,
+    }
+
+    /** AudioEffectPlayer instance index. */
+    public enum ZegoAudioEffectPlayerInstanceIndex
+    {
+        /** Unknown value */
+        Null = -1,
+        /** The first AudioEffectPlayer instance index */
+        First = 0
+    }
+
+    /** Font type. */
+    public enum ZegoFontType
+    {
+        /** Source han sans. */
+        SourceHanSans = 0,
+        /** Alibaba sans. */
+        AlibabaSans = 1,
+        /** Pang men zheng dao title. */
+        PangMenZhengDaoTitle,
+        /** HappyZcool. */
+        HappyZcool
+    }
+
+    /** Mixing stream video view render mode. */
+    public enum ZegoMixRenderMode
+    {
+        /** The proportional zoom fills the entire area and may be partially cut. */
+        Fill = 0,
+        /** Scale the filled area proportionally. If the scale does not match the set size after scaling, the extra part will be displayed as transparent. */
+        Fit = 1
+    }
+
+    /** Camera focus mode. */
+    public enum ZegoCameraFocusMode
+    {
+        /** Auto focus. */
+        AutoFocus = 0,
+        /** Continuous auto focus. */
+        ContinuousAutoFocus = 1
+    }
+
+    /** Camera exposure mode. */
+    public enum ZegoCameraExposureMode
+    {
+        /** Auto exposure. */
+        AutoExposure = 0,
+        /** Continuous auto exposure. */
+        ContinuousAutoExposure = 1
+    }
+
+    /** voice activity detection type */
+    public enum ZegoAudioVADType
+    {
+        /** noise */
+        Noise,
+        /** speech */
+        Speech
+    }
+
+    /** stable voice activity detection type */
+    public enum ZegoAudioVADStableStateMonitorType
+    {
+        /** captured */
+        Captured,
+        /** custom processed */
+        CustomProcessed
+    }
+
+    /**
+     * Log config.
+     *
+     * Description: This parameter is required when calling [setlogconfig] to customize log configuration.
+     * Use cases: This configuration is required when you need to customize the log storage path or the maximum log file size.
+     * Caution: None.
+     */
+    public class ZegoLogConfig
+    {
+
+        /** The storage path of the log file. Description: Used to customize the storage path of the log file. Use cases: This configuration is required when you need to customize the log storage path. Required: False. Default value: The default path of each platform is different, please refer to the official website document: https://doc-zh.zego.im/article/646. Caution: Developers need to ensure read and write permissions for files under this path. */
+        public string logPath;
+
+        /** Maximum log file size(Bytes). Description: Used to customize the maximum log file size. Use cases: This configuration is required when you need to customize the upper limit of the log file size. Required: False. Default value: 5MB (5 * 1024 * 1024 Bytes). Value range: Minimum 1MB (1 * 1024 * 1024 Bytes), maximum 100M (100 * 1024 * 1024 Bytes), 0 means no need to write logs. Caution: The larger the upper limit of the log file size, the more log information it carries, but the log upload time will be longer. */
+        public ulong logSize;
+
+    }
+
+    /**
+     * Custom video capture configuration.
+     *
+     * Custom video capture, that is, the developer is responsible for collecting video data and sending the collected video data to SDK for video data encoding and publishing to the ZEGO RTC server. This feature is generally used by developers who use third-party beauty features or record game screen living.
+     * When you need to use the custom video capture function, you need to set an instance of this class as a parameter to the [enableCustomVideoCapture] function.
+     * Because when using custom video capture, SDK will no longer start the camera to capture video data. You need to collect video data from video sources by yourself.
+     */
+    public class ZegoCustomVideoCaptureConfig
+    {
+
+        /** Custom video capture video frame data type */
+        public ZegoVideoBufferType bufferType;
+
+    }
+
+    /**
+     * Custom video process configuration.
+     */
+    public class ZegoCustomVideoProcessConfig
+    {
+
+        /** Custom video process video frame data type */
+        public ZegoVideoBufferType bufferType;
+
+    }
+
+    public class ZegoCustomVideoRenderConfig
+    {
+        /** 自定义视频渲染视频帧数据类型 */
+        public ZegoVideoBufferType bufferType;
+        /** 自定义视频渲染视频帧数据格式 */
+        public ZegoVideoFrameFormatSeries frameFormatSeries;
+        /** 是否在自定义视频渲染的同时，引擎也渲染，默认为 [false] */
+        public bool enableEngineRender;
+    }
+
+    /**
+     * Custom audio configuration.
+     */
+    public class ZegoCustomAudioConfig
+    {
+
+        /** Audio capture source type */
+        public ZegoAudioSourceType sourceType;
+
+    }
+
+    /**
+     * Profile for create engine
+     *
+     * Profile for create engine
+     */
+    public class ZegoEngineProfile
+    {
+
+        /** Application ID issued by ZEGO for developers, please apply from the ZEGO Admin Console https://console-express.zego.im The value ranges from 0 to 4294967295. */
+        public uint appID;
+
+        /** Application signature for each AppID, please apply from the ZEGO Admin Console. Application signature is a 64 character string. Each character has a range of '0' ~ '9', 'a' ~ 'z'. */
+        public string appSign;
+
+        /** The application scenario. Developers can choose one of ZegoScenario based on the scenario of the app they are developing, and the engine will preset a more general setting for specific scenarios based on the set scenario. After setting specific scenarios, developers can still call specific functions to set specific parameters if they have customized parameter settings.The recommended configuration for different application scenarios can be referred to: https://doc-zh.zego.im/faq/profile_difference. */
+        public ZegoScenario scenario;
+
+    }
+
+    /**
+     * Advanced engine configuration.
+     */
+    public class ZegoEngineConfig
+    {
+
+        /** Log configuration, if not set, use the default configuration. It must be set before calling [createEngine] to take effect. If it is set after [createEngine], it will take effect at the next [createEngine] after [destroyEngine]. */
+        public ZegoLogConfig logConfig;
+
+        /** Other special function switches, if not set, no special function will be used by default. Please contact ZEGO technical support before use. */
+        public Dictionary<string, string> advancedConfig;
+
+    }
+
+    /**
+     * Advanced room configuration.
+     *
+     * Configure maximum number of users in the room and authentication token, etc.
+     */
+    public class ZegoRoomConfig
+    {
+
+        /** The maximum number of users in the room, Passing 0 means unlimited, the default is unlimited. */
+        public uint maxMemberCount;
+
+        /** Whether to enable the user in and out of the room callback notification [onRoomUserUpdate], the default is off. If developers need to use ZEGO Room user notifications, make sure that each user who login sets this flag to true */
+        public bool isUserStatusNotify;
+
+        /** The token issued by the developer's business server is used to ensure security. The generation rules are detailed in Room Login Authentication Description https://doc-en.zego.im/article/3881 Default is empty string, that is, no authentication */
+        public string token;
+
+    }
+
+    /**
+     * Video config.
+     *
+     * Configure parameters used for publishing stream, such as bitrate, frame rate, and resolution.
+     * Developers should note that the width and height resolution of the mobile and desktop are opposite. For example, 360p, the resolution of the mobile is 360x640, and the desktop is 640x360.
+     */
+    public class ZegoVideoConfig
+    {
+
+        /** Capture resolution width, control the width of camera image acquisition. SDK requires this member to be set to an even number. Only the camera is not started and the custom video capture is not used, the setting is effective. For performance reasons, the SDK scales the video frame to the encoding resolution after capturing from camera and before rendering to the preview view. Therefore, the resolution of the preview image is the encoding resolution. If you need the resolution of the preview image to be this value, Please call [setCapturePipelineScaleMode] first to change the capture pipeline scale mode to [Post] */
+        public int captureWidth;
+
+        /** Capture resolution height, control the height of camera image acquisition. SDK requires this member to be set to an even number. Only the camera is not started and the custom video capture is not used, the setting is effective. For performance reasons, the SDK scales the video frame to the encoding resolution after capturing from camera and before rendering to the preview view. Therefore, the resolution of the preview image is the encoding resolution. If you need the resolution of the preview image to be this value, Please call [setCapturePipelineScaleMode] first to change the capture pipeline scale mode to [Post] */
+        public int captureHeight;
+
+        /** Encode resolution width, control the image width of the encoder when publishing stream. SDK requires this member to be set to an even number. The settings before and after publishing stream can be effective */
+        public int encodeWidth;
+
+        /** Encode resolution height, control the image height of the encoder when publishing stream. SDK requires this member to be set to an even number. The settings before and after publishing stream can be effective */
+        public int encodeHeight;
+
+        /** Frame rate, control the frame rate of the camera and the frame rate of the encoder. Only the camera is not started, the setting is effective */
+        public int fps;
+
+        /** Bit rate in kbps. The settings before and after publishing stream can be effective */
+        public int bitrate;
+
+        /** The codec id to be used, the default value is [default]. Settings only take effect before publishing stream */
+        public ZegoVideoCodecID codecID;
+
+        /** Video keyframe interval, in seconds. Required: No. Default value: 2 seconds. Value range: [2, 5]. Caution: The setting is only valid before pushing. */
+        public int keyFrameInterval;
+
+        /**
+         * Create video configuration with preset enumeration values
+         */
+        public ZegoVideoConfig(ZegoVideoConfigPreset preset)
+        {
+            codecID = ZegoVideoCodecID.Default;
+#if UNITY_IOS || UNITY_ANDROID
+            switch (preset) {
+                case ZegoVideoConfigPreset.Preset180P:
+                    captureWidth = 180;
+                    captureHeight = 320;
+                    encodeWidth = 180;
+                    encodeHeight = 320;
+                    bitrate = 300;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset270P:
+                    captureWidth = 270;
+                    captureHeight = 480;
+                    encodeWidth = 270;
+                    encodeHeight = 480;
+                    bitrate = 400;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset360P:
+                    captureWidth = 360;
+                    captureHeight = 640;
+                    encodeWidth = 360;
+                    encodeHeight = 640;
+                    bitrate = 600;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset540P:
+                    captureWidth = 540;
+                    captureHeight = 960;
+                    encodeWidth = 540;
+                    encodeHeight = 960;
+                    bitrate = 1200;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset720P:
+                    captureWidth = 720;
+                    captureHeight = 1280;
+                    encodeWidth = 720;
+                    encodeHeight = 1280;
+                    bitrate = 1500;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset1080P:
+                    captureWidth = 1080;
+                    captureHeight = 1920;
+                    encodeWidth = 1080;
+                    encodeHeight = 1920;
+                    bitrate = 3000;
+                    fps = 15;
+                    break;
+            }
+#elif UNITY_STANDALONE_OSX||UNITY_STANDALONE_WIN || UNITY_EDITOR
+            switch (preset)
+            {
+                case ZegoVideoConfigPreset.Preset180P:
+                    captureWidth = 320;
+                    captureHeight = 180;
+                    encodeWidth = 320;
+                    encodeHeight = 180;
+                    bitrate = 300;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset270P:
+                    captureWidth = 480;
+                    captureHeight = 270;
+                    encodeWidth = 480;
+                    encodeHeight = 270;
+                    bitrate = 400;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset360P:
+                    captureWidth = 640;
+                    captureHeight = 360;
+                    encodeWidth = 640;
+                    encodeHeight = 360;
+                    bitrate = 600;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset540P:
+                    captureWidth = 960;
+                    captureHeight = 540;
+                    encodeWidth = 960;
+                    encodeHeight = 540;
+                    bitrate = 1200;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset720P:
+                    captureWidth = 1280;
+                    captureHeight = 720;
+                    encodeWidth = 1280;
+                    encodeHeight = 720;
+                    bitrate = 1500;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset1080P:
+                    captureWidth = 1920;
+                    captureHeight = 1080;
+                    encodeWidth = 1920;
+                    encodeHeight = 1080;
+                    bitrate = 3000;
+                    fps = 15;
+                    break;
+            }
+#endif
+        }
+
+        /**
+         * Create default video configuration(360p, 15fps, 600000bps)
+         *
+         * 360p, 15fps, 600kbps
+         */
+        public ZegoVideoConfig() : this(ZegoVideoConfigPreset.Preset360P)
+        {
+
+        }
+
+    }
+
+    /**
+     * SEI configuration
+     *
+     * Used to set the relevant configuration of the Supplemental Enhancement Information.
+     */
+    public class ZegoSEIConfig
+    {
+
+        /** SEI type */
+        public ZegoSEIType type;
+
+    }
+
+    /**
+     * Audio reverberation echo parameters.
+     */
+    public class ZegoReverbEchoParam
+    {
+
+        /** Gain of input audio signal, in the range [0.0, 1.0] */
+        public float inGain;
+
+        /** Gain of output audio signal, in the range [0.0, 1.0] */
+        public float outGain;
+
+        /** Number of echos, in the range [0, 7] */
+        public int numDelays;
+
+        /** Respective delay of echo signal, in milliseconds, in the range [0, 5000] ms */
+        public int[] delay = new int[7];
+
+        /** Respective decay coefficient of echo signal, in the range [0.0, 1.0] */
+        public float[] decay = new float[7];
+
+    }
+
+    /**
+     * User object.
+     *
+     * Configure user ID and username to identify users in the room.
+     * Note that the userID must be unique under the same appID, otherwise mutual kicks out will occur.
+     * It is strongly recommended that userID corresponds to the user ID of the business APP, that is, a userID and a real user are fixed and unique, and should not be passed to the SDK in a random userID. Because the unique and fixed userID allows ZEGO technicians to quickly locate online problems.
+     */
+    public class ZegoUser
+    {
+
+        /** User ID, a string with a maximum length of 64 bytes or less.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
+        public string userID;
+
+        /** User Name, a string with a maximum length of 256 bytes or less.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc. */
+        public string userName;
+
+        public ZegoUser(string userId)
+        {
+            this.userID = userId;
+            this.userName = userId;
+        }
+
+        public ZegoUser()
+        {
+
+        }
+
+    }
+
+    /**
+     * Stream object.
+     *
+     * Identify an stream object
+     */
+    public class ZegoStream
+    {
+
+        /** User object instance.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc. */
+        public ZegoUser user;
+
+        /** Stream ID, a string of up to 256 characters. You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '~', '!', '@', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
+        public string streamID;
+
+        /** Stream extra info */
+        public string extraInfo;
+
+    }
+
+    /**
+     * Room extra information.
+     */
+    public class ZegoRoomExtraInfo
+    {
+
+        /** The key of the room extra information. */
+        public string key;
+
+        /** The value of the room extra information. */
+        public string value;
+
+        /** The user who update the room extra information.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc. */
+        public ZegoUser updateUser;
+
+        /** Update time of the room extra information, UNIX timestamp, in milliseconds. */
+        public ulong updateTime;
+
+    }
+
+    /**
+     * View related coordinates.
+     */
+    public class ZegoRect
+    {
+
+        /** The horizontal offset from the top-left corner */
+        public int x;
+
+        /** The vertical offset from the top-left corner */
+        public int y;
+
+        /** The width of the rectangle */
+        public int width;
+
+        /** The height of the rectangle */
+        public int height;
+
+        public ZegoRect(int x, int y, int width, int height)
+        {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+
+        public ZegoRect()
+        {
+
+        }
+
+    }
+
+    public class ZegoCanvas
+    {
+        /// void*
+        public System.IntPtr view;
+
+        /// zego_view_mode
+        public ZegoViewMode viewMode;
+
+        /// int
+        public int backgroundColor;
+    }
+
+    /**
+     * Advanced publisher configuration.
+     *
+     * Configure room id
+     */
+    public class ZegoPublisherConfig
+    {
+
+        /** The Room ID */
+        public string roomID;
+
+    }
+
+    /**
+     * Published stream quality information.
+     *
+     * Audio and video parameters and network quality, etc.
+     */
+    public class ZegoPublishStreamQuality
+    {
+
+        /** Video capture frame rate. The unit of frame rate is f/s */
+        public double videoCaptureFPS;
+
+        /** Video encoding frame rate. The unit of frame rate is f/s */
+        public double videoEncodeFPS;
+
+        /** Video transmission frame rate. The unit of frame rate is f/s */
+        public double videoSendFPS;
+
+        /** Video bit rate in kbps */
+        public double videoKBPS;
+
+        /** Audio capture frame rate. The unit of frame rate is f/s */
+        public double audioCaptureFPS;
+
+        /** Audio transmission frame rate. The unit of frame rate is f/s */
+        public double audioSendFPS;
+
+        /** Audio bit rate in kbps */
+        public double audioKBPS;
+
+        /** Local to server delay, in milliseconds */
+        public int rtt;
+
+        /** Packet loss rate, in percentage, 0.0 ~ 1.0 */
+        public double packetLostRate;
+
+        /** Published stream quality level */
+        public ZegoStreamQualityLevel level;
+
+        /** Whether to enable hardware encoding */
+        public bool isHardwareEncode;
+
+        /** Video codec ID */
+        public ZegoVideoCodecID videoCodecID;
+
+        /** Total number of bytes sent, including audio, video, SEI */
+        public double totalSendBytes;
+
+        /** Number of audio bytes sent */
+        public double audioSendBytes;
+
+        /** Number of video bytes sent */
+        public double videoSendBytes;
+
+    }
+
+    /**
+     * CDN config object.
+     *
+     * Includes CDN URL and authentication parameter string
+     */
+    public class ZegoCDNConfig
+    {
+
+        /** CDN URL */
+        public string url;
+
+        /** Auth param of URL */
+        public string authParam;
+
+    }
+
+    /**
+     * Relay to CDN info.
+     *
+     * Including the URL of the relaying CDN, relaying state, etc.
+     */
+    public class ZegoStreamRelayCDNInfo
+    {
+
+        /** URL of publishing stream to CDN */
+        public string url;
+
+        /** State of relaying to CDN */
+        public ZegoStreamRelayCDNState state;
+
+        /** Reason for relay state changed */
+        public ZegoStreamRelayCDNUpdateReason updateReason;
+
+        /** The timestamp when the state changed, UNIX timestamp, in milliseconds. */
+        public ulong stateTime;
+
+    }
+
+    /**
+     * Advanced player configuration.
+     *
+     * Configure playing stream CDN configuration, video layer, room id.
+     */
+    public class ZegoPlayerConfig
+    {
+
+        /** Stream resource mode. */
+        public ZegoStreamResourceMode resourceMode;
+
+        /** The CDN configuration for playing stream. If set, the stream is play according to the URL instead of the streamID. After that, the streamID is only used as the ID of SDK internal callback. */
+        public ZegoCDNConfig cdnConfig;
+
+        /** @deprecated This property has been deprecated since version 1.19.0, please use the [setPlayStreamVideoLayer] function instead. */
+        public ZegoPlayerVideoLayer videoLayer;
+
+        /** The Room ID. */
+        public string roomID;
+        ZegoPlayerConfig()
+        {
+            resourceMode = ZegoStreamResourceMode.Default;
+            cdnConfig = null;
+            videoLayer = (ZegoPlayerVideoLayer)99;
+        }
+    }
+
+    /**
+     * Played stream quality information.
+     *
+     * Audio and video parameters and network quality, etc.
+     */
+    public class ZegoPlayStreamQuality
+    {
+
+        /** Video receiving frame rate. The unit of frame rate is f/s */
+        public double videoRecvFPS;
+
+        /** Video dejitter frame rate. The unit of frame rate is f/s */
+        public double videoDejitterFPS;
+
+        /** Video decoding frame rate. The unit of frame rate is f/s */
+        public double videoDecodeFPS;
+
+        /** Video rendering frame rate. The unit of frame rate is f/s */
+        public double videoRenderFPS;
+
+        /** Video bit rate in kbps */
+        public double videoKBPS;
+
+        /** Video break rate, the unit is (number of breaks / every 10 seconds) */
+        public double videoBreakRate;
+
+        /** Audio receiving frame rate. The unit of frame rate is f/s */
+        public double audioRecvFPS;
+
+        /** Audio dejitter frame rate. The unit of frame rate is f/s */
+        public double audioDejitterFPS;
+
+        /** Audio decoding frame rate. The unit of frame rate is f/s */
+        public double audioDecodeFPS;
+
+        /** Audio rendering frame rate. The unit of frame rate is f/s */
+        public double audioRenderFPS;
+
+        /** Audio bit rate in kbps */
+        public double audioKBPS;
+
+        /** Audio break rate, the unit is (number of breaks / every 10 seconds) */
+        public double audioBreakRate;
+
+        /** Server to local delay, in milliseconds */
+        public int rtt;
+
+        /** Packet loss rate, in percentage, 0.0 ~ 1.0 */
+        public double packetLostRate;
+
+        /** Delay from peer to peer, in milliseconds */
+        public int peerToPeerDelay;
+
+        /** Packet loss rate from peer to peer, in percentage, 0.0 ~ 1.0 */
+        public double peerToPeerPacketLostRate;
+
+        /** Published stream quality level */
+        public ZegoStreamQualityLevel level;
+
+        /** Delay after the data is received by the local end, in milliseconds */
+        public int delay;
+
+        /** The difference between the video timestamp and the audio timestamp, used to reflect the synchronization of audio and video, in milliseconds. This value is less than 0 means the number of milliseconds that the video leads the audio, greater than 0 means the number of milliseconds that the video lags the audio, and 0 means no difference. When the absolute value is less than 200, it can basically be regarded as synchronized audio and video, when the absolute value is greater than 200 for 10 consecutive seconds, it can be regarded as abnormal */
+        public int avTimestampDiff;
+
+        /** Whether to enable hardware decoding */
+        public bool isHardwareDecode;
+
+        /** Video codec ID */
+        public ZegoVideoCodecID videoCodecID;
+
+        /** Total number of bytes received, including audio, video, SEI */
+        public double totalRecvBytes;
+
+        /** Number of audio bytes received */
+        public double audioRecvBytes;
+
+        /** Number of video bytes received */
+        public double videoRecvBytes;
+
+    }
+
+    /**
+     * Device Info.
+     *
+     * Including device ID and name
+     */
+    public class ZegoDeviceInfo
+    {
+
+        /** Device ID */
+        public string deviceID;
+
+        /** Device name */
+        public string deviceName;
+
+    }
+
+    /**
+     * System performance monitoring status
+     */
+    public class ZegoPerformanceStatus
+    {
+
+        /** Current CPU usage of the app, value range [0, 1] */
+        public double cpuUsageApp;
+
+        /** Current CPU usage of the system, value range [0, 1] */
+        public double cpuUsageSystem;
+
+        /** Current memory usage of the app, value range [0, 1] */
+        public double memoryUsageApp;
+
+        /** Current memory usage of the system, value range [0, 1] */
+        public double memoryUsageSystem;
+
+        /** Current memory used of the app, in MB */
+        public double memoryUsedApp;
+
+    }
+
+    /**
+     * Beauty configuration options.
+     *
+     * Configure the parameters of skin peeling, whitening and sharpening
+     */
+    public class ZegoBeautifyOption
+    {
+
+        /** The sample step size of beauty peeling, the value range is [0,1], default 0.2 */
+        public double polishStep;
+
+        /** Brightness parameter for beauty and whitening, the larger the value, the brighter the brightness, ranging from [0,1], default 0.5 */
+        public double whitenFactor;
+
+        /** Beauty sharpening parameter, the larger the value, the stronger the sharpening, value range [0,1], default 0.1 */
+        public double sharpenFactor;
+
+    }
+
+    /**
+     * Mix stream audio configuration.
+     *
+     * Configure video frame rate, bitrate, and resolution for mixer task
+     */
+    public class ZegoMixerAudioConfig
+    {
+
+        /** Audio bitrate in kbps, default is 48 kbps, cannot be modified after starting a mixer task */
+        public int bitrate;
+
+        /** Audio channel, default is Mono */
+        public ZegoAudioChannel channel;
+
+        /** codec ID, default is ZegoAudioCodecIDDefault */
+        public ZegoAudioCodecID codecID;
+
+        public ZegoMixerAudioConfig()
+        {
+            bitrate = 48;
+            channel = ZegoAudioChannel.Mono;
+            codecID = ZegoAudioCodecID.Default;
+        }
+
+    }
+
+    /**
+     * Mix stream video config object.
+     *
+     * Configure video frame rate, bitrate, and resolution for mixer task
+     */
+    public class ZegoMixerVideoConfig
+    {
+
+        /** Video resolution width */
+        public int width;
+
+        /** Video resolution height */
+        public int height;
+
+        /** Video FPS, cannot be modified after starting a mixer task */
+        public int fps;
+
+        /** Video bitrate in kbps */
+        public int bitrate;
+
+        public ZegoMixerVideoConfig()
+        {
+            width = 360;
+            height = 640;
+            fps = 15;
+            bitrate = 600;
+        }
+
+        public ZegoMixerVideoConfig(int width, int height, int fps, int bitrate)
+        {
+            this.width = width;
+            this.height = height;
+            this.fps = fps;
+            this.bitrate = bitrate;
+        }
+
+    }
+
+    /**
+     * Mix stream output video config object.
+     *
+     * Description: Configure the video parameters, coding format and bitrate of mix stream output.
+     * Use cases: Manual mixed stream scenario, such as Co-hosting.
+     */
+    public class ZegoMixerOutputVideoConfig
+    {
+
+        /** Mix stream output video coding format, supporting H.264 and h.265 coding. */
+        public ZegoVideoCodecID videoCodecID;
+
+        /** Mix stream output video bitrate in kbps. */
+        public int bitrate;
+
+    }
+
+    /**
+     * Font style.
+     *
+     * Description: Font style configuration, can be used to configure font type, font size, font color, font transparency.
+     * Use cases: Set text watermark in manual stream mixing scene, such as Co-hosting.
+     */
+    public class ZegoFontStyle
+    {
+
+        /** Font type. Required: False. Default value: Source han sans [ZegoFontTypeSourceHanSans] */
+        public ZegoFontType type;
+
+        /** Font size in px. Required: False. Default value: 24. Value range: [12,100]. */
+        public int size;
+
+        /** Font color, the calculation formula is: R + G x 256 + B x 65536, the value range of R (red), G (green), and B (blue) [0,255]. Required: False. Default value: 16777215(white). Value range: [0,16777215]. */
+        public int color;
+
+        /** Font transparency. Required: False. Default value: 0. Value range: [0,100], 100 is completely opaque, 0 is completely transparent. */
+        public int transparency;
+
+        public ZegoFontStyle()
+        {
+            this.type = ZegoFontType.SourceHanSans;
+            this.size = 24;
+            this.color = 16777215;
+            this.transparency = 0;
+        }
+
+    }
+
+    /**
+     * Label info.
+     *
+     * Description: Font style configuration, can be used to configure font type, font si-e, font color, font transparency.
+     * Use cases: Set text watermark in manual stream mixing scene, such as Co-hosting.
+     */
+    public class ZegoLabelInfo
+    {
+
+        /** Text content, support for setting simplified Chinese, English, half-width, not full-width. Required: True.Value range: Maximum support for displaying 100 Chinese characters and 300 English characters. */
+        public string text;
+
+        /** The distance between the font and the left border of the output canvas, in px. Required: False. Default value: 0. */
+        public int left;
+
+        /** The distance between the font and the top border of the output canvas, in px. Required: False. Default value: 0. */
+        public int top;
+
+        /** Font style. Required: False. */
+        public ZegoFontStyle font;
+
+        public ZegoLabelInfo(string text)
+        {
+            this.text = text;
+            this.left = 0;
+            this.top = 0;
+            this.font = new ZegoFontStyle();
+        }
+
+    }
+
+    /**
+     * Mixer input.
+     *
+     * Configure the mix stream input stream ID, type, and the layout
+     */
+    public class ZegoMixerInput
+    {
+
+        /** Stream ID, a string of up to 256 characters. You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '~', '!', '@', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
+        public string streamID;
+
+        /** Mix stream content type */
+        public ZegoMixerInputContentType contentType;
+
+        /** Stream layout. When the mixed stream is an audio stream (that is, the ContentType parameter is set to the audio mixed stream type), the layout field is not processed inside the SDK, and there is no need to pay attention to this parameter. */
+        public ZegoRect layout;
+
+        /** If enable soundLevel in mix stream task, an unique soundLevelID is need for every stream */
+        public uint soundLevelID;
+
+        /** Whether the focus voice is enabled in the current input stream, the sound of this stream will be highlighted if enabled */
+        public bool isAudioFocus;
+
+        /** The direction of the audio. Valid direction is between 0 to 360. Set -1 means disable. Default value is -1 */
+        public int audioDirection;
+
+        /** Text watermark. */
+        public ZegoLabelInfo label;
+
+        /** Video view render mode. */
+        public ZegoMixRenderMode renderMode;
+
+        public ZegoMixerInput(string streamID, ZegoMixerInputContentType contentType, ZegoRect layout)
+        {
+            this.streamID = streamID;
+            this.contentType = contentType;
+            this.layout = layout;
+            this.soundLevelID = 0;
+            this.isAudioFocus = false;
+            this.audioDirection = -1;
+            this.label = new ZegoLabelInfo("");
+            this.renderMode = ZegoMixRenderMode.Fill;
+        }
+
+        public ZegoMixerInput(string streamID, ZegoMixerInputContentType contentType, ZegoRect layout, uint soundLevelID)
+        {
+            this.streamID = streamID;
+            this.contentType = contentType;
+            this.layout = layout;
+            this.soundLevelID = soundLevelID;
+            this.isAudioFocus = false;
+            this.audioDirection = -1;
+            this.label = new ZegoLabelInfo("");
+            this.renderMode = ZegoMixRenderMode.Fill;
+        }
+
+    }
+
+    /**
+     * Mixer output object.
+     *
+     * Configure mix stream output target URL or stream ID
+     */
+    public class ZegoMixerOutput
+    {
+
+        /** Mix stream output target, URL or stream ID, if set to be URL format, only RTMP URL surpported, for example rtmp://xxxxxxxx, addresses with two identical mixed-stream outputs cannot be passed in. */
+        public string target;
+
+        /** Mix stream output video config */
+        public ZegoMixerOutputVideoConfig videoConfig;
+
+        public ZegoMixerOutput(string target)
+        {
+            this.target = target;
+        }
+
+    }
+
+    /**
+     * Watermark object.
+     *
+     * Configure a watermark image URL and the layout of the watermark in the screen.
+     */
+    public class ZegoWatermark
+    {
+
+        /** The path of the watermark image. Support local file absolute path (file://xxx). The format supports png, jpg. */
+        public string imageURL;
+
+        /** Watermark image layout */
+        public ZegoRect layout;
+
+    }
+
+    /**
+     * Mix stream task object.
+     *
+     * This class is the configuration class of the stream mixing task. When a stream mixing task is requested to the ZEGO RTC server, the configuration of the stream mixing task is required.
+     * This class describes the detailed configuration information of this stream mixing task.
+     */
+    public class ZegoMixerTask
+    {
+
+        /** Mix stream task ID */
+        public string taskID;
+
+        /** Mix stream audio config */
+        public ZegoMixerAudioConfig audioConfig;
+
+        /** Mix stream audio config */
+        public ZegoMixerVideoConfig videoConfig;
+
+        /** Mix stream task input list */
+        public List<ZegoMixerInput> inputList;
+
+        /** Mix stream task output list */
+        public List<ZegoMixerOutput> outputList;
+
+        /** Mix stream wate rmark */
+        public ZegoWatermark watermark;
+
+        /** Mix stream background image URL */
+        public string backgroundImageURL;
+
+        /** Enable or disable sound level callback for the task. If enabled, then the remote player can get the soundLevel of every stream in the inputlist by [onMixerSoundLevelUpdate] callback. */
+        public bool soundLevel;
+
+        /**
+         * Create a mix stream task object with TaskID
+         */
+        public ZegoMixerTask(string taskID)
+        {
+            this.taskID = taskID;
+            inputList = new List<ZegoMixerInput>();
+            outputList = new List<ZegoMixerOutput>();
+            audioConfig = new ZegoMixerAudioConfig();
+            videoConfig = new ZegoMixerVideoConfig();
+            backgroundImageURL = "";
+        }
+
+    }
+
+    /**
+     * Configuration for start sound level monitor.
+     */
+    public class ZegoSoundLevelConfig
+    {
+
+        /** Monitoring time period of the sound level, in milliseconds, has a value range of [100, 3000]. Default is 100 ms. */
+        public uint millisecond;
+
+        /** Set whether the sound level callback includes the VAD detection result. */
+        public bool enableVAD;
+
+    }
+
+    /**
+     * Auto mix stream task object.
+     *
+     * Description: When using [StartAutoMixerTask] function to start an auto stream mixing task to the ZEGO RTC server, user need to set this parameter to configure the auto stream mixing task, including the task ID, room ID, audio configuration, output stream list, and whether to enable the sound level callback.
+     * Use cases: This configuration is required when an auto stream mixing task is requested to the ZEGO RTC server.
+     * Caution: As an argument passed when [StartAutoMixerTask] function is called.
+     */
+    public class ZegoAutoMixerTask
+    {
+
+        /** The taskID of the auto mixer task.Description: Auto stream mixing task id, must be unique in a room.Use cases: User need to set this parameter when initiating an auto stream mixing task.Required: Yes.Recommended value: Set this parameter based on requirements.Value range: A string up to 256 bytes.Caution: When starting a new auto stream mixing task, only one auto stream mixing task ID can exist in a room, that is, to ensure the uniqueness of task ID. You are advised to associate task ID with room ID. You can directly use the room ID as the task ID.Cannot include URL keywords, for example, 'http' and '?' etc, otherwise publishing stream and playing stream will fail. Only support numbers, English characters and '~', '!', '@', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
+        public string taskID;
+
+        /** The roomID of the auto mixer task.Description: Auto stream mixing task id.Use cases: User need to set this parameter when initiating an auto stream mixing task.Required: Yes.Recommended value: Set this parameter based on requirements.Value range: A string up to 128 bytes.Caution: Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
+        public string roomID;
+
+        /** The audio config of the auto mixer task.Description: The audio config of the auto mixer task.Use cases: If user needs special requirements for the audio config of the auto stream mixing task, such as adjusting the audio bitrate, user can set this parameter as required. Otherwise, user do not need to set this parameter.Required: No.Default value: The default audio bitrate is `48 kbps`, the default audio channel is `ZEGO_AUDIO_CHANNEL_MONO`, the default encoding ID is `ZEGO_AUDIO_CODEC_ID_DEFAULT`, and the default multi-channel audio stream mixing mode is `ZEGO_AUDIO_MIX_MODE_RAW`.Recommended value: Set this parameter based on requirements. */
+        public ZegoMixerAudioConfig audioConfig;
+
+        /** The output list of the auto mixer task.Description: The output list of the auto stream mixing task, items in the list are URL or stream ID, if the item set to be URL format, only RTMP URL surpported, for example rtmp://xxxxxxxx.Use cases: User need to set this parameter to specify the mix stream output target when starting an auto stream mixing task.Required: Yes. */
+        public List<ZegoMixerOutput> outputList;
+
+        /** Enable or disable sound level callback for the task. If enabled, then the remote player can get the sound level of every stream in the inputlist by [onAutoMixerSoundLevelUpdate] callback.Description: Enable or disable sound level callback for the task.If enabled, then the remote player can get the sound level of every stream in the inputlist by [onAutoMixerSoundLevelUpdate] callback.Use cases: This parameter needs to be configured if user need the sound level information of every stream when an auto stream mixing task started.Required: No.Default value: `false`.Recommended value: Set this parameter based on requirements. */
+        public bool enableSoundLevel;
+
+        /**
+         * Create a auto mix stream task object
+         */
+        public ZegoAutoMixerTask()
+        {
+            this.taskID = "";
+            this.roomID = "";
+            outputList = new List<ZegoMixerOutput>();
+            audioConfig = new ZegoMixerAudioConfig();
+            enableSoundLevel = false;
+        }
+
+    }
+
+    /**
+     * Broadcast message info.
+     *
+     * The received object of the room broadcast message, including the message content, message ID, sender, sending time
+     */
+    public class ZegoBroadcastMessageInfo
+    {
+
+        /** message content */
+        public string message;
+
+        /** message id */
+        public ulong messageID;
+
+        /** Message send time, UNIX timestamp, in milliseconds. */
+        public ulong sendTime;
+
+        /** Message sender.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc. */
+        public ZegoUser fromUser;
+
+    }
+
+    /**
+     * Barrage message info.
+     *
+     * The received object of the room barrage message, including the message content, message ID, sender, sending time
+     */
+    public class ZegoBarrageMessageInfo
+    {
+
+        /** message content */
+        public string message;
+
+        /** message id */
+        public string messageID;
+
+        /** Message send time, UNIX timestamp, in milliseconds. */
+        public ulong sendTime;
+
+        /** Message sender.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc. */
+        public ZegoUser fromUser;
+
+    }
+
+    /**
+     * Object for video frame fieldeter.
+     *
+     * Including video frame format, width and height, etc.
+     */
+    public class ZegoVideoFrameParam
+    {
+
+        /** Video frame format */
+        public ZegoVideoFrameFormat format;
+
+        /** Number of bytes per line (for example: BGRA only needs to consider strides [0], I420 needs to consider strides [0,1,2]) */
+        public int[] strides;
+
+        /** Video frame width. When use custom video capture, the video data meeting the 32-bit alignment can obtain the maximum performance. Taking BGRA as an example, width * 4 is expected to be multiple of 32. */
+        public int width;
+
+        /** Video frame height */
+        public int height;
+
+        /** The rotation direction of the video frame, the SDK rotates clockwise */
+        public int rotation;
+
+    }
+
+    /**
+     * Parameter object for audio frame.
+     *
+     * Including the sampling rate and channel of the audio frame
+     */
+    public class ZegoAudioFrameParam
+    {
+
+        /** Sampling Rate */
+        public ZegoAudioSampleRate sampleRate = ZegoAudioSampleRate.Unknown;
+
+        /** Audio channel, default is Mono */
+        public ZegoAudioChannel channel = ZegoAudioChannel.Mono;
+
+    }
+
+    /**
+     * Audio configuration.
+     *
+     * Configure audio bitrate, audio channel, audio encoding for publishing stream
+     */
+    public class ZegoAudioConfig
+    {
+
+        /** Audio bitrate in kbps, default is 48 kbps. The settings before and after publishing stream can be effective */
+        public int bitrate;
+
+        /** Audio channel, default is Mono. The setting only take effect before publishing stream */
+        public ZegoAudioChannel channel;
+
+        /** codec ID, default is ZegoAudioCodecIDDefault. The setting only take effect before publishing stream */
+        public ZegoAudioCodecID codecID;
+
+        /**
+         * Create a default audio configuration (ZegoAudioConfigPresetStandardQuality, 48 kbps, Mono, ZegoAudioCodecIDDefault)
+         */
+        public ZegoAudioConfig() : this(ZegoAudioConfigPreset.StandardQuality)
+        {
+
+        }
+
+        /**
+         * Create a audio configuration with preset enumeration values
+         */
+        public ZegoAudioConfig(ZegoAudioConfigPreset presetType)
+        {
+            codecID = ZegoAudioCodecID.Default;
+            switch (presetType)
+            {
+                case ZegoAudioConfigPreset.BasicQuality:
+                    bitrate = 16;
+                    channel = ZegoAudioChannel.Mono;
+                    break;
+                case ZegoAudioConfigPreset.StandardQuality:
+                    bitrate = 48;
+                    channel = ZegoAudioChannel.Mono;
+                    break;
+                case ZegoAudioConfigPreset.StandardQualityStereo:
+                    bitrate = 56;
+                    channel = ZegoAudioChannel.Stereo;
+                    break;
+                case ZegoAudioConfigPreset.HighQuality:
+                    bitrate = 128;
+                    channel = ZegoAudioChannel.Mono;
+                    break;
+                case ZegoAudioConfigPreset.HighQualityStereo:
+                    bitrate = 192;
+                    channel = ZegoAudioChannel.Stereo;
+                    break;
+            }
+        }
+
+    }
+
+    /**
+     * Record config.
+     */
+    public class ZegoDataRecordConfig
+    {
+
+        /** The path to save the recording file, absolute path, need to include the file name, the file name need to specify the suffix, currently supports .mp4/.flv/.aac format files, if multiple recording for the same path, will overwrite the file with the same name. The maximum length should be less than 1024 bytes. */
+        public string filePath;
+
+        /** Type of recording media */
+        public ZegoDataRecordType recordType;
+
+    }
+
+    /**
+     * File recording progress.
+     */
+    public class ZegoDataRecordProgress
+    {
+
+        /** Current recording duration in milliseconds */
+        public ulong duration;
+
+        /** Current recording file size in byte */
+        public ulong currentFileSize;
+
+    }
+
+    /**
+     * AudioEffectPlayer play configuration.
+     */
+    public class ZegoAudioEffectPlayConfig
+    {
+
+        /** The number of play counts. When set to 0, it will play in an infinite loop until the user invoke [stop]. The default is 1, which means it will play only once. */
+        public uint playCount;
+
+        /** Whether to mix audio effects into the publishing stream, the default is false. */
+        public bool isPublishOut;
+
+    }
+
+
 }

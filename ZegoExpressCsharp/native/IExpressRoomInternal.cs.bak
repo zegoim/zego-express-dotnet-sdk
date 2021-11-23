@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using static ZEGO.ZegoConstans;
@@ -25,12 +25,6 @@ namespace ZEGO
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_logout_room", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_logout_room([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string room_id);
 
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_logout_all_room", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_logout_all_room();
-
-        [DllImport(LIB_NAME, EntryPoint = "zego_express_switch_room", CallingConvention = ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_switch_room([In()][MarshalAs(UnmanagedType.LPStr)] string from_room_id, [In()][MarshalAs(UnmanagedType.LPStr)] string to_room_id, IntPtr config);
-
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_room_state_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_room_state_update_callback(zego_on_room_state_update callback_func, System.IntPtr user_context);
 
@@ -45,9 +39,6 @@ namespace ZEGO
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_room_stream_extra_info_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_room_stream_extra_info_update_callback(zego_on_room_stream_extra_info_update callback_func, System.IntPtr user_context);
-
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_room_extra_info", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_set_room_extra_info([System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, [System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string key, [System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string value);
 
     }
 

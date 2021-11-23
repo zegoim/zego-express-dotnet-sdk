@@ -33,8 +33,6 @@ namespace ZEGO
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
         public delegate void zego_on_engine_uninit(System.IntPtr user_context);
 
-        [DllImport("ZegoExpressEngine", EntryPoint = "zego_express_set_room_mode", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_set_room_mode(ZegoRoomMode mode);
 
         /**
           * 获取 SDK 版本号
@@ -71,17 +69,6 @@ namespace ZEGO
          */
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_engine_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_express_set_engine_config(zego_engine_config config);
-
-        /**
-         * 创建引擎实例对象
-         * 在调用其他 API 前需要先创建并初始化引擎；SDK 只支持创建一个 ZegoExpressEngine 实例，多次调用此接口返回的都是同一个对象。
-         * @param profile 创建引擎实例对象的配置
-         * @param event_handler 事件通知回调对象
-         * @return (zego_error), 错误码
-         */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_init_with_profile", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_engine_init_with_profile(zego_engine_profile profile);
-
         /**
          * 创建引擎实例对象
          * 在调用其他 API 前需要先创建并初始化引擎；SDK 只支持创建一个 ZegoExpressEngine 实例，多次调用此接口返回的都是同一个对象。
