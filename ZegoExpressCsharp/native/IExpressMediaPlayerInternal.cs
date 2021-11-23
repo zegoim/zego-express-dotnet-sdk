@@ -10,38 +10,38 @@ namespace ZEGO
         /// Return Type: int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_destroy_media_player", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_destroy_media_player(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_destroy_media_player(zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_start", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_start(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_start(zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_stop", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_stop(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_stop(zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_pause", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_pause(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_pause(zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_resume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_resume(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_resume(zego_media_player_instance_index instance_index);
 
 
        
         /// Return Type: zego_mediaplayer_state
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_current_state", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern ZegoMediaPlayerState zego_express_media_player_get_current_state(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern ZegoMediaPlayerState zego_express_media_player_get_current_state(zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
@@ -49,14 +49,14 @@ namespace ZEGO
         ///millisecond: int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_seek_to", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_seek_to(ulong millisecond, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_seek_to(ulong millisecond, zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///volume: int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_set_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_set_volume(int volume, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_set_volume(int volume, zego_media_player_instance_index instance_index);
 
 
         
@@ -65,34 +65,34 @@ namespace ZEGO
         /// Return Type: unsigned int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_total_duration", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern uint zego_express_media_player_get_total_duration(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern uint zego_express_media_player_get_total_duration(zego_media_player_instance_index instance_index);
 
 
         /// Return Type: unsigned int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_current_progress", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern uint zego_express_media_player_get_current_progress(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern uint zego_express_media_player_get_current_progress(zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///mute: boolean
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_mute_local_audio", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_mute_local_audio([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool mute, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_mute_local_audio([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool mute, zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///canvas: zego_canvas*
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_set_player_canvas", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_set_player_canvas(IntPtr canvas, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_set_player_canvas(IntPtr canvas, zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///enable: boolean
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_enable_aux", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_enable_aux([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_enable_aux([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, zego_media_player_instance_index instance_index);
 
 
 
@@ -100,21 +100,21 @@ namespace ZEGO
         ///enable: boolean
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_enable_repeat", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_enable_repeat([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_enable_repeat([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, zego_media_player_instance_index instance_index);
 
         /// Return Type: int
         ///param0: unsigned int
         ///millisecond: int
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_set_progress_interval", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_set_progress_interval(ulong millisecond, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_set_progress_interval(ulong millisecond, zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///enable: boolean
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_enable_audio_data", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_enable_audio_data([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_enable_audio_data([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
@@ -122,7 +122,7 @@ namespace ZEGO
         ///format: zego_video_frame_format
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_enable_video_data", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_enable_video_data([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, ZegoVideoFrameFormat format, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_enable_video_data([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool enable, ZegoVideoFrameFormat format, zego_media_player_instance_index instance_index);
 
 
         /// Return Type: void
@@ -145,11 +145,11 @@ namespace ZEGO
         ///path: char*
         ///instance_index: zego_mediaplayer_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_load_resource", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_load_resource([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler,MarshalTypeRef =typeof(ZegoUtil.UTF8StringMarshaler))] string path, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_load_resource([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler,MarshalTypeRef =typeof(ZegoUtil.UTF8StringMarshaler))] string path, zego_media_player_instance_index instance_index);
 
         /// Return Type: ZegoMediaPlayerInstanceIndex
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_create_media_player", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern ZegoMediaPlayerInstanceIndex zego_express_create_media_player();
+        public static extern zego_media_player_instance_index zego_express_create_media_player();
 
         /// Return Type: void
         ///callback_func: zego_on_mediaplayer_state_update
@@ -195,14 +195,14 @@ namespace ZEGO
         ///instance_index: ZegoMediaPlayerInstanceIndex
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_media_player_state_update(ZegoMediaPlayerState state, int error_code, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
+        public delegate void zego_on_media_player_state_update(ZegoMediaPlayerState state, int error_code, zego_media_player_instance_index instance_index, System.IntPtr user_context);
 
         /// Return Type: void
         ///event: ZegoMediaPlayerNetworkEvent
         ///instance_index: ZegoMediaPlayerInstanceIndex
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_media_player_network_event(ZegoMediaPlayerNetworkEvent net_event, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
+        public delegate void zego_on_media_player_network_event(ZegoMediaPlayerNetworkEvent net_event, zego_media_player_instance_index instance_index, System.IntPtr user_context);
 
         /// Return Type: void
         ///param0: unsigned int
@@ -210,7 +210,7 @@ namespace ZEGO
         ///instance_index: ZegoMediaPlayerInstanceIndex
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_media_player_playing_progress(ulong millisecond, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
+        public delegate void zego_on_media_player_playing_progress(ulong millisecond, zego_media_player_instance_index instance_index, System.IntPtr user_context);
 
         /// Return Type: void
         ///seq: int
@@ -218,14 +218,14 @@ namespace ZEGO
         ///instance_index: ZegoMediaPlayerInstanceIndex
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_media_player_seek_to(int seq, int error_code, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
+        public delegate void zego_on_media_player_seek_to(int seq, int error_code, zego_media_player_instance_index instance_index, System.IntPtr user_context);
 
         /// Return Type: void
         ///error_code: int
         ///instance_index: ZegoMediaPlayerInstanceIndex
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_media_player_load_resource(int error_code, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
+        public delegate void zego_on_media_player_load_resource(int error_code, zego_media_player_instance_index instance_index, System.IntPtr user_context);
 
         /// Return Type: void
         ///data: char*
@@ -234,7 +234,7 @@ namespace ZEGO
         ///instance_index: ZegoMediaPlayerInstanceIndex
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_media_player_audio_frame(IntPtr data, uint data_length, zego_audio_frame_param param, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
+        public delegate void zego_on_media_player_audio_frame(IntPtr data, uint data_length, zego_audio_frame_param param, zego_media_player_instance_index instance_index, System.IntPtr user_context);
 
         /// Return Type: void
         ///data: char**
@@ -245,32 +245,32 @@ namespace ZEGO
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
         public delegate void zego_on_media_player_video_frame([In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] IntPtr[] data,
             [In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] uint[] data_length, zego_video_frame_param param,
-            ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context);
+            zego_media_player_instance_index instance_index, System.IntPtr user_context);
 
         /// Return Type: int
         ///volume: int
         ///instance_index: zego_media_player_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_set_play_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_set_play_volume(int volume, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_set_play_volume(int volume, zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///volume: int
         ///instance_index: zego_media_player_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_set_publish_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_set_publish_volume(int volume, ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_set_publish_volume(int volume, zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///instance_index: zego_media_player_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_play_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_get_play_volume(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_get_play_volume(zego_media_player_instance_index instance_index);
 
 
         /// Return Type: int
         ///instance_index: zego_media_player_instance_index
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_publish_volume", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_get_publish_volume(ZegoMediaPlayerInstanceIndex instance_index);
+        public static extern int zego_express_media_player_get_publish_volume(zego_media_player_instance_index instance_index);
 
 
     }

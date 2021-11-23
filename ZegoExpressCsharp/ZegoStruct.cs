@@ -4,6 +4,34 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 namespace ZEGO
 {
+    ///
+    /// enum
+    ///
+
+    /** MediaPlayer instance index. */
+    public enum zego_media_player_instance_index
+    {
+        /** Unknown value */
+        zego_media_player_instance_index_null = -1,
+
+        /** The first mediaplayer instance index */
+        zego_media_player_instance_index_first = 0,
+
+        /** The second mediaplayer instance index */
+        zego_media_player_instance_index_second = 1,
+
+        /** The third mediaplayer instance index */
+        zego_media_player_instance_index_third = 2,
+
+        /** The forth mediaplayer instance index */
+        zego_media_player_instance_index_forth = 3
+
+    };
+
+    /// 
+    /// struct
+    ///
+
     // 日志属性，默认为空（size 为 5M，路径为默认k路径）
     public struct zego_log_config
     {

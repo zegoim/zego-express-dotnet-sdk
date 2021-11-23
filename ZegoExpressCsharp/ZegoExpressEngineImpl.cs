@@ -26,7 +26,7 @@ namespace ZEGO
         public static ConcurrentDictionary<int, OnRoomSetRoomExtraInfoResult> onRoomSetRoomExtraInfoResultDics = new ConcurrentDictionary<int, OnRoomSetRoomExtraInfoResult>();
         // private static bool setEngineConfigFlag = false;
         static SynchronizationContext context;
-        private static ConcurrentDictionary<ZegoMediaPlayerInstanceIndex, ZegoMediaPlayer> mediaPlayerAndIndex = new ConcurrentDictionary<ZegoMediaPlayerInstanceIndex, ZegoMediaPlayer>();
+        private static ConcurrentDictionary<zego_media_player_instance_index, ZegoMediaPlayer> mediaPlayerAndIndex = new ConcurrentDictionary<zego_media_player_instance_index, ZegoMediaPlayer>();
         private static ConcurrentDictionary<int, OnMixerStartResult> onMixerStartResultDics = new ConcurrentDictionary<int, OnMixerStartResult>();
         private static ConcurrentDictionary<int, OnMixerStopResult> onMixerStopResultDics = new ConcurrentDictionary<int, OnMixerStopResult>();
         private static IExpressEngineInternal.zego_on_engine_uninit zegoOnEngineUninit;//避免GC回收
@@ -429,7 +429,7 @@ namespace ZEGO
             }), null);
 
         }
-        public static void zego_on_mediaplayer_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, zego_media_player_instance_index instance_index, System.IntPtr user_context)
         {
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
             if (zegoMediaPlayer.onAudioFrame != null)
@@ -453,7 +453,7 @@ namespace ZEGO
         }
 
 
-        public static void zego_on_mediaplayer_video_data(IntPtr[] data, uint[] data_length, zego_video_frame_param param, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_video_data(IntPtr[] data, uint[] data_length, zego_video_frame_param param, zego_media_player_instance_index instance_index, System.IntPtr user_context)
         {
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
             if (zegoMediaPlayer.onVideoFrame != null)
@@ -480,7 +480,7 @@ namespace ZEGO
         }
 
 
-        public static void zego_on_mediaplayer_load_resource_result(int error_code, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_load_resource_result(int error_code, zego_media_player_instance_index instance_index, System.IntPtr user_context)
         {
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
             if (zegoMediaPlayer.onLoadResourceCallback != null)
@@ -912,7 +912,7 @@ namespace ZEGO
             {
                 int result = 0;
                 bool enable = false;
-                ZegoMediaPlayerInstanceIndex curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 if (onAudioFrame == null)
                 {
                     enable = false;
@@ -934,7 +934,7 @@ namespace ZEGO
             {
                 int result = 0;
                 bool enable = false;
-                ZegoMediaPlayerInstanceIndex curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 if (onVideoFrame == null)
                 {
                     enable = false;
@@ -1205,7 +1205,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_stop(index);
                 string log = string.Format("MediaPlayer Stop index:{0}  result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1217,7 +1217,7 @@ namespace ZEGO
             ZegoMediaPlayerState state = ZegoMediaPlayerState.NoPlay;
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 state = IExpressMediaPlayerInternal.zego_express_media_player_get_current_state(index);
                 string log = string.Format("MediaPlayer GetCurrentState index:{0}  result:{1} ", index, state);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -1229,7 +1229,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_resume(index);
                 string log = string.Format("MediaPlayer Resume index:{0}  result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1240,7 +1240,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int seq = IExpressMediaPlayerInternal.zego_express_media_player_seek_to(millisecond, index);
                 string log = string.Format("MediaPlayer SeekTo index:{0} millisecond:{1} result:{2} ", index, millisecond, seq);
                 zegoMediaPlayer.seekToTimeCallbackDic.AddOrUpdate(seq, onSeekToTimeCallback, (key, oldValue) => onSeekToTimeCallback);
@@ -1251,7 +1251,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(mediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(mediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_destroy_media_player(index);
                 string log = string.Format("MediaPlayer Destroy index:{0} result:{1} ", index, result);
                 mediaPlayer.seekToTimeCallbackDic.Clear();
@@ -1264,7 +1264,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_mute_local_audio(mute, index);
                 string log = string.Format("MediaPlayer MuteLocal index:{0} mute:{1} result:{2} ", index, mute, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1275,7 +1275,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 zego_canvas zegoCanvas = ChangeZegoCanvasClassToStruct(canvas);
                 IntPtr ptr = ZegoUtil.GetStructPointer(zegoCanvas);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_player_canvas(ptr, index);
@@ -1289,7 +1289,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_volume(volume, index);
                 string log = string.Format("MediaPlayer SetVolume index:{0} volume:{1} result:{2} ", index, volume, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1300,7 +1300,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_progress_interval(millisecond, index);
                 string log = string.Format("MediaPlayer SetProgressInterval index:{0} millisecond:{1} result:{2} ", index, millisecond, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1312,7 +1312,7 @@ namespace ZEGO
             ulong result = 0;
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_total_duration(index);
                 string log = string.Format("MediaPlayer GetTotalDuration index:{0} result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -1326,7 +1326,7 @@ namespace ZEGO
             ulong result = 0;
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_current_progress(index);
                 string log = string.Format("MediaPlayer GetCurrentProgress index:{0} result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -1336,7 +1336,7 @@ namespace ZEGO
 
         public static int GetIndex(ZegoMediaPlayer zegoMediaPlayer)
         {
-            ZegoMediaPlayerInstanceIndex index = ZegoMediaPlayerInstanceIndex.Null;
+            zego_media_player_instance_index index = zego_media_player_instance_index.zego_media_player_instance_index_null;
             if (enginePtr != null)
             {
                 index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
@@ -1352,7 +1352,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_enable_aux(enable, index);
                 string log = string.Format("MediaPlayer EnableAux index:{0} result:{1} enable{2}", index, result, enable);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1363,7 +1363,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_pause(index);
                 string log = string.Format("MediaPlayer Pause index:{0} result:{1}", index, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1374,7 +1374,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_start(index);
                 string log = string.Format("MediaPlayer Start index:{0} result:{1}", index, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1385,7 +1385,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_enable_repeat(enable, index);
                 string log = string.Format("EnableRepeat enable:{0} result:{1}", enable, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1416,23 +1416,23 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_load_resource(path, curIndex);
                 string log = string.Format("LoadResource result:{0}  path:{1} ", result, path);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
-        private static ZegoMediaPlayerInstanceIndex GetIndexFromZegoMediaPlayer(ZegoMediaPlayer zegoMediaPlayer)
+        private static zego_media_player_instance_index GetIndexFromZegoMediaPlayer(ZegoMediaPlayer zegoMediaPlayer)
         {
-            ZegoMediaPlayerInstanceIndex result = ZegoMediaPlayerInstanceIndex.Null;
-            foreach (KeyValuePair<ZegoMediaPlayerInstanceIndex, ZegoMediaPlayer> kvp in mediaPlayerAndIndex)
+            zego_media_player_instance_index result = zego_media_player_instance_index.zego_media_player_instance_index_null;
+            foreach (KeyValuePair<zego_media_player_instance_index, ZegoMediaPlayer> kvp in mediaPlayerAndIndex)
             {
                 if (kvp.Value == zegoMediaPlayer)
                 {
                     result = kvp.Key;
                 }
             }
-            if (result == ZegoMediaPlayerInstanceIndex.Null)
+            if (result == zego_media_player_instance_index.zego_media_player_instance_index_null)
             {
                 throw new Exception("GetIndexFromZegoMediaPlayer found null，Maybe you have already release the mediaplayer");
             }
@@ -2605,7 +2605,7 @@ namespace ZEGO
             }), null);
 
         }
-        public static ZegoMediaPlayer GetMediaPlayerFromIndex(ZegoMediaPlayerInstanceIndex index)
+        public static ZegoMediaPlayer GetMediaPlayerFromIndex(zego_media_player_instance_index index)
         {
             ZegoMediaPlayer zegoMediaPlayer = null;
             mediaPlayerAndIndex.TryGetValue(index, out zegoMediaPlayer);
@@ -2615,7 +2615,7 @@ namespace ZEGO
             }
             return zegoMediaPlayer;
         }
-        public static void zego_on_mediaplayer_state_update(ZegoMediaPlayerState state, int error_code, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_state_update(ZegoMediaPlayerState state, int error_code, zego_media_player_instance_index instance_index, System.IntPtr user_context)
         {
 
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
@@ -2638,7 +2638,7 @@ namespace ZEGO
 
 
         }
-        public static void zego_on_mediaplayer_network_event(ZegoMediaPlayerNetworkEvent net_event, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_network_event(ZegoMediaPlayerNetworkEvent net_event, zego_media_player_instance_index instance_index, System.IntPtr user_context)
 
         {
 
@@ -2664,7 +2664,7 @@ namespace ZEGO
 
 
         }
-        public static void zego_on_mediaplayer_playing_progress(ulong millisecond, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_playing_progress(ulong millisecond, zego_media_player_instance_index instance_index, System.IntPtr user_context)
         {
 
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
@@ -2689,7 +2689,7 @@ namespace ZEGO
 
         }
 
-        public static void zego_on_mediaplayer_seek_to_time_result(int seq, int error_code, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_seek_to_time_result(int seq, int error_code, zego_media_player_instance_index instance_index, System.IntPtr user_context)
         {
 
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
@@ -3000,7 +3000,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex result = IExpressMediaPlayerInternal.zego_express_create_media_player();
+                zego_media_player_instance_index result = IExpressMediaPlayerInternal.zego_express_create_media_player();
                 string log = string.Format("CreateMediaPlayer  result:{0}", result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
                 if (result >= 0)
@@ -3124,7 +3124,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_play_volume(volume, index);
                 string log = string.Format("MediaPlayer SetMediaPlayerPlayVolume index:{0} volume:{1} result:{2} ", index, volume, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -3134,7 +3134,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_publish_volume(volume, index);
                 string log = string.Format("MediaPlayer SetMediaPlayerPublishVolume index:{0} volume:{1} result:{2} ", index, volume, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -3145,7 +3145,7 @@ namespace ZEGO
             int result = -1;
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_play_volume(index);
                 string log = string.Format("MediaPlayer GetMediaPlayerPlayVolume index:{0} result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -3157,7 +3157,7 @@ namespace ZEGO
             int result = -1;
             if (enginePtr != null)
             {
-                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_publish_volume(index);
                 string log = string.Format("MediaPlayer GetMediaPlayerPublishVolume index:{0} result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
