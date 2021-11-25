@@ -144,8 +144,8 @@ namespace ZEGO
         /// Return Type: int
         ///path: char*
         ///instance_index: zego_mediaplayer_instance_index
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_load_resource", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_media_player_load_resource([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler,MarshalTypeRef =typeof(ZegoUtil.UTF8StringMarshaler))] string path, zego_media_player_instance_index instance_index);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_load_resource", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_media_player_load_resource([In()] [MarshalAs(UnmanagedType.CustomMarshaler,MarshalTypeRef =typeof(ZegoUtil.UTF8StringMarshaler))] string path, zego_media_player_instance_index instance_index);
 
         /// Return Type: ZegoMediaPlayerInstanceIndex
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_create_media_player", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]

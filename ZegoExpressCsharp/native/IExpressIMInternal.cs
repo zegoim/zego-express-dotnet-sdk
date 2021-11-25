@@ -13,7 +13,7 @@ namespace ZEGO
         ///seq: int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_im_send_broadcast_message_result([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id,ulong message_id, int error_code, int seq, System.IntPtr user_context);
+        public delegate void zego_on_im_send_broadcast_message_result([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id,ulong message_id, int error_code, int seq, System.IntPtr user_context);
 
         /// Return Type: void
         ///room_id: char*
@@ -21,7 +21,7 @@ namespace ZEGO
         ///message_count: unsigned int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_im_recv_broadcast_message([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, System.IntPtr message_info_list, uint message_count, System.IntPtr user_context);
+        public delegate void zego_on_im_recv_broadcast_message([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, System.IntPtr message_info_list, uint message_count, System.IntPtr user_context);
 
         /// Return Type: void
         ///room_id: char*
@@ -29,7 +29,7 @@ namespace ZEGO
         ///seq: int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_im_send_custom_command_result([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, int error_code, int seq, System.IntPtr user_context);
+        public delegate void zego_on_im_send_custom_command_result([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, int error_code, int seq, System.IntPtr user_context);
 
         /// Return Type: void
         ///room_id: char*
@@ -37,7 +37,7 @@ namespace ZEGO
         ///content: char*
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_im_recv_custom_command([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, zego_user from_user, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content, System.IntPtr user_context);
+        public delegate void zego_on_im_recv_custom_command([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, zego_user from_user, [In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content, System.IntPtr user_context);
 
         /// Return Type: void
         ///room_id: char*
@@ -46,7 +46,7 @@ namespace ZEGO
         ///seq: int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_im_send_barrage_message_result([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string message_id, int error_code, int seq, System.IntPtr user_context);
+        public delegate void zego_on_im_send_barrage_message_result([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, [In()] [MarshalAs(UnmanagedType.LPStr)] string message_id, int error_code, int seq, System.IntPtr user_context);
 
         /// Return Type: void
         ///room_id: char*
@@ -54,7 +54,7 @@ namespace ZEGO
         ///message_count: unsigned int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_im_recv_barrage_message([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, System.IntPtr message_info_list, uint message_count, System.IntPtr user_context);
+        public delegate void zego_on_im_recv_barrage_message([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, System.IntPtr message_info_list, uint message_count, System.IntPtr user_context);
 
 
 
@@ -63,7 +63,7 @@ namespace ZEGO
         ///room_id: char*
         ///content: char*
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_broadcast_message", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_send_broadcast_message([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content);
+        public static extern int zego_express_send_broadcast_message([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, [In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content);
 
 
         /// Return Type: int
@@ -71,15 +71,15 @@ namespace ZEGO
         ///content: char*
         ///to_user_list: zego_user*
         ///to_user_count: unsigned int
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_custom_command", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_send_custom_command([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content, zego_user[] user_list, uint to_user_count);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_custom_command", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_send_custom_command([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, [In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content, zego_user[] user_list, uint to_user_count);
 
 
         /// Return Type: int
         ///room_id: char*
         ///content: char*
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_barrage_message", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_send_barrage_message([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_barrage_message", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_send_barrage_message([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, [In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content);
 
 
         /// Return Type: void

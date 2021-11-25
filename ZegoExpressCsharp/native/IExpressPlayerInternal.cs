@@ -6,7 +6,7 @@ namespace ZEGO
     public class IExpressPlayerInternal
     {
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_player_state_update([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, ZegoPlayerState state, int error_code, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string extended_data, System.IntPtr user_context);
+        public delegate void zego_on_player_state_update([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoPlayerState state, int error_code, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extended_data, System.IntPtr user_context);
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
         public delegate void zego_on_player_quality_update([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, zego_play_stream_quality quality, System.IntPtr user_context);
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
@@ -20,11 +20,11 @@ namespace ZEGO
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
         public delegate void zego_on_player_video_size_changed([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, int width, int height, System.IntPtr user_context);
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_player_recv_sei([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string stream_id, System.IntPtr data, uint data_length, System.IntPtr user_context);
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_playing_stream", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_start_playing_stream([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, System.IntPtr canvas);
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_playing_stream_with_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_start_playing_stream_with_config([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, System.IntPtr canvas, zego_player_config config);
+        public delegate void zego_on_player_recv_sei([InAttribute()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, System.IntPtr data, uint data_length, System.IntPtr user_context);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_playing_stream", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_start_playing_stream([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, System.IntPtr canvas);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_playing_stream_with_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_start_playing_stream_with_config([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, System.IntPtr canvas, zego_player_config config);
 
 
 
