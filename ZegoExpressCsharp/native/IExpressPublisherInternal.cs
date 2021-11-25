@@ -7,7 +7,7 @@ namespace ZEGO
     public class IExpressPublisherInternal
     {
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_publisher_state_update([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, ZegoPublisherState state, int error_code, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string extended_data, System.IntPtr user_context);
+        public delegate void zego_on_publisher_state_update([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoPublisherState state, int error_code, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extended_data, IntPtr user_context);
 
 
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
@@ -29,7 +29,7 @@ namespace ZEGO
         ///seq: int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_publisher_update_cdn_url_result([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string stream_id, int error_code, int seq, System.IntPtr user_context);
+        public delegate void zego_on_publisher_update_cdn_url_result([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, int error_code, int seq, IntPtr user_context);
 
 
         /// Return Type: void
@@ -37,7 +37,7 @@ namespace ZEGO
         ///seq: int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_publisher_update_stream_extra_info_result(int error_code, int seq, System.IntPtr user_context);
+        public delegate void zego_on_publisher_update_stream_extra_info_result(int error_code, int seq, IntPtr user_context);
 
         /// Return Type: void
         ///stream_id: char*
@@ -45,7 +45,7 @@ namespace ZEGO
         ///info_count: unsigned int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_publisher_relay_cdn_state_update([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string stream_id, System.IntPtr cdn_info_list, uint info_count, System.IntPtr user_context);
+        public delegate void zego_on_publisher_relay_cdn_state_update([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, IntPtr cdn_info_list, uint info_count, System.IntPtr user_context);
 
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_publishing_stream", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
@@ -171,22 +171,22 @@ namespace ZEGO
         /// Return Type: int
         ///stream_id: char*
         ///target_url: char*
-        [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_add_publish_cdn_url", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_add_publish_cdn_url([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string stream_id, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string target_url);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_add_publish_cdn_url", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_add_publish_cdn_url([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, [In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string target_url);
 
 
         /// Return Type: int
         ///stream_id: char*
         ///target_url: char*
-        [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_remove_publish_cdn_url", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_remove_publish_cdn_url([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string stream_id, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string target_url);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_remove_publish_cdn_url", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_remove_publish_cdn_url([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string target_url);
 
 
         /// Return Type: void
         ///callback_func: zego_on_publisher_update_cdn_url_result
         ///user_context: void*
-        [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_publisher_update_cdn_url_result_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_register_publisher_update_cdn_url_result_callback(zego_on_publisher_update_cdn_url_result callback_func, System.IntPtr user_context);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_publisher_update_cdn_url_result_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_publisher_update_cdn_url_result_callback(zego_on_publisher_update_cdn_url_result callback_func, IntPtr user_context);
 
 
         /// Return Type: void
@@ -207,21 +207,21 @@ namespace ZEGO
         ///is_preview_visible: boolean
         ///watermark: zego_watermark*
         ///channel: zego_publish_channel
-        [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_publish_watermark", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_publish_watermark", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_set_publish_watermark([System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.I1)] bool is_preview_visible, System.IntPtr watermark, ZegoPublishChannel channel);
 
         /// Return Type: int
         ///extra_info: char*
         ///channel: zego_publish_channel
-        [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_stream_extra_info", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_set_stream_extra_info([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extra_info, ZegoPublishChannel channel);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_stream_extra_info", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_set_stream_extra_info([In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extra_info, ZegoPublishChannel channel);
 
 
         /// Return Type: void
         ///callback_func: zego_on_publisher_update_stream_extra_info_result
         ///user_context: void*
-        [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_publisher_update_stream_extra_info_result_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_register_publisher_update_stream_extra_info_result_callback(zego_on_publisher_update_stream_extra_info_result callback_func, System.IntPtr user_context);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_publisher_update_stream_extra_info_result_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_publisher_update_stream_extra_info_result_callback(zego_on_publisher_update_stream_extra_info_result callback_func, IntPtr user_context);
 
         [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_audio_capture_stereo_mode", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_set_audio_capture_stereo_mode(ZegoAudioCaptureStereoMode mode);

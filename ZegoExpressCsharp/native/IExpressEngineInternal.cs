@@ -14,7 +14,7 @@ namespace ZEGO
          * @param user_context 用户上下文
          */
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_debug_error(int error_code, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string func_name, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string info, System.IntPtr user_context);
+        public delegate void zego_on_debug_error(int error_code, [In()] [MarshalAs(UnmanagedType.LPStr)] string func_name, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string info, System.IntPtr user_context);
         /**
          * 音视频引擎状态变更回调
          *
@@ -93,7 +93,7 @@ namespace ZEGO
          * @return (zego_error), 错误码
          */
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_init", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_engine_init(uint app_id, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string app_sign, bool is_test_env, ZegoScenario scenario);
+        public static extern int zego_express_engine_init(uint app_id, [In()] [MarshalAs(UnmanagedType.LPStr)] string app_sign, bool is_test_env, ZegoScenario scenario);
         /**
          * 同步销毁引擎实例对象
          * 用于释放 SDK 使用的资源。同步销毁会阻塞当前线程，若开发者不希望在这途中阻塞UI线程，可在其他线程调用。

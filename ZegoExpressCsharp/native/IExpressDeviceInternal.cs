@@ -100,15 +100,15 @@ namespace ZEGO
         /// Return Type: int
         ///device_id: char*
         ///channel: zego_publish_channel
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_use_video_device", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_use_video_device([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string device_id, ZegoPublishChannel channel);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_use_video_device", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_use_video_device([In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string device_id, ZegoPublishChannel channel);
 
 
         /// Return Type: int
         ///device_type: zego_audio_device_type
         ///device_id: char*
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_use_audio_device", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_use_audio_device(ZegoAudioDeviceType device_type, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string device_id);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_use_audio_device", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_use_audio_device(ZegoAudioDeviceType device_type, [In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string device_id);
 
 
 
@@ -146,21 +146,21 @@ namespace ZEGO
         ///device_name: char*
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_device_error(int error_code, [In()][MarshalAs(UnmanagedType.LPStr)] string device_name, System.IntPtr user_context);
+        public delegate void zego_on_device_error(int error_code, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string device_name, IntPtr user_context);
 
         /// Return Type: void
         ///stream_id: char*
         ///state: zego_remote_device_state
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_remote_camera_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, System.IntPtr user_context);
+        public delegate void zego_on_remote_camera_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, IntPtr user_context);
 
         /// Return Type: void
         ///stream_id: char*
         ///state: zego_remote_device_state
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_remote_mic_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, System.IntPtr user_context);
+        public delegate void zego_on_remote_mic_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, IntPtr user_context);
 
         /// Return Type: void
         ///callback_func: zego_on_device_error

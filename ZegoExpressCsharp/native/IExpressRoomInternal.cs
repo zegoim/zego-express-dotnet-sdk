@@ -7,20 +7,20 @@ namespace ZEGO
     public class IExpressRoomInternal
     {
         [UnmanagedFunctionPointer(ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_room_state_update([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string room_id, ZegoRoomState state, int error_code, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string extended_data, System.IntPtr user_context);
+        public delegate void zego_on_room_state_update([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, ZegoRoomState state, int error_code, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extended_data, IntPtr user_context);
 
         [UnmanagedFunctionPointer(ZEGO_CALINGCONVENTION)]
         public delegate void zego_on_room_user_update([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string room_id, ZegoUpdateType update_type, System.IntPtr user_list,uint user_count, System.IntPtr user_context);
 
 
         [UnmanagedFunctionPointer(ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_room_stream_update([InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string room_id, ZegoUpdateType update_type, System.IntPtr stream_info_list, uint stream_info_count, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string extend_data, System.IntPtr user_context);
+        public delegate void zego_on_room_stream_update([In()][MarshalAs(UnmanagedType.LPStr)] string room_id, ZegoUpdateType update_type, IntPtr stream_info_list, uint stream_info_count, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extend_data, IntPtr user_context);
 
         [UnmanagedFunctionPointer(ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_room_stream_extra_info_update([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string room_id,System.IntPtr stream_info_list, uint stream_info_count, System.IntPtr user_context);
+        public delegate void zego_on_room_stream_extra_info_update([InAttribute()] [MarshalAs(UnmanagedType.LPStr)] string room_id, IntPtr stream_info_list, uint stream_info_count, IntPtr user_context);
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_login_room", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_login_room([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string room_id,zego_user user, System.IntPtr config);
+        public static extern int zego_express_login_room([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id,zego_user user, System.IntPtr config);
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_logout_room", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_logout_room([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string room_id);
@@ -46,8 +46,8 @@ namespace ZEGO
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_room_stream_extra_info_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_room_stream_extra_info_update_callback(zego_on_room_stream_extra_info_update callback_func, System.IntPtr user_context);
 
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_room_extra_info", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern int zego_express_set_room_extra_info([System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, [System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string key, [System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string value);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_room_extra_info", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_set_room_extra_info([In()][MarshalAs(UnmanagedType.LPStr)] string room_id, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string key, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string value);
 
     }
 

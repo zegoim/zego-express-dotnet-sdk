@@ -36,13 +36,13 @@ namespace ZEGO
         ///extended_data: char*
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_mixer_start_result(int error_code, int seq, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string extended_data, System.IntPtr user_context);
+        public delegate void zego_on_mixer_start_result(int error_code, int seq, [In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extended_data, IntPtr user_context);
 
         /// Return Type: void
         ///error_code: int
         ///seq: int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_mixer_stop_result(int error_code, int seq, System.IntPtr user_context);
+        public delegate void zego_on_mixer_stop_result(int error_code, int seq, IntPtr user_context);
     }
 }

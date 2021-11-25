@@ -229,6 +229,15 @@ namespace ZEGO
         Adaptive
     }
 
+    /** Audio mix mode. */
+    public enum ZegoAudioMixMode
+    {
+        /** Default mode, no special behavior */
+        Raw,
+        /** Audio focus mode, which can highlight the sound of a certain stream in multiple audio streams */
+        Focused
+    }
+
     /** Audio Codec ID. */
     public enum ZegoAudioCodecID
     {
@@ -305,6 +314,28 @@ namespace ZEGO
         Medium,
         /** Aggressive ANS. It may significantly impair the sound quality, but it has a good noise reduction effect. */
         Aggressive
+    }
+
+    /** video encode profile. */
+    public enum ZegoEncodeProfile
+    {
+        /** The default video encode specifications, The default value is the video encoding specification at the Main level. */
+        Default,
+        /** Baseline-level video encode specifications have low decoding consumption and poor picture effects. They are generally used for low-level applications or applications that require additional fault tolerance. */
+        Baseline,
+        /** Main-level video encode specifications, decoding consumption is slightly higher than Baseline, the picture effect is also better, generally used in mainstream consumer electronic products. */
+        Main,
+        /** High-level video encode specifications, decoding consumption is higher than Main, the picture effect is better, generally used for broadcasting and video disc storage, high-definition TV. */
+        High
+    }
+
+    /** Stream alignment mode. */
+    public enum ZegoStreamAlignmentMode
+    {
+        /** Disable stream alignment. */
+        None,
+        /** Streams should be aligned as much as possible, call the [setStreamAlignmentProperty] function to enable the stream alignment of the push stream network time alignment of the specified channel. */
+        Try
     }
 
     /** Traffic control property (bitmask enumeration). */
@@ -714,26 +745,6 @@ namespace ZEGO
         Downlink
     }
 
-    public enum ZegoMediaPlayerInstanceIndex
-    {
-
-        /// ZegoMediaPlayerInstanceIndex_null -> -1
-        Null = -1,
-
-        /// ZegoMediaPlayerInstanceIndex_first -> 0
-        First = 0,
-
-        /// ZegoMediaPlayerInstanceIndex_second -> 1
-
-        Second = 1,
-
-        /// ZegoMediaPlayerInstanceIndex_third -> 2
-        Third = 2,
-
-        /// ZegoMediaPlayerInstanceIndex_forth -> 3
-        Forth = 3,
-    }
-
     /** AudioEffectPlayer instance index. */
     public enum ZegoAudioEffectPlayerInstanceIndex
     {
@@ -808,14 +819,19 @@ namespace ZEGO
      * Use cases: This configuration is required when you need to customize the log storage path or the maximum log file size.
      * Caution: None.
      */
-    public class ZegoLogConfig
-    {
+    public class ZegoLogConfig {
 
         /** The storage path of the log file. Description: Used to customize the storage path of the log file. Use cases: This configuration is required when you need to customize the log storage path. Required: False. Default value: The default path of each platform is different, please refer to the official website document: https://doc-zh.zego.im/article/646. Caution: Developers need to ensure read and write permissions for files under this path. */
         public string logPath;
 
         /** Maximum log file size(Bytes). Description: Used to customize the maximum log file size. Use cases: This configuration is required when you need to customize the upper limit of the log file size. Required: False. Default value: 5MB (5 * 1024 * 1024 Bytes). Value range: Minimum 1MB (1 * 1024 * 1024 Bytes), maximum 100M (100 * 1024 * 1024 Bytes), 0 means no need to write logs. Caution: The larger the upper limit of the log file size, the more log information it carries, but the log upload time will be longer. */
         public ulong logSize;
+
+        ZegoLogConfig()
+        {
+            logPath = "";
+            logSize = 5 * 1024 * 1024;
+        }
 
     }
 
@@ -826,8 +842,7 @@ namespace ZEGO
      * When you need to use the custom video capture function, you need to set an instance of this class as a parameter to the [enableCustomVideoCapture] function.
      * Because when using custom video capture, SDK will no longer start the camera to capture video data. You need to collect video data from video sources by yourself.
      */
-    public class ZegoCustomVideoCaptureConfig
-    {
+    public class ZegoCustomVideoCaptureConfig {
 
         /** Custom video capture video frame data type */
         public ZegoVideoBufferType bufferType;
@@ -837,29 +852,35 @@ namespace ZEGO
     /**
      * Custom video process configuration.
      */
-    public class ZegoCustomVideoProcessConfig
-    {
+    public class ZegoCustomVideoProcessConfig {
 
         /** Custom video process video frame data type */
         public ZegoVideoBufferType bufferType;
 
     }
 
-    public class ZegoCustomVideoRenderConfig
-    {
-        /** 自定义视频渲染视频帧数据类型 */
+    /**
+     * Custom video render configuration.
+     *
+     * When you need to use the custom video render function, you need to set an instance of this class as a parameter to the [enableCustomVideoRender] function.
+     */
+    public class ZegoCustomVideoRenderConfig {
+
+        /** Custom video capture video frame data type */
         public ZegoVideoBufferType bufferType;
-        /** 自定义视频渲染视频帧数据格式 */
+
+        /** Custom video rendering video frame data format。Useless when set bufferType as [EncodedData] */
         public ZegoVideoFrameFormatSeries frameFormatSeries;
-        /** 是否在自定义视频渲染的同时，引擎也渲染，默认为 [false] */
+
+        /** Whether the engine also renders while customizing video rendering. The default value is [false]. Useless when set bufferType as [EncodedData] */
         public bool enableEngineRender;
+
     }
 
     /**
      * Custom audio configuration.
      */
-    public class ZegoCustomAudioConfig
-    {
+    public class ZegoCustomAudioConfig {
 
         /** Audio capture source type */
         public ZegoAudioSourceType sourceType;
@@ -871,8 +892,7 @@ namespace ZEGO
      *
      * Profile for create engine
      */
-    public class ZegoEngineProfile
-    {
+    public class ZegoEngineProfile {
 
         /** Application ID issued by ZEGO for developers, please apply from the ZEGO Admin Console https://console-express.zego.im The value ranges from 0 to 4294967295. */
         public uint appID;
@@ -888,10 +908,9 @@ namespace ZEGO
     /**
      * Advanced engine configuration.
      */
-    public class ZegoEngineConfig
-    {
+    public class ZegoEngineConfig {
 
-        /** Log configuration, if not set, use the default configuration. It must be set before calling [createEngine] to take effect. If it is set after [createEngine], it will take effect at the next [createEngine] after [destroyEngine]. */
+        /** @deprecated This property has been deprecated since version 2.3.0, please use the [setLogConfig] function instead. */
         public ZegoLogConfig logConfig;
 
         /** Other special function switches, if not set, no special function will be used by default. Please contact ZEGO technical support before use. */
@@ -904,8 +923,7 @@ namespace ZEGO
      *
      * Configure maximum number of users in the room and authentication token, etc.
      */
-    public class ZegoRoomConfig
-    {
+    public class ZegoRoomConfig {
 
         /** The maximum number of users in the room, Passing 0 means unlimited, the default is unlimited. */
         public uint maxMemberCount;
@@ -924,8 +942,7 @@ namespace ZEGO
      * Configure parameters used for publishing stream, such as bitrate, frame rate, and resolution.
      * Developers should note that the width and height resolution of the mobile and desktop are opposite. For example, 360p, the resolution of the mobile is 360x640, and the desktop is 640x360.
      */
-    public class ZegoVideoConfig
-    {
+    public class ZegoVideoConfig {
 
         /** Capture resolution width, control the width of camera image acquisition. SDK requires this member to be set to an even number. Only the camera is not started and the custom video capture is not used, the setting is effective. For performance reasons, the SDK scales the video frame to the encoding resolution after capturing from camera and before rendering to the preview view. Therefore, the resolution of the preview image is the encoding resolution. If you need the resolution of the preview image to be this value, Please call [setCapturePipelineScaleMode] first to change the capture pipeline scale mode to [Post] */
         public int captureWidth;
@@ -1008,7 +1025,60 @@ namespace ZEGO
                     fps = 15;
                     break;
             }
-#elif UNITY_STANDALONE_OSX||UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN || UNITY_EDITOR
+            switch (preset)
+            {
+                case ZegoVideoConfigPreset.Preset180P:
+                    captureWidth = 320;
+                    captureHeight = 180;
+                    encodeWidth = 320;
+                    encodeHeight = 180;
+                    bitrate = 300;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset270P:
+                    captureWidth = 480;
+                    captureHeight = 270;
+                    encodeWidth = 480;
+                    encodeHeight = 270;
+                    bitrate = 400;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset360P:
+                    captureWidth = 640;
+                    captureHeight = 360;
+                    encodeWidth = 640;
+                    encodeHeight = 360;
+                    bitrate = 600;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset540P:
+                    captureWidth = 960;
+                    captureHeight = 540;
+                    encodeWidth = 960;
+                    encodeHeight = 540;
+                    bitrate = 1200;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset720P:
+                    captureWidth = 1280;
+                    captureHeight = 720;
+                    encodeWidth = 1280;
+                    encodeHeight = 720;
+                    bitrate = 1500;
+                    fps = 15;
+                    break;
+                case ZegoVideoConfigPreset.Preset1080P:
+                    captureWidth = 1920;
+                    captureHeight = 1080;
+                    encodeWidth = 1920;
+                    encodeHeight = 1080;
+                    bitrate = 3000;
+                    fps = 15;
+                    break;
+            }
+#else
+            // windows by default
             switch (preset)
             {
                 case ZegoVideoConfigPreset.Preset180P:
@@ -1061,7 +1131,7 @@ namespace ZEGO
                     break;
             }
 #endif
-        }
+        } 
 
         /**
          * Create default video configuration(360p, 15fps, 600000bps)
@@ -1070,7 +1140,7 @@ namespace ZEGO
          */
         public ZegoVideoConfig() : this(ZegoVideoConfigPreset.Preset360P)
         {
-
+               
         }
 
     }
@@ -1080,8 +1150,7 @@ namespace ZEGO
      *
      * Used to set the relevant configuration of the Supplemental Enhancement Information.
      */
-    public class ZegoSEIConfig
-    {
+    public class ZegoSEIConfig {
 
         /** SEI type */
         public ZegoSEIType type;
@@ -1091,8 +1160,7 @@ namespace ZEGO
     /**
      * Audio reverberation echo parameters.
      */
-    public class ZegoReverbEchoParam
-    {
+    public class ZegoReverbEchoParam {
 
         /** Gain of input audio signal, in the range [0.0, 1.0] */
         public float inGain;
@@ -1118,8 +1186,7 @@ namespace ZEGO
      * Note that the userID must be unique under the same appID, otherwise mutual kicks out will occur.
      * It is strongly recommended that userID corresponds to the user ID of the business APP, that is, a userID and a real user are fixed and unique, and should not be passed to the SDK in a random userID. Because the unique and fixed userID allows ZEGO technicians to quickly locate online problems.
      */
-    public class ZegoUser
-    {
+    public class ZegoUser {
 
         /** User ID, a string with a maximum length of 64 bytes or less.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
         public string userID;
@@ -1135,7 +1202,7 @@ namespace ZEGO
 
         public ZegoUser()
         {
-
+             
         }
 
     }
@@ -1145,8 +1212,7 @@ namespace ZEGO
      *
      * Identify an stream object
      */
-    public class ZegoStream
-    {
+    public class ZegoStream {
 
         /** User object instance.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc. */
         public ZegoUser user;
@@ -1162,8 +1228,7 @@ namespace ZEGO
     /**
      * Room extra information.
      */
-    public class ZegoRoomExtraInfo
-    {
+    public class ZegoRoomExtraInfo {
 
         /** The key of the room extra information. */
         public string key;
@@ -1182,8 +1247,7 @@ namespace ZEGO
     /**
      * View related coordinates.
      */
-    public class ZegoRect
-    {
+    public class ZegoRect {
 
         /** The horizontal offset from the top-left corner */
         public int x;
@@ -1203,25 +1267,31 @@ namespace ZEGO
             this.y = y;
             this.width = width;
             this.height = height;
-        }
+        } 
 
         public ZegoRect()
         {
-
+               
         }
 
     }
 
-    public class ZegoCanvas
-    {
-        /// void*
-        public System.IntPtr view;
+    /**
+     * View object.
+     *
+     * Configure view object, view Mode, background color
+     */
+    public class ZegoCanvas {
 
-        /// zego_view_mode
+        /** View object */
+        public IntPtr view;
+
+        /** View mode, default is ZegoViewModeAspectFit */
         public ZegoViewMode viewMode;
 
-        /// int
+        /** Background color, the format is 0xRRGGBB, default is black, which is 0x000000 */
         public int backgroundColor;
+
     }
 
     /**
@@ -1229,8 +1299,7 @@ namespace ZEGO
      *
      * Configure room id
      */
-    public class ZegoPublisherConfig
-    {
+    public class ZegoPublisherConfig {
 
         /** The Room ID */
         public string roomID;
@@ -1242,8 +1311,7 @@ namespace ZEGO
      *
      * Audio and video parameters and network quality, etc.
      */
-    public class ZegoPublishStreamQuality
-    {
+    public class ZegoPublishStreamQuality {
 
         /** Video capture frame rate. The unit of frame rate is f/s */
         public double videoCaptureFPS;
@@ -1297,8 +1365,7 @@ namespace ZEGO
      *
      * Includes CDN URL and authentication parameter string
      */
-    public class ZegoCDNConfig
-    {
+    public class ZegoCDNConfig {
 
         /** CDN URL */
         public string url;
@@ -1313,8 +1380,7 @@ namespace ZEGO
      *
      * Including the URL of the relaying CDN, relaying state, etc.
      */
-    public class ZegoStreamRelayCDNInfo
-    {
+    public class ZegoStreamRelayCDNInfo {
 
         /** URL of publishing stream to CDN */
         public string url;
@@ -1335,8 +1401,7 @@ namespace ZEGO
      *
      * Configure playing stream CDN configuration, video layer, room id.
      */
-    public class ZegoPlayerConfig
-    {
+    public class ZegoPlayerConfig {
 
         /** Stream resource mode. */
         public ZegoStreamResourceMode resourceMode;
@@ -1349,12 +1414,15 @@ namespace ZEGO
 
         /** The Room ID. */
         public string roomID;
+
         ZegoPlayerConfig()
         {
             resourceMode = ZegoStreamResourceMode.Default;
             cdnConfig = null;
             videoLayer = (ZegoPlayerVideoLayer)99;
+            roomID = "";
         }
+
     }
 
     /**
@@ -1362,8 +1430,7 @@ namespace ZEGO
      *
      * Audio and video parameters and network quality, etc.
      */
-    public class ZegoPlayStreamQuality
-    {
+    public class ZegoPlayStreamQuality {
 
         /** Video receiving frame rate. The unit of frame rate is f/s */
         public double videoRecvFPS;
@@ -1444,8 +1511,7 @@ namespace ZEGO
      *
      * Including device ID and name
      */
-    public class ZegoDeviceInfo
-    {
+    public class ZegoDeviceInfo {
 
         /** Device ID */
         public string deviceID;
@@ -1458,8 +1524,7 @@ namespace ZEGO
     /**
      * System performance monitoring status
      */
-    public class ZegoPerformanceStatus
-    {
+    public class ZegoPerformanceStatus {
 
         /** Current CPU usage of the app, value range [0, 1] */
         public double cpuUsageApp;
@@ -1483,8 +1548,7 @@ namespace ZEGO
      *
      * Configure the parameters of skin peeling, whitening and sharpening
      */
-    public class ZegoBeautifyOption
-    {
+    public class ZegoBeautifyOption {
 
         /** The sample step size of beauty peeling, the value range is [0,1], default 0.2 */
         public double polishStep;
@@ -1502,8 +1566,7 @@ namespace ZEGO
      *
      * Configure video frame rate, bitrate, and resolution for mixer task
      */
-    public class ZegoMixerAudioConfig
-    {
+    public class ZegoMixerAudioConfig {
 
         /** Audio bitrate in kbps, default is 48 kbps, cannot be modified after starting a mixer task */
         public int bitrate;
@@ -1514,11 +1577,15 @@ namespace ZEGO
         /** codec ID, default is ZegoAudioCodecIDDefault */
         public ZegoAudioCodecID codecID;
 
+        /** Multi-channel audio stream mixing mode. If [ZegoAudioMixMode] is selected as [Focused], the SDK will select 4 input streams with [isAudioFocus] set as the focus voice highlight. If it is not selected or less than 4 channels are selected, it will automatically fill in 4 channels */
+        public ZegoAudioMixMode mixMode;
+
         public ZegoMixerAudioConfig()
         {
             bitrate = 48;
             channel = ZegoAudioChannel.Mono;
             codecID = ZegoAudioCodecID.Default;
+            mixMode = ZegoAudioMixMode.Raw;
         }
 
     }
@@ -1528,8 +1595,7 @@ namespace ZEGO
      *
      * Configure video frame rate, bitrate, and resolution for mixer task
      */
-    public class ZegoMixerVideoConfig
-    {
+    public class ZegoMixerVideoConfig {
 
         /** Video resolution width */
         public int width;
@@ -1549,7 +1615,7 @@ namespace ZEGO
             height = 640;
             fps = 15;
             bitrate = 600;
-        }
+        } 
 
         public ZegoMixerVideoConfig(int width, int height, int fps, int bitrate)
         {
@@ -1567,14 +1633,27 @@ namespace ZEGO
      * Description: Configure the video parameters, coding format and bitrate of mix stream output.
      * Use cases: Manual mixed stream scenario, such as Co-hosting.
      */
-    public class ZegoMixerOutputVideoConfig
-    {
+    public class ZegoMixerOutputVideoConfig {
 
         /** Mix stream output video coding format, supporting H.264 and h.265 coding. */
         public ZegoVideoCodecID videoCodecID;
 
         /** Mix stream output video bitrate in kbps. */
         public int bitrate;
+
+        /** Mix stream video encode profile. Default value is [ZegoEncodeProfileDefault]. */
+        public ZegoEncodeProfile encodeProfile;
+
+        /** The video encoding delay of mixed stream output, Valid value range [0, 2000], in milliseconds. The default value is 0. */
+        public int encodeLatency;
+
+        ZegoMixerOutputVideoConfig()
+        {
+            this.videoCodecID = ZegoVideoCodecID.Default;
+            this.bitrate = 0;
+            this.encodeProfile = ZegoEncodeProfile.Default;
+            this.encodeLatency = 0;
+        }
 
     }
 
@@ -1584,8 +1663,7 @@ namespace ZEGO
      * Description: Font style configuration, can be used to configure font type, font size, font color, font transparency.
      * Use cases: Set text watermark in manual stream mixing scene, such as Co-hosting.
      */
-    public class ZegoFontStyle
-    {
+    public class ZegoFontStyle {
 
         /** Font type. Required: False. Default value: Source han sans [ZegoFontTypeSourceHanSans] */
         public ZegoFontType type;
@@ -1615,8 +1693,7 @@ namespace ZEGO
      * Description: Font style configuration, can be used to configure font type, font si-e, font color, font transparency.
      * Use cases: Set text watermark in manual stream mixing scene, such as Co-hosting.
      */
-    public class ZegoLabelInfo
-    {
+    public class ZegoLabelInfo {
 
         /** Text content, support for setting simplified Chinese, English, half-width, not full-width. Required: True.Value range: Maximum support for displaying 100 Chinese characters and 300 English characters. */
         public string text;
@@ -1645,8 +1722,7 @@ namespace ZEGO
      *
      * Configure the mix stream input stream ID, type, and the layout
      */
-    public class ZegoMixerInput
-    {
+    public class ZegoMixerInput {
 
         /** Stream ID, a string of up to 256 characters. You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '~', '!', '@', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
         public string streamID;
@@ -1682,7 +1758,7 @@ namespace ZEGO
             this.audioDirection = -1;
             this.label = new ZegoLabelInfo("");
             this.renderMode = ZegoMixRenderMode.Fill;
-        }
+        } 
 
         public ZegoMixerInput(string streamID, ZegoMixerInputContentType contentType, ZegoRect layout, uint soundLevelID)
         {
@@ -1703,8 +1779,7 @@ namespace ZEGO
      *
      * Configure mix stream output target URL or stream ID
      */
-    public class ZegoMixerOutput
-    {
+    public class ZegoMixerOutput {
 
         /** Mix stream output target, URL or stream ID, if set to be URL format, only RTMP URL surpported, for example rtmp://xxxxxxxx, addresses with two identical mixed-stream outputs cannot be passed in. */
         public string target;
@@ -1724,8 +1799,7 @@ namespace ZEGO
      *
      * Configure a watermark image URL and the layout of the watermark in the screen.
      */
-    public class ZegoWatermark
-    {
+    public class ZegoWatermark {
 
         /** The path of the watermark image. Support local file absolute path (file://xxx). The format supports png, jpg. */
         public string imageURL;
@@ -1741,8 +1815,7 @@ namespace ZEGO
      * This class is the configuration class of the stream mixing task. When a stream mixing task is requested to the ZEGO RTC server, the configuration of the stream mixing task is required.
      * This class describes the detailed configuration information of this stream mixing task.
      */
-    public class ZegoMixerTask
-    {
+    public class ZegoMixerTask {
 
         /** Mix stream task ID */
         public string taskID;
@@ -1762,11 +1835,26 @@ namespace ZEGO
         /** Mix stream wate rmark */
         public ZegoWatermark watermark;
 
+        /** Mix stream background color */
+        public int backgroundColor;
+
         /** Mix stream background image URL */
         public string backgroundImageURL;
 
         /** Enable or disable sound level callback for the task. If enabled, then the remote player can get the soundLevel of every stream in the inputlist by [onMixerSoundLevelUpdate] callback. */
-        public bool soundLevel;
+        public bool enableSoundLevel;
+
+        /** The stream mixing alignment mode */
+        public ZegoStreamAlignmentMode streamAlignmentMode;
+
+        /** User data, the length of user data should not be more than 1000 bytes,After setting, the streaming party can obtain the SEI content by listening to the callback of [onPlayerRecvSEI]. */
+        public IntPtr userData;
+
+        /** User data length, not greater than 1000.Note that only data with length will be read by SDK. If the length is greater than the actual length of data, the SDK will read the data according to the actual length of data. */
+        public uint userDataLength;
+
+        /** Set advanced configuration, such as specifying video encoding and others. If you need to use it, contact ZEGO technical support. */
+        public Dictionary<string, string> advancedConfig;
 
         /**
          * Create a mix stream task object with TaskID
@@ -1779,6 +1867,8 @@ namespace ZEGO
             audioConfig = new ZegoMixerAudioConfig();
             videoConfig = new ZegoMixerVideoConfig();
             backgroundImageURL = "";
+            streamAlignmentMode = ZegoStreamAlignmentMode.None;
+            advancedConfig = new Dictionary<string, string>();
         }
 
     }
@@ -1786,8 +1876,7 @@ namespace ZEGO
     /**
      * Configuration for start sound level monitor.
      */
-    public class ZegoSoundLevelConfig
-    {
+    public class ZegoSoundLevelConfig {
 
         /** Monitoring time period of the sound level, in milliseconds, has a value range of [100, 3000]. Default is 100 ms. */
         public uint millisecond;
@@ -1804,8 +1893,7 @@ namespace ZEGO
      * Use cases: This configuration is required when an auto stream mixing task is requested to the ZEGO RTC server.
      * Caution: As an argument passed when [StartAutoMixerTask] function is called.
      */
-    public class ZegoAutoMixerTask
-    {
+    public class ZegoAutoMixerTask {
 
         /** The taskID of the auto mixer task.Description: Auto stream mixing task id, must be unique in a room.Use cases: User need to set this parameter when initiating an auto stream mixing task.Required: Yes.Recommended value: Set this parameter based on requirements.Value range: A string up to 256 bytes.Caution: When starting a new auto stream mixing task, only one auto stream mixing task ID can exist in a room, that is, to ensure the uniqueness of task ID. You are advised to associate task ID with room ID. You can directly use the room ID as the task ID.Cannot include URL keywords, for example, 'http' and '?' etc, otherwise publishing stream and playing stream will fail. Only support numbers, English characters and '~', '!', '@', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'. */
         public string taskID;
@@ -1841,8 +1929,7 @@ namespace ZEGO
      *
      * The received object of the room broadcast message, including the message content, message ID, sender, sending time
      */
-    public class ZegoBroadcastMessageInfo
-    {
+    public class ZegoBroadcastMessageInfo {
 
         /** message content */
         public string message;
@@ -1863,8 +1950,7 @@ namespace ZEGO
      *
      * The received object of the room barrage message, including the message content, message ID, sender, sending time
      */
-    public class ZegoBarrageMessageInfo
-    {
+    public class ZegoBarrageMessageInfo {
 
         /** message content */
         public string message;
@@ -1885,8 +1971,7 @@ namespace ZEGO
      *
      * Including video frame format, width and height, etc.
      */
-    public class ZegoVideoFrameParam
-    {
+    public class ZegoVideoFrameParam {
 
         /** Video frame format */
         public ZegoVideoFrameFormat format;
@@ -1910,8 +1995,7 @@ namespace ZEGO
      *
      * Including the sampling rate and channel of the audio frame
      */
-    public class ZegoAudioFrameParam
-    {
+    public class ZegoAudioFrameParam {
 
         /** Sampling Rate */
         public ZegoAudioSampleRate sampleRate = ZegoAudioSampleRate.Unknown;
@@ -1926,8 +2010,7 @@ namespace ZEGO
      *
      * Configure audio bitrate, audio channel, audio encoding for publishing stream
      */
-    public class ZegoAudioConfig
-    {
+    public class ZegoAudioConfig {
 
         /** Audio bitrate in kbps, default is 48 kbps. The settings before and after publishing stream can be effective */
         public int bitrate;
@@ -1941,10 +2024,10 @@ namespace ZEGO
         /**
          * Create a default audio configuration (ZegoAudioConfigPresetStandardQuality, 48 kbps, Mono, ZegoAudioCodecIDDefault)
          */
-        public ZegoAudioConfig() : this(ZegoAudioConfigPreset.StandardQuality)
+        public ZegoAudioConfig():this(ZegoAudioConfigPreset.StandardQuality)
         {
-
-        }
+              
+        } 
 
         /**
          * Create a audio configuration with preset enumeration values
@@ -1952,8 +2035,7 @@ namespace ZEGO
         public ZegoAudioConfig(ZegoAudioConfigPreset presetType)
         {
             codecID = ZegoAudioCodecID.Default;
-            switch (presetType)
-            {
+            switch (presetType) {
                 case ZegoAudioConfigPreset.BasicQuality:
                     bitrate = 16;
                     channel = ZegoAudioChannel.Mono;
@@ -1982,8 +2064,7 @@ namespace ZEGO
     /**
      * Record config.
      */
-    public class ZegoDataRecordConfig
-    {
+    public class ZegoDataRecordConfig {
 
         /** The path to save the recording file, absolute path, need to include the file name, the file name need to specify the suffix, currently supports .mp4/.flv/.aac format files, if multiple recording for the same path, will overwrite the file with the same name. The maximum length should be less than 1024 bytes. */
         public string filePath;
@@ -1996,8 +2077,7 @@ namespace ZEGO
     /**
      * File recording progress.
      */
-    public class ZegoDataRecordProgress
-    {
+    public class ZegoDataRecordProgress {
 
         /** Current recording duration in milliseconds */
         public ulong duration;
@@ -2010,8 +2090,7 @@ namespace ZEGO
     /**
      * AudioEffectPlayer play configuration.
      */
-    public class ZegoAudioEffectPlayConfig
-    {
+    public class ZegoAudioEffectPlayConfig {
 
         /** The number of play counts. When set to 0, it will play in an infinite loop until the user invoke [stop]. The default is 1, which means it will play only once. */
         public uint playCount;

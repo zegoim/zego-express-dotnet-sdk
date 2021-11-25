@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.IO;
 
 namespace ZEGO
 {
@@ -177,7 +178,7 @@ namespace ZEGO
         {
             return new ZegoDataRecordConfig
             {
-                filePath = config.file_path,
+                filePath = ZegoUtil.GetUTF8String(config.file_path),
                 recordType = config.record_type,
             };
         }
@@ -192,7 +193,11 @@ namespace ZEGO
             if (config.logConfig != null)
             {
                 zego_log_config logConfig = new zego_log_config();
-                logConfig.log_path = config.logConfig.logPath;
+                if(config.logConfig.logPath != null)
+                {
+                    logConfig.log_path = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.logConfig.logPath), 0, logConfig.log_path, 0, config.logConfig.logPath.Length);
+                }
                 logConfig.log_size = config.logConfig.logSize;
                 engineConfig.log_config = ZegoUtil.GetStructPointer(logConfig);
                 Console.WriteLine(string.Format("SetEngineConfig  logConfig.log_path:{0} logConfig.log_size:{1}", logConfig.log_path, logConfig.log_size));
@@ -209,7 +214,11 @@ namespace ZEGO
                     advancedConfig += item.Key + "=" + item.Value + ";";
                 }
                 Console.WriteLine(string.Format("SetEngineConfig  advancedConfig:{0}", advancedConfig));
-                engineConfig.advanced_config = advancedConfig;
+                if(config.logConfig.logPath != null)
+                {
+                    engineConfig.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.logConfig.logPath), 0, engineConfig.advanced_config, 0, config.logConfig.logPath.Length);
+                }
             }
             else
             {
@@ -223,12 +232,13 @@ namespace ZEGO
         {
             ZegoVideoConfig zegoVideoConfig = new ZegoVideoConfig();
             zegoVideoConfig.bitrate = zego_Video_Config.bitrate;
-            zegoVideoConfig.captureHeight = zego_Video_Config.capture_resolution_height;
-            zegoVideoConfig.captureWidth = zego_Video_Config.capture_resolution_width;
-            zegoVideoConfig.encodeHeight = zego_Video_Config.encode_resolution_height;
-            zegoVideoConfig.encodeWidth = zego_Video_Config.encode_resolution_width;
-            zegoVideoConfig.codecID = zego_Video_Config.video_codec_id;
+            zegoVideoConfig.captureHeight = zego_Video_Config.capture_height;
+            zegoVideoConfig.captureWidth = zego_Video_Config.capture_width;
+            zegoVideoConfig.encodeHeight = zego_Video_Config.encode_height;
+            zegoVideoConfig.encodeWidth = zego_Video_Config.encode_width;
+            zegoVideoConfig.codecID = zego_Video_Config.codec_id;
             zegoVideoConfig.fps = zego_Video_Config.fps;
+            zegoVideoConfig.keyFrameInterval = zego_Video_Config.key_frame_interval;
             return zegoVideoConfig;
         }
 
@@ -237,7 +247,7 @@ namespace ZEGO
             ZegoAudioConfig zegoAudioConfig = new ZegoAudioConfig();
             zegoAudioConfig.bitrate = zego_Audio_Config.bitrate;
             zegoAudioConfig.channel = zego_Audio_Config.channel;
-            zegoAudioConfig.codecID = zego_Audio_Config.audio_codec_id;
+            zegoAudioConfig.codecID = zego_Audio_Config.codec_id;
             return zegoAudioConfig;
         }
 
@@ -250,7 +260,7 @@ namespace ZEGO
                 result.height = param.height;
                 result.width = param.width;
                 result.rotation = param.rotation;
-                result.strides = param.strides;
+                Buffer.BlockCopy(param.strides, 0, result.strides, 0, 4);
             }
             return result;
         }
@@ -274,7 +284,12 @@ namespace ZEGO
             {
                 zego_room_config roomConfig = new zego_room_config();
                 roomConfig.max_member_count = config.maxMemberCount;
-                roomConfig.thrid_token = config.token;
+                if(config.token != null)
+                {
+                    roomConfig.thrid_token = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.token), 0, roomConfig.thrid_token, 0, config.token.Length);
+                }
+
                 roomConfig.is_user_status_notify = config.isUserStatusNotify;
                 Console.WriteLine(string.Format("LoginRoom ZegoRoomConfig max_member_count:{0} thrid_token:{1} is_user_status_notify:{2}", roomConfig.max_member_count, roomConfig.thrid_token, roomConfig.is_user_status_notify));
                 return ZegoUtil.GetStructPointer(roomConfig);
@@ -297,11 +312,11 @@ namespace ZEGO
                 {
                     throw new Exception("ZegoUser userName should not be null");
                 }
-                zegoUser = new zego_user
-                {
-                    user_id = user.userID,
-                    user_name = user.userName
-                };
+                zegoUser = new zego_user();
+                zegoUser.user_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_USERID_LEN];
+                zegoUser.user_name = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_USERNAME_LEN];
+                Buffer.BlockCopy(Encoding.UTF8.GetBytes(user.userID), 0, zegoUser.user_id, 0, user.userID.Length);
+                Buffer.BlockCopy(Encoding.UTF8.GetBytes(user.userName), 0, zegoUser.user_name, 0, user.userName.Length);
             }
             return zegoUser;
         }
@@ -323,12 +338,11 @@ namespace ZEGO
                 {
                     throw new Exception("ZegoEngineProfile appSign should not be null");
                 }
-                engine_profile = new zego_engine_profile
-                {
-                    app_id = profile.appID,
-                    app_sign = profile.appSign,
-                    scenario = profile.scenario
-                };
+                engine_profile = new zego_engine_profile();
+                engine_profile.app_id = profile.appID;
+                engine_profile.app_sign = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_APPSIGN_LEN];
+                Buffer.BlockCopy(Encoding.UTF8.GetBytes(profile.appSign), 0, engine_profile.app_sign, 0, profile.appSign.Length);
+                engine_profile.scenario = profile.scenario;
             }
             return engine_profile;
         }
@@ -359,8 +373,8 @@ namespace ZEGO
                 for (int i = 0; i < zego_Device_Info.Length; i++)
                 {
                     ZegoDeviceInfo zegoDevice = new ZegoDeviceInfo();
-                    zegoDevice.deviceID = zego_Device_Info[i].device_id;
-                    zegoDevice.deviceName = zego_Device_Info[i].device_name;
+                    zegoDevice.deviceID = ZegoUtil.GetUTF8String(zego_Device_Info[i].device_id);
+                    zegoDevice.deviceName = ZegoUtil.GetUTF8String(zego_Device_Info[i].device_name);
                     result[i] = zegoDevice;
                 }
             }
@@ -380,6 +394,11 @@ namespace ZEGO
                 zegoPlayerConfig.resource_mode = config.resourceMode;
                 zegoPlayerConfig.cdn_config = ZegoUtil.GetStructPointer(ChangeCDNConfigClassToStruct(config.cdnConfig));
                 zegoPlayerConfig.video_layer = config.videoLayer;
+                if(config.roomID != null)
+                {
+                    zegoPlayerConfig.room_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.roomID), 0, zegoPlayerConfig.room_id, 0, config.roomID.Length);
+                }
                 Console.WriteLine(string.Format("StartPlayingStream ZegoPlayerConfig url:{0} authParam:{1} video_layer{2}", config.cdnConfig.url, config.cdnConfig.authParam, config.videoLayer));
                 return zegoPlayerConfig;
             }
@@ -391,8 +410,16 @@ namespace ZEGO
             zego_cdn_config config = new zego_cdn_config();
             if (cDNConfig != null)
             {
-                config.auth_param = cDNConfig.authParam;
-                config.url = cDNConfig.url;
+                if(cDNConfig.authParam != null)
+                {
+                    config.auth_param = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(cDNConfig.authParam), 0, config.auth_param, 0, cDNConfig.authParam.Length);
+                }
+                if (cDNConfig.url != null)
+                {
+                    config.url = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(cDNConfig.url), 0, config.url, 0, cDNConfig.url.Length);
+                }
             }
             return config;
         }
@@ -407,13 +434,14 @@ namespace ZEGO
             else
             {
                 zegoVideoConfig = new zego_video_config();
-                zegoVideoConfig.capture_resolution_width = config.captureWidth;
-                zegoVideoConfig.capture_resolution_height = config.captureHeight;
-                zegoVideoConfig.encode_resolution_width = config.encodeWidth;
-                zegoVideoConfig.encode_resolution_height = config.encodeHeight;
+                zegoVideoConfig.capture_width = config.captureWidth;
+                zegoVideoConfig.capture_height = config.captureHeight;
+                zegoVideoConfig.encode_width = config.encodeWidth;
+                zegoVideoConfig.encode_height = config.encodeHeight;
                 zegoVideoConfig.bitrate = config.bitrate;
                 zegoVideoConfig.fps = config.fps;
-                zegoVideoConfig.video_codec_id = config.codecID;
+                zegoVideoConfig.codec_id = config.codecID;
+                zegoVideoConfig.key_frame_interval = config.keyFrameInterval;
             }
             return zegoVideoConfig;
         }
@@ -429,7 +457,7 @@ namespace ZEGO
             {
                 zegoAudioConfig.bitrate = config.bitrate;
                 zegoAudioConfig.channel = config.channel;
-                zegoAudioConfig.audio_codec_id = config.codecID;
+                zegoAudioConfig.codec_id = config.codecID;
             }
             return zegoAudioConfig;
         }
@@ -458,7 +486,11 @@ namespace ZEGO
             else
             {
                 zego_watermark zegoWatermark = new zego_watermark();
-                zegoWatermark.image = watermark.imageURL;
+                if(watermark.imageURL != null)
+                {
+                    zegoWatermark.image = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(watermark.imageURL), 0, zegoWatermark.image, 0, watermark.imageURL.Length);
+                }
                 zegoWatermark.layout = ChangeRectClassToStruct(watermark.layout);
                 return zegoWatermark;
             }
@@ -490,7 +522,11 @@ namespace ZEGO
             }
             else
             {
-                result.task_id = task.taskID;
+                if(task.taskID != null)
+                {
+                    result.task_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_MIXER_TASK_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(task.taskID), 0, result.task_id, 0, task.taskID.Length);
+                }
                 zego_mixer_input[] zego_Mixer_Inputs = ChangeZegoMixerInputClassListToStructList(task.inputList);
                 result.input_list_count = (uint)zego_Mixer_Inputs.Length;
                 IntPtr inputListPtr = GetMixerInputListPtr(zego_Mixer_Inputs);
@@ -507,8 +543,26 @@ namespace ZEGO
                 {
                     result.watermark = ZegoUtil.GetStructPointer(ChangeWaterMarkClassToStruct(task.watermark));
                 }
-                result.background_image_url = task.backgroundImageURL;
-                result.enable_sound_level = task.soundLevel;
+                result.background_color = task.backgroundColor;
+                if(task.backgroundImageURL != null)
+                {
+                    result.background_image_url = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(task.backgroundImageURL), 0, result.background_image_url, 0, task.backgroundImageURL.Length);
+                }
+                result.enable_sound_level = task.enableSoundLevel;
+                result.stream_alignment_mode = task.streamAlignmentMode;
+                result.user_data = task.userData;
+                result.user_data_length = task.userDataLength;
+                string advanceConfig = null;
+                foreach (var iter in task.advancedConfig)
+                {
+                    advanceConfig += iter.Key + "=" + iter.Value + ";";
+                }
+                if(advanceConfig != null)
+                {
+                    result.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(advanceConfig), 0, result.advanced_config, 0, advanceConfig.Length);
+                }
             }
             return result;
         }
@@ -549,8 +603,8 @@ namespace ZEGO
             {
                 config.bitrate = videoConfig.bitrate;
                 config.fps = videoConfig.fps;
-                config.resolution_height = videoConfig.height;
-                config.resolution_width = videoConfig.width;
+                config.height = videoConfig.height;
+                config.width = videoConfig.width;
             }
             return config;
         }
@@ -560,9 +614,10 @@ namespace ZEGO
             zego_mixer_audio_config config = new zego_mixer_audio_config();
             if (audioConfig != null)
             {
-                config.audio_codec_id = audioConfig.codecID;
+                config.codec_id = audioConfig.codecID;
                 config.channel = audioConfig.channel;
                 config.bitrate = audioConfig.bitrate;
+                config.mix_mode = audioConfig.mixMode;
             }
             return config;
         }
@@ -593,10 +648,25 @@ namespace ZEGO
             {
                 zego_Mixer_Input.content_type = zegoMixerInput.contentType;
                 zego_Mixer_Input.sound_level_id = zegoMixerInput.soundLevelID;
-                zego_Mixer_Input.stream_id = zegoMixerInput.streamID;
+                if(zegoMixerInput.streamID != null)
+                {
+                    zego_Mixer_Input.stream_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(zegoMixerInput.streamID), 0, zego_Mixer_Input.stream_id, 0, zegoMixerInput.streamID.Length);
+                }
                 zego_Mixer_Input.layout = ChangeRectClassToStruct(zegoMixerInput.layout);
                 zego_Mixer_Input.is_audio_focus = zegoMixerInput.isAudioFocus;
                 zego_Mixer_Input.audio_direction = zegoMixerInput.audioDirection;
+                zego_Mixer_Input.label.font.color = zegoMixerInput.label.font.color;
+                zego_Mixer_Input.label.font.size = zegoMixerInput.label.font.size;
+                zego_Mixer_Input.label.font.transparency = zegoMixerInput.label.font.transparency;
+                zego_Mixer_Input.label.font.type = zegoMixerInput.label.font.type;
+                zego_Mixer_Input.label.left = zegoMixerInput.label.left;
+                if (zegoMixerInput.label.text != null)
+                {
+                    zego_Mixer_Input.label.text = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(zegoMixerInput.label.text), 0, zego_Mixer_Input.label.text, 0, zegoMixerInput.label.text.Length);
+                }
+                zego_Mixer_Input.label.top = zegoMixerInput.label.top;
             }
             return zego_Mixer_Input;
         }
@@ -622,7 +692,11 @@ namespace ZEGO
         public static zego_mixer_output ChangeZegoMixerOutputClassToStruct(ZegoMixerOutput zegoMixerOutput)
         {
             zego_mixer_output zego_Mixer_Output = new zego_mixer_output();
-            zego_Mixer_Output.target = zegoMixerOutput.target;
+            if(zegoMixerOutput.target != null)
+            {
+                zego_Mixer_Output.target = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
+                Buffer.BlockCopy(Encoding.UTF8.GetBytes(zegoMixerOutput.target), 0, zego_Mixer_Output.target, 0, zegoMixerOutput.target.Length);
+            }
             return zego_Mixer_Output;
         }
 
@@ -682,7 +756,11 @@ namespace ZEGO
             var result = new zego_data_record_config();
             if (config != null)
             {
-                result.file_path = config.filePath;
+                if(config.filePath != null)
+                {
+                    result.file_path = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.filePath), 0, result.file_path, 0, config.filePath.Length);
+                }
                 result.record_type = config.recordType;
             }
             return result;
@@ -723,7 +801,12 @@ namespace ZEGO
             var result = new zego_publisher_config();
             if (config != null)
             {
-                result.room_id = config.roomID;
+                if(config.roomID != null)
+                {
+                    result.room_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN];
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.roomID), 0, result.room_id, 0, config.roomID.Length);
+                }
+                //result.force_synchronous_network_time//TODO
             }
             return result;
         }
