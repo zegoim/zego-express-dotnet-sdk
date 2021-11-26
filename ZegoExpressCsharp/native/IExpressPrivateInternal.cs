@@ -9,7 +9,7 @@ namespace ZEGO
     class IExpressPrivateInternal
     {
         [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_custom_log", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public static extern void zego_express_custom_log([In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string log, [In()][MarshalAs(UnmanagedType.LPStr)] string module);
+        public static extern void zego_express_custom_log([In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string log, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string module);
 
 
         [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_print_debug_info", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]

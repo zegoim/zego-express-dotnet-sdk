@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
+//using UnityEngine;
 namespace ZEGO
 {
     public class IExpressDeviceInternal
@@ -126,6 +125,12 @@ namespace ZEGO
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_audio_capture_device", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_enable_audio_capture_device([MarshalAs(UnmanagedType.I1)] bool enable);
+
+
+        /// Return Type: int
+        ///enable: boolean
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_built_in_speaker_on", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_set_built_in_speaker_on([MarshalAs(UnmanagedType.I1)] bool enable);
 
 
         /// Return Type: int

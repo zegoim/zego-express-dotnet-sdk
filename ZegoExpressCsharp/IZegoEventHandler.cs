@@ -351,19 +351,6 @@ namespace ZEGO
         public delegate void OnMixerSoundLevelUpdate(Dictionary<uint, float> soundLevels);
 
         /**
-         * The callback triggered when the sound level of any input stream changes in the auto stream mixing process.
-         *
-         * Available since: 2.10.0
-         * Description: According to this callback, user can obtain the sound level information of each stream pulled during auto stream mixing.
-         * Use cases: Often used in voice chat room scenarios.Users can use this callback to show which streamer is speaking when an audience pulls a mixed stream.
-         * Trigger: Call [startPlayingStream] function to pull the stream.
-         * Related APIs: Users can call [startAutoMixerTask] function to start an auto stream mixing task.Users can call [stopAutoMixerTask] function to stop an auto stream mixing task.
-         *
-         * @param soundLevels Sound level hash map, key is the streamID of every single stream in this mixer stream, value is the sound level value of that single stream, value ranging from 0.0 to 100.0.
-         */
-        public delegate void OnAutoMixerSoundLevelUpdate(Dictionary<string, float> soundLevels);
-
-        /**
          * The local captured audio sound level callback.
          *
          * Available since: 1.1.0
@@ -454,20 +441,6 @@ namespace ZEGO
          * @param state Remote microphone status.
          */
         public delegate void OnRemoteMicStateUpdate(string streamID, ZegoRemoteDeviceState state);
-
-        /**
-         * The callback triggered when the state of the remote speaker changes.
-         *
-         * Available since: 1.1.0
-         * Description: The callback triggered when the state of the remote microphone changes.
-         * Use cases: Developers of 1v1 education scenarios or education small class scenarios and similar scenarios can use this callback notification to determine whether the speaker device of the remote publishing stream device is working normally, and preliminary understand the cause of the device problem according to the corresponding state.
-         * Trigger: When the state of the remote speaker device changes, such as switching the speaker, by monitoring this callback, you can get events related to the remote speaker.
-         * Caution: This callback will not be called back when the remote stream is play from the CDN.
-         *
-         * @param streamID Stream ID.
-         * @param state Remote speaker status.
-         */
-        public delegate void OnRemoteSpeakerStateUpdate(string streamID, ZegoRemoteDeviceState state);
 
         /**
          * The callback triggered when Broadcast Messages are received.
@@ -594,7 +567,7 @@ namespace ZEGO
          * @param flipMode video flip mode.
          * @param channel Publishing stream channel.
          */
-        public delegate void OnCapturedVideoFrameRawData(IntPtr[] data, uint[] dataLength, ZegoVideoFrameParam param, ZegoVideoFlipMode flipMode, ZegoPublishChannel channel);
+        public delegate void OnCapturedVideoFrameRawData(ref IntPtr data, ref uint dataLength, ZegoVideoFrameParam param, ZegoVideoFlipMode flipMode, ZegoPublishChannel channel);
 
         /**
          * When custom video rendering is enabled, the remote end pulls the original video frame data to call back, and distinguishes different streams by streamID.
@@ -610,7 +583,7 @@ namespace ZEGO
          * @param param Video frame parameters.
          * @param streamID Stream ID.
          */
-        public delegate void OnRemoteVideoFrameRawData(IntPtr[] data, uint[] dataLength, ZegoVideoFrameParam param, string streamID);
+        public delegate void OnRemoteVideoFrameRawData(ref IntPtr data, ref uint dataLength, ZegoVideoFrameParam param, string streamID);
 
         /**
          * The callback for obtaining the audio data captured by the local microphone.

@@ -42,7 +42,10 @@ namespace ZEGO
         public const int ZEGO_EXPRESS_MAX_ROOM_EXTRA_INFO_KEY_LEN = 128;
         public const int ZEGO_EXPRESS_MAX_ROOM_EXTRA_INFO_VALUE_LEN = 4096;
 
-        public const string MOUDLE = "dotnet";
+        public const string MOUDLE_U3D = "u3d";
+        public const string MODULE_DOT_NET = "dotnet";
+
+        public const string MODULE = MODULE_DOT_NET;
 
         //module
         /// ZEGO_EXPRESS_MODULE_COMMON -> (0)

@@ -1,4 +1,4 @@
-﻿using static ZEGO.IZegoAudioEffectPlayerHandler;
+using static ZEGO.IZegoAudioEffectPlayerHandler;
 
 namespace ZEGO
 {

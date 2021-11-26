@@ -733,6 +733,19 @@ namespace ZEGO
     }
 
     /**
+     * Mix stream sound level info object.
+     */
+    public struct zego_mixer_sound_level_info
+    {
+        /** Sound level ID. */
+        public uint sound_level_id;
+
+        /** Sound level value. */
+        public float sound_level;
+
+    };
+
+    /**
      * Configuration for start sound level monitor.
      */
     public struct zego_sound_level_config
@@ -919,6 +932,17 @@ namespace ZEGO
 
         /** Current recording file size in byte */
         public ulong current_file_size;
+    }
+
+    public struct zego_audio_effect_play_config
+    {
+
+        /// unsigned int
+        public uint play_count;
+
+        /// boolean
+        [MarshalAs(UnmanagedType.I1)]
+        public bool is_publish_out;
     }
 
     /**

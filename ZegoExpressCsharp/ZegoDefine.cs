@@ -827,7 +827,7 @@ namespace ZEGO
         /** Maximum log file size(Bytes). Description: Used to customize the maximum log file size. Use cases: This configuration is required when you need to customize the upper limit of the log file size. Required: False. Default value: 5MB (5 * 1024 * 1024 Bytes). Value range: Minimum 1MB (1 * 1024 * 1024 Bytes), maximum 100M (100 * 1024 * 1024 Bytes), 0 means no need to write logs. Caution: The larger the upper limit of the log file size, the more log information it carries, but the log upload time will be longer. */
         public ulong logSize;
 
-        ZegoLogConfig()
+        public ZegoLogConfig()
         {
             logPath = "";
             logSize = 5 * 1024 * 1024;
@@ -1198,7 +1198,7 @@ namespace ZEGO
         {
             this.userID = userId;
             this.userName = userId;
-        }
+        } 
 
         public ZegoUser()
         {
@@ -1415,7 +1415,7 @@ namespace ZEGO
         /** The Room ID. */
         public string roomID;
 
-        ZegoPlayerConfig()
+        public ZegoPlayerConfig()
         {
             resourceMode = ZegoStreamResourceMode.Default;
             cdnConfig = null;
@@ -1647,7 +1647,7 @@ namespace ZEGO
         /** The video encoding delay of mixed stream output, Valid value range [0, 2000], in milliseconds. The default value is 0. */
         public int encodeLatency;
 
-        ZegoMixerOutputVideoConfig()
+        public ZegoMixerOutputVideoConfig()
         {
             this.videoCodecID = ZegoVideoCodecID.Default;
             this.bitrate = 0;
@@ -1790,6 +1790,7 @@ namespace ZEGO
         public ZegoMixerOutput(string target)
         {
             this.target = target;
+            this.videoConfig = new ZegoMixerOutputVideoConfig();
         }
 
     }
@@ -1909,6 +1910,9 @@ namespace ZEGO
 
         /** Enable or disable sound level callback for the task. If enabled, then the remote player can get the sound level of every stream in the inputlist by [onAutoMixerSoundLevelUpdate] callback.Description: Enable or disable sound level callback for the task.If enabled, then the remote player can get the sound level of every stream in the inputlist by [onAutoMixerSoundLevelUpdate] callback.Use cases: This parameter needs to be configured if user need the sound level information of every stream when an auto stream mixing task started.Required: No.Default value: `false`.Recommended value: Set this parameter based on requirements. */
         public bool enableSoundLevel;
+
+        /** Stream mixing alignment mode. */
+        public ZegoStreamAlignmentMode streamAlignmentMode;
 
         /**
          * Create a auto mix stream task object

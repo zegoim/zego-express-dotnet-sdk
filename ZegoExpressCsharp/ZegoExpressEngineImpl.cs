@@ -8,13 +8,15 @@ using System.Text;
 using System.Threading;
 using static ZEGO.IZegoEventHandler;
 using static ZEGO.ZegoImplCallChangeUtil;
+using static ZEGO.ZegoCallBackChangeUtil;
+using static ZEGO.ZegoAudioEffectPlayerImpl;
 
 namespace ZEGO
 {
     public class ZegoExpressEngineImpl : ZegoExpressEngine
     {
 
-        static ZegoExpressEngineImpl enginePtr = null;
+        public static ZegoExpressEngineImpl enginePtr = null;
         public static zego_engine_config engineConfig = new zego_engine_config();
         private static object zegoExpressEngineLock = new object();
         private static ConcurrentDictionary<int, OnPublisherUpdateCdnUrlResult> onPublisherUpdateCdnUrlResultDics = new ConcurrentDictionary<int, OnPublisherUpdateCdnUrlResult>();
@@ -25,74 +27,68 @@ namespace ZEGO
         private static ConcurrentDictionary<int, OnPublisherSetStreamExtraInfoResult> onPublisherSetStreamExtraInfoResultDics = new ConcurrentDictionary<int, OnPublisherSetStreamExtraInfoResult>();
         public static ConcurrentDictionary<int, OnRoomSetRoomExtraInfoResult> onRoomSetRoomExtraInfoResultDics = new ConcurrentDictionary<int, OnRoomSetRoomExtraInfoResult>();
         // private static bool setEngineConfigFlag = false;
-        static SynchronizationContext context;
+        public static SynchronizationContext context;
         private static ConcurrentDictionary<zego_media_player_instance_index, ZegoMediaPlayer> mediaPlayerAndIndex = new ConcurrentDictionary<zego_media_player_instance_index, ZegoMediaPlayer>();
         private static ConcurrentDictionary<int, OnMixerStartResult> onMixerStartResultDics = new ConcurrentDictionary<int, OnMixerStartResult>();
         private static ConcurrentDictionary<int, OnMixerStopResult> onMixerStopResultDics = new ConcurrentDictionary<int, OnMixerStopResult>();
-        private static IExpressEngineInternal.zego_on_engine_uninit zegoOnEngineUninit;//避免GC回收
-        private static IExpressMediaPlayerInternal.zego_on_media_player_playing_progress zegoOnMediaplayerPlayingProgress;
-        private static IExpressRoomInternal.zego_on_room_state_update zegoOnRoomStateUpdate;
-        private static IExpressRoomInternal.zego_on_room_user_update zegoOnRoomUserUpdate;
-        private static IExpressRoomInternal.zego_on_room_stream_update zegoOnRoomStreamUpdate;
-        private static IExpressPublisherInternal.zego_on_publisher_state_update zegoOnPublisherStateUpdate;
-        private static IExpressPublisherInternal.zego_on_publisher_quality_update zegoOnPublisherQualityUpdate;
-        private static IExpressPublisherInternal.zego_on_publisher_captured_audio_first_frame zegoOnPublisherRecvAudioCapturedFirstFrame;
-        private static IExpressPublisherInternal.zego_on_publisher_captured_video_first_frame zegoOnPublisherRecvVideoCapturedFirstFrame;
-        private static IExpressPublisherInternal.zego_on_publisher_video_size_changed zegoOnPublisherVideoSizeChanged;
-        private static IExpressCustomVideoInternal.zego_on_custom_video_render_captured_frame_data zegoOnCustomVideoRenderCapturedFrameData;
-        private static IExpressCustomVideoInternal.zego_on_custom_video_render_remote_frame_data zegoOnCustomVideoRenderRemoteFrameData;
-        private static IExpressPlayerInternal.zego_on_player_state_update zegoOnPlayerStateUpdate;
-        private static IExpressPlayerInternal.zego_on_player_quality_update zegoOnPlayerQualityUpdate;
-        private static IExpressPlayerInternal.zego_on_player_media_event zegoOnPlayerMediaEvent;
-        private static IExpressPlayerInternal.zego_on_player_recv_audio_first_frame zegoOnPlayerRecvAudioFirstFrame;
-        private static IExpressPlayerInternal.zego_on_player_recv_video_first_frame zegoOnPlayerRecvVideoFirstFrame;
-        private static IExpressPlayerInternal.zego_on_player_render_video_first_frame zegoOnPlayerRenderVideoFirstFrame;
-        private static IExpressPlayerInternal.zego_on_player_video_size_changed zegoOnPlayerVideoSizeChanged;
-        private static IExpressIMInternal.zego_on_im_recv_barrage_message zegoOnImRecvBarrageMessage;
-        private static IExpressIMInternal.zego_on_im_recv_broadcast_message zegoOnImRecvBroadcastMessage;
-        private static IExpressIMInternal.zego_on_im_recv_custom_command zegoOnImRecvCustomCommand;
-        private static IExpressIMInternal.zego_on_im_send_barrage_message_result zegoOnImSendBarrageMessageResult;
-        private static IExpressIMInternal.zego_on_im_send_broadcast_message_result zegoOnImSendBroadcastMessageResult;
-        private static IExpressIMInternal.zego_on_im_send_custom_command_result zegoOnImSendCustomCommandResult;
-        private static IExpressPublisherInternal.zego_on_publisher_update_cdn_url_result zegoOnPublisherUpdateCdnUrlResult;
-        private static IExpressPublisherInternal.zego_on_publisher_relay_cdn_state_update zegoOnPublisherRelayCdnStateUpdate;
-        private static IExpressDeviceInternal.zego_on_captured_sound_level_update zegoOnCapturedSoundLevelUpdate;
-        private static IExpressDeviceInternal.zego_on_remote_sound_level_update zegoOnRemoteSoundLevelUpdate;
-        private static IExpressDeviceInternal.zego_on_captured_audio_spectrum_update zegoOnCapturedAudioSpectrumUpdate;
-        private static IExpressDeviceInternal.zego_on_remote_audio_spectrum_update zegoOnRemoteAudioSpectrumUpdate;
-        private static IExpressPlayerInternal.zego_on_player_recv_sei zegoOnPlayerRecvSei;
-        private static IExpressEngineInternal.zego_on_debug_error zegoOnDebugError;
-        private static IExpressRoomInternal.zego_on_room_stream_extra_info_update zegoOnRoomStreamExtraInfoUpdate;
-        private static IExpressPublisherInternal.zego_on_publisher_update_stream_extra_info_result zegoOnPublisherUpdateStreamExtraInfoResult;
-        private static IExpressMediaPlayerInternal.zego_on_media_player_state_update zegoOnMediaplayerStateUpdate;
-        private static IExpressMediaPlayerInternal.zego_on_media_player_load_resource zegoOnMediaplayerLoadResourceResult;
-        private static IExpressMediaPlayerInternal.zego_on_media_player_network_event zegoOnMediaplayerNetworkEvent;
-        private static IExpressMediaPlayerInternal.zego_on_media_player_seek_to zegoOnMediaplayerSeekToTimeResult;
-        private static IExpressMediaPlayerInternal.zego_on_media_player_audio_frame zegoOnMediaplayerAudioData;
-        private static IExpressMediaPlayerInternal.zego_on_media_player_video_frame zegoOnMediaplayerVideoData;
-        private static IExpressMixerInternal.zego_on_mixer_start_result zegoOnMixerStartResult;
-        private static IExpressMixerInternal.zego_on_mixer_stop_result zegoOnMixerStopResult;
-        private static IExpressCustomVideoInternal.zego_on_custom_video_capture_start zegoOnCustomVideoCaptureStart;
-        private static IExpressCustomVideoInternal.zego_on_custom_video_capture_stop zegoOnCustomVideoCaptureStop;
-        private static IExpressCustomAudioIO.zego_on_captured_audio_data zegoOnCapturedAudioData;
-        private static IExpressCustomAudioIO.zego_on_mixed_audio_data zegoOnMixedAudioData;
-        private static IExpressRecordInternal.zego_on_captured_data_record_state_update zegoOnCapturedDataRecordStateUpdate;
-        private static IExpressRecordInternal.zego_on_captured_data_record_progress_update zegoOnCapturedDataRecordProgressUpdate;
-        private static IExpressCustomAudioIO.zego_on_playback_audio_data zegoOnPlaybackAudioData;
-        private static IExpressDeviceInternal.zego_on_device_error zegoOnDeviceError;
-        private static IExpressDeviceInternal.zego_on_remote_camera_state_update zegoOnRemoteCameraStateUpdate;
-        private static IExpressDeviceInternal.zego_on_remote_mic_state_update zegoOnRemoteMicStateUpdate;
+        public static ConcurrentDictionary<int, ZegoAudioEffectPlayer> audioEffectPlayerAndIndex = new ConcurrentDictionary<int, ZegoAudioEffectPlayer>();
+        
         private ArrayList arrayList;
         public static new void SetEngineConfig(ZegoEngineConfig config)
         {
             engineConfig = ChangeZegoEngineConfigClassToStruct(config);
-            // DefaultOpenCustomRender(ref engineConfig);//Unity跨平台，默认开启外部渲染
+            //DefaultOpenCustomRender(ref engineConfig);//Unity跨平台，默认开启外部渲染
             IExpressEngineInternal.zego_express_set_engine_config(engineConfig);
-            ZegoUtil.ReleaseStructPointer(engineConfig.log_config);
-            // setEngineConfigFlag = true;
+            if (engineConfig.log_config != IntPtr.Zero)
+            {
+                ZegoUtil.ReleaseStructPointer(engineConfig.log_config);
+            }
+            //setEngineConfigFlag = true;
         }
 
-        public static ZegoExpressEngine CreateEngine(uint appId, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string appSign, bool isTestEnv, ZegoScenario scenario, SynchronizationContext uiThreadContext)
+        public static new void SetLogConfig(ZegoLogConfig config)
+        {
+            zego_log_config log_config = ChangeZegoLogConfigClassToStruct(config);
+
+            IExpressEngineInternal.zego_express_set_log_config(log_config);
+        }
+
+        public static new ZegoExpressEngine CreateEngine(ZegoEngineProfile profile, SynchronizationContext uiThreadContext)
+        {
+            if (enginePtr == null) //双if +lock
+            {
+                lock (zegoExpressEngineLock)
+                {
+                    if (enginePtr == null)
+                    {
+                        if (uiThreadContext == null)
+                        {
+                            throw new Exception("CreateEngine uiThreadContext should not be null");
+                        }
+                        context = uiThreadContext;
+
+                        RegisterCallback();
+
+                        zego_engine_profile engine_profile = ChangeZegoEngineProfileClassToStruct(profile);
+                        int createResult = IExpressEngineInternal.zego_express_engine_init_with_profile(engine_profile);
+                        if (createResult != 0)
+                        {
+                            Console.WriteLine(string.Format("create Engine fail,error Code:{0}", createResult));
+                            throw new Exception("create Engine fail,error Code:" + createResult);
+                        }
+                        else
+                        {
+                            Console.WriteLine("create Enigne success!!!");
+                            enginePtr = new ZegoExpressEngineImpl();
+                        }
+                    }
+                }
+            }
+            return enginePtr;
+
+        }
+
+        public static new ZegoExpressEngine CreateEngine(uint appId, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string appSign, bool isTestEnv, ZegoScenario scenario, SynchronizationContext uiThreadContext)
         {
             if (enginePtr == null) //双if +lock
             {
@@ -133,255 +129,74 @@ namespace ZEGO
 
         }
 
-        public static ZegoExpressEngine CreateEngineWithProfile(ZegoEngineProfile profile, SynchronizationContext uiThreadContext)
-        {
-            if (enginePtr == null) //双if +lock
-            {
-                lock (zegoExpressEngineLock)
-                {
-                    if (enginePtr == null)
-                    {
-                        if (uiThreadContext == null)
-                        {
-                            throw new Exception("CreateEngine uiThreadContext should not be null");
-                        }
-                        context = uiThreadContext;
-
-                        RegisterCallback();
-
-                        zego_engine_profile engine_profile = ChangeZegoEngineProfileClassToStruct(profile);
-                        int createResult = IExpressEngineInternal.zego_express_engine_init_with_profile(engine_profile);
-                        if (createResult != 0)
-                        {
-                            Console.WriteLine(string.Format("create Engine fail,error Code:{0}", createResult));
-                            throw new Exception("create Engine fail,error Code:" + createResult);
-                        }
-                        else
-                        {
-                            Console.WriteLine("create Enigne success!!!");
-                            enginePtr = new ZegoExpressEngineImpl();
-                        }
-                    }
-                }
-            }
-            return enginePtr;
-
-        }
-
         /// <summary>
         /// Register callback
         /// </summary>
         private static void RegisterCallback()
         {
-            zegoOnEngineUninit = new IExpressEngineInternal.zego_on_engine_uninit(zego_on_engine_uninit);
-            IExpressEngineInternal.zego_register_engine_uninit_callback(zegoOnEngineUninit, IntPtr.Zero);
-
-
-            zegoOnRoomStateUpdate = new IExpressRoomInternal.zego_on_room_state_update(zego_on_room_state_update);
-            IExpressRoomInternal.zego_register_room_state_update_callback(zegoOnRoomStateUpdate, IntPtr.Zero);
-
-
-            zegoOnRoomUserUpdate = new IExpressRoomInternal.zego_on_room_user_update(zego_on_room_user_update);
-            IExpressRoomInternal.zego_register_room_user_update_callback(zegoOnRoomUserUpdate, IntPtr.Zero);
-
-
-            zegoOnRoomStreamUpdate = new IExpressRoomInternal.zego_on_room_stream_update(zego_on_room_stream_update);
-            IExpressRoomInternal.zego_register_room_stream_update_callback(zegoOnRoomStreamUpdate, IntPtr.Zero);
-
-
-            zegoOnPublisherStateUpdate = new IExpressPublisherInternal.zego_on_publisher_state_update(zego_on_publisher_state_update);
-            IExpressPublisherInternal.zego_register_publisher_state_update_callback(zegoOnPublisherStateUpdate, IntPtr.Zero);
-
-
-            zegoOnPublisherQualityUpdate = new IExpressPublisherInternal.zego_on_publisher_quality_update(zego_on_publisher_quality_update);
-            IExpressPublisherInternal.zego_register_publisher_quality_update_callback(zegoOnPublisherQualityUpdate, IntPtr.Zero);
-
-
-            zegoOnPublisherRecvAudioCapturedFirstFrame = new IExpressPublisherInternal.zego_on_publisher_captured_audio_first_frame(zego_on_publisher_recv_audio_captured_first_frame);
-            IExpressPublisherInternal.zego_register_publisher_captured_audio_first_frame_callback(zegoOnPublisherRecvAudioCapturedFirstFrame, IntPtr.Zero);
-
-
-
-            zegoOnPublisherRecvVideoCapturedFirstFrame = new IExpressPublisherInternal.zego_on_publisher_captured_video_first_frame(zego_on_publisher_recv_video_captured_first_frame);
-            IExpressPublisherInternal.zego_register_publisher_captured_video_first_frame_callback(zegoOnPublisherRecvVideoCapturedFirstFrame, IntPtr.Zero);
-
-
-            zegoOnPublisherVideoSizeChanged = new IExpressPublisherInternal.zego_on_publisher_video_size_changed(zego_on_publisher_video_size_changed);
-            IExpressPublisherInternal.zego_register_publisher_video_size_changed_callback(zegoOnPublisherVideoSizeChanged, IntPtr.Zero);
-
-
-            zegoOnCustomVideoRenderCapturedFrameData = new IExpressCustomVideoInternal.zego_on_custom_video_render_captured_frame_data(zego_on_custom_video_render_captured_frame_data);
-            IExpressCustomVideoInternal.zego_register_custom_video_render_captured_frame_data_callback(zegoOnCustomVideoRenderCapturedFrameData, IntPtr.Zero);
-
-
-            zegoOnCustomVideoRenderRemoteFrameData = new IExpressCustomVideoInternal.zego_on_custom_video_render_remote_frame_data(zego_on_custom_video_render_remote_frame_data);
-            IExpressCustomVideoInternal.zego_register_custom_video_render_remote_frame_data_callback(zegoOnCustomVideoRenderRemoteFrameData, IntPtr.Zero);
-
-
-            zegoOnPlayerStateUpdate = new IExpressPlayerInternal.zego_on_player_state_update(zego_on_player_state_update);
-            IExpressPlayerInternal.zego_register_player_state_update_callback(zegoOnPlayerStateUpdate, IntPtr.Zero);
-
-
-            zegoOnPlayerQualityUpdate = new IExpressPlayerInternal.zego_on_player_quality_update(zego_on_player_quality_update);
-            IExpressPlayerInternal.zego_register_player_quality_update_callback(zegoOnPlayerQualityUpdate, IntPtr.Zero);
-
-
-            zegoOnPlayerMediaEvent = new IExpressPlayerInternal.zego_on_player_media_event(zego_on_player_media_event);
-            IExpressPlayerInternal.zego_register_player_media_event_callback(zegoOnPlayerMediaEvent, IntPtr.Zero);
-
-
-            zegoOnPlayerRecvAudioFirstFrame = new IExpressPlayerInternal.zego_on_player_recv_audio_first_frame(zego_on_player_recv_audio_first_frame);
-            IExpressPlayerInternal.zego_register_player_recv_audio_first_frame_callback(zegoOnPlayerRecvAudioFirstFrame, IntPtr.Zero);
-
-
-            zegoOnPlayerRecvVideoFirstFrame = new IExpressPlayerInternal.zego_on_player_recv_video_first_frame(zego_on_player_recv_video_first_frame);
-            IExpressPlayerInternal.zego_register_player_recv_video_first_frame_callback(zegoOnPlayerRecvVideoFirstFrame, IntPtr.Zero);
-
-
-            zegoOnPlayerRenderVideoFirstFrame = new IExpressPlayerInternal.zego_on_player_render_video_first_frame(zego_on_player_render_video_first_frame);
-            IExpressPlayerInternal.zego_register_player_render_video_first_frame_callback(zegoOnPlayerRenderVideoFirstFrame, IntPtr.Zero);
-
-
-
-            zegoOnPlayerVideoSizeChanged = new IExpressPlayerInternal.zego_on_player_video_size_changed(zego_on_player_video_size_changed);
-            IExpressPlayerInternal.zego_register_player_video_size_changed_callback(zegoOnPlayerVideoSizeChanged, IntPtr.Zero);
-
-
-            zegoOnImRecvBarrageMessage = new IExpressIMInternal.zego_on_im_recv_barrage_message(zego_on_im_recv_barrage_message);
-            IExpressIMInternal.zego_register_im_recv_barrage_message_callback(zegoOnImRecvBarrageMessage, IntPtr.Zero);
-
-
-            zegoOnImRecvBroadcastMessage = new IExpressIMInternal.zego_on_im_recv_broadcast_message(zego_on_im_recv_broadcast_message);
-            IExpressIMInternal.zego_register_im_recv_broadcast_message_callback(zegoOnImRecvBroadcastMessage, IntPtr.Zero);
-
-
-            zegoOnImRecvCustomCommand = new IExpressIMInternal.zego_on_im_recv_custom_command(zego_on_im_recv_custom_command);
-            IExpressIMInternal.zego_register_im_recv_custom_command_callback(zegoOnImRecvCustomCommand, IntPtr.Zero);
-
-
-            zegoOnImSendBarrageMessageResult = new IExpressIMInternal.zego_on_im_send_barrage_message_result(zego_on_im_send_barrage_message_result);
-            IExpressIMInternal.zego_register_im_send_barrage_message_result_callback(zegoOnImSendBarrageMessageResult, IntPtr.Zero);
-
-
-            zegoOnImSendBroadcastMessageResult = new IExpressIMInternal.zego_on_im_send_broadcast_message_result(zego_on_im_send_broadcast_message_result);
-            IExpressIMInternal.zego_register_im_send_broadcast_message_result_callback(zegoOnImSendBroadcastMessageResult, IntPtr.Zero);
-
-
-            zegoOnImSendCustomCommandResult = new IExpressIMInternal.zego_on_im_send_custom_command_result(zego_on_im_send_custom_command_result);
-            IExpressIMInternal.zego_register_im_send_custom_command_result_callback(zegoOnImSendCustomCommandResult, IntPtr.Zero);
-
-
-            zegoOnPublisherUpdateCdnUrlResult = new IExpressPublisherInternal.zego_on_publisher_update_cdn_url_result(zego_on_publisher_update_cdn_url_result);
-            IExpressPublisherInternal.zego_register_publisher_update_cdn_url_result_callback(zegoOnPublisherUpdateCdnUrlResult, IntPtr.Zero);
-
-
-            zegoOnPublisherRelayCdnStateUpdate = new IExpressPublisherInternal.zego_on_publisher_relay_cdn_state_update(zego_on_publisher_relay_cdn_state_update);
-            IExpressPublisherInternal.zego_register_publisher_relay_cdn_state_update_callback(zegoOnPublisherRelayCdnStateUpdate, IntPtr.Zero);
-
-
-            zegoOnCapturedSoundLevelUpdate = new IExpressDeviceInternal.zego_on_captured_sound_level_update(zego_on_captured_sound_level_update);
-            IExpressDeviceInternal.zego_register_captured_sound_level_update_callback(zegoOnCapturedSoundLevelUpdate, IntPtr.Zero);
-
-
-            zegoOnRemoteSoundLevelUpdate = new IExpressDeviceInternal.zego_on_remote_sound_level_update(zego_on_remote_sound_level_update);
-            IExpressDeviceInternal.zego_register_remote_sound_level_update_callback(zegoOnRemoteSoundLevelUpdate, IntPtr.Zero);
-
-
-            zegoOnCapturedAudioSpectrumUpdate = new IExpressDeviceInternal.zego_on_captured_audio_spectrum_update(zego_on_captured_audio_spectrum_update);
-            IExpressDeviceInternal.zego_register_captured_audio_spectrum_update_callback(zegoOnCapturedAudioSpectrumUpdate, IntPtr.Zero);
-
-
-            zegoOnRemoteAudioSpectrumUpdate = new IExpressDeviceInternal.zego_on_remote_audio_spectrum_update(zego_on_remote_audio_spectrum_update);
-            IExpressDeviceInternal.zego_register_remote_audio_spectrum_update_callback(zegoOnRemoteAudioSpectrumUpdate, IntPtr.Zero);
-
-
-
-            zegoOnPlayerRecvSei = new IExpressPlayerInternal.zego_on_player_recv_sei(zego_on_player_recv_sei);
-            IExpressPlayerInternal.zego_register_player_recv_sei_callback(zegoOnPlayerRecvSei, IntPtr.Zero);
-
-
-            zegoOnDebugError = new IExpressEngineInternal.zego_on_debug_error(zego_on_debug_error);
-            IExpressEngineInternal.zego_register_debug_error_callback(zegoOnDebugError, IntPtr.Zero);
-
-
-            zegoOnRoomStreamExtraInfoUpdate = new IExpressRoomInternal.zego_on_room_stream_extra_info_update(zego_on_room_stream_extra_info_update);
-            IExpressRoomInternal.zego_register_room_stream_extra_info_update_callback(zegoOnRoomStreamExtraInfoUpdate, IntPtr.Zero);
-
-
-            zegoOnPublisherUpdateStreamExtraInfoResult = new IExpressPublisherInternal.zego_on_publisher_update_stream_extra_info_result(zego_on_publisher_update_stream_extra_info_result);
-            IExpressPublisherInternal.zego_register_publisher_update_stream_extra_info_result_callback(zegoOnPublisherUpdateStreamExtraInfoResult, IntPtr.Zero);
-
-
-            zegoOnMediaplayerStateUpdate = new IExpressMediaPlayerInternal.zego_on_media_player_state_update(zego_on_mediaplayer_state_update);
-            IExpressMediaPlayerInternal.zego_register_media_player_state_update_callback(zegoOnMediaplayerStateUpdate, IntPtr.Zero);
-
-
-            zegoOnMediaplayerLoadResourceResult = new IExpressMediaPlayerInternal.zego_on_media_player_load_resource(zego_on_mediaplayer_load_resource_result);
-            IExpressMediaPlayerInternal.zego_register_media_player_load_resource_callback(zegoOnMediaplayerLoadResourceResult, IntPtr.Zero);
-
-
-            zegoOnMediaplayerPlayingProgress = new IExpressMediaPlayerInternal.zego_on_media_player_playing_progress(zego_on_mediaplayer_playing_progress);
-            IExpressMediaPlayerInternal.zego_register_media_player_playing_progress_callback(zegoOnMediaplayerPlayingProgress, IntPtr.Zero);
-
-
-            zegoOnMediaplayerNetworkEvent = new IExpressMediaPlayerInternal.zego_on_media_player_network_event(zego_on_mediaplayer_network_event);
-            IExpressMediaPlayerInternal.zego_register_media_player_network_event_callback(zegoOnMediaplayerNetworkEvent, IntPtr.Zero);
-
-
-            zegoOnMediaplayerSeekToTimeResult = new IExpressMediaPlayerInternal.zego_on_media_player_seek_to(zego_on_mediaplayer_seek_to_time_result);
-            IExpressMediaPlayerInternal.zego_register_media_player_seek_to_callback(zegoOnMediaplayerSeekToTimeResult, IntPtr.Zero);
-
-
-            zegoOnMediaplayerAudioData = new IExpressMediaPlayerInternal.zego_on_media_player_audio_frame(zego_on_mediaplayer_audio_data);
-            IExpressMediaPlayerInternal.zego_register_media_player_audio_frame_callback(zegoOnMediaplayerAudioData, IntPtr.Zero);
-
-
-            zegoOnMediaplayerVideoData = new IExpressMediaPlayerInternal.zego_on_media_player_video_frame(zego_on_mediaplayer_video_data);
-            IExpressMediaPlayerInternal.zego_register_media_player_video_frame_callback(zegoOnMediaplayerVideoData, IntPtr.Zero);
-
-
-
-            zegoOnMixerStartResult = new IExpressMixerInternal.zego_on_mixer_start_result(zego_on_mixer_start_result);
-            IExpressMixerInternal.zego_register_mixer_start_result_callback(zegoOnMixerStartResult, IntPtr.Zero);
-
-
-            zegoOnMixerStopResult = new IExpressMixerInternal.zego_on_mixer_stop_result(zego_on_mixer_stop_result);
-            IExpressMixerInternal.zego_register_mixer_stop_result_callback(zegoOnMixerStopResult, IntPtr.Zero);
-
-
-            zegoOnCustomVideoCaptureStart = new IExpressCustomVideoInternal.zego_on_custom_video_capture_start(zego_on_custom_video_capture_start);
-            IExpressCustomVideoInternal.zego_register_custom_video_capture_start_callback(zegoOnCustomVideoCaptureStart, IntPtr.Zero);
-
-
-            zegoOnCustomVideoCaptureStop = new IExpressCustomVideoInternal.zego_on_custom_video_capture_stop(zego_on_custom_video_capture_stop);
-            IExpressCustomVideoInternal.zego_register_custom_video_capture_stop_callback(zegoOnCustomVideoCaptureStop, IntPtr.Zero);
-
-
-            zegoOnCapturedAudioData = new IExpressCustomAudioIO.zego_on_captured_audio_data(zego_on_captured_audio_data);
-            IExpressCustomAudioIO.zego_register_captured_audio_data_callback(zegoOnCapturedAudioData, IntPtr.Zero);
-
-            zegoOnMixedAudioData = new IExpressCustomAudioIO.zego_on_mixed_audio_data(zego_on_mixed_audio_data);
-            IExpressCustomAudioIO.zego_register_mixed_audio_data_callback(zegoOnMixedAudioData, IntPtr.Zero);
-
-            zegoOnPlaybackAudioData = new IExpressCustomAudioIO.zego_on_playback_audio_data(zego_on_playback_audio_data);
-            IExpressCustomAudioIO.zego_register_playback_audio_data_callback(zegoOnPlaybackAudioData, IntPtr.Zero);
-
-            zegoOnCapturedDataRecordStateUpdate = new IExpressRecordInternal.zego_on_captured_data_record_state_update(zego_on_captured_data_record_state_update);
-            IExpressRecordInternal.zego_register_captured_data_record_state_update_callback(zegoOnCapturedDataRecordStateUpdate, IntPtr.Zero);
-
-            zegoOnCapturedDataRecordProgressUpdate = new IExpressRecordInternal.zego_on_captured_data_record_progress_update(zego_on_captured_data_record_progress_update);
-            IExpressRecordInternal.zego_register_captured_data_record_progress_update_callback(zegoOnCapturedDataRecordProgressUpdate, IntPtr.Zero);
-
-
-            zegoOnDeviceError = new IExpressDeviceInternal.zego_on_device_error(zego_on_device_error);
-            IExpressDeviceInternal.zego_register_device_error_callback(zegoOnDeviceError, IntPtr.Zero);
-
-
-            zegoOnRemoteCameraStateUpdate = new IExpressDeviceInternal.zego_on_remote_camera_state_update(zego_on_remote_camera_state_update);
-            IExpressDeviceInternal.zego_register_remote_camera_state_update_callback(zegoOnRemoteCameraStateUpdate, IntPtr.Zero);
-
-            zegoOnRemoteMicStateUpdate = new IExpressDeviceInternal.zego_on_remote_mic_state_update(zego_on_remote_mic_state_update);
-            IExpressDeviceInternal.zego_register_remote_mic_state_update_callback(zegoOnRemoteMicStateUpdate, IntPtr.Zero);
+            IExpressEngineInternal.zego_register_engine_uninit_callback(zego_on_engine_uninit, IntPtr.Zero);
+            IExpressRoomInternal.zego_register_room_state_update_callback(zego_on_room_state_update, IntPtr.Zero);
+            IExpressRoomInternal.zego_register_room_user_update_callback(zego_on_room_user_update, IntPtr.Zero);
+            IExpressRoomInternal.zego_register_room_stream_update_callback(zego_on_room_stream_update, IntPtr.Zero);
+            IExpressPublisherInternal.zego_register_publisher_state_update_callback(zego_on_publisher_state_update, IntPtr.Zero);
+            IExpressPublisherInternal.zego_register_publisher_quality_update_callback(zego_on_publisher_quality_update, IntPtr.Zero);
+            IExpressPublisherInternal.zego_register_publisher_captured_audio_first_frame_callback(zego_on_publisher_captured_audio_first_frame, IntPtr.Zero);
+            IExpressPublisherInternal.zego_register_publisher_captured_video_first_frame_callback(zego_on_publisher_captured_video_first_frame, IntPtr.Zero);
+            IExpressPublisherInternal.zego_register_publisher_video_size_changed_callback(zego_on_publisher_video_size_changed, IntPtr.Zero);
+            IExpressCustomVideoInternal.zego_register_custom_video_render_captured_frame_data_callback(zego_on_custom_video_render_captured_frame_data, IntPtr.Zero);
+            IExpressCustomVideoInternal.zego_register_custom_video_render_remote_frame_data_callback(zego_on_custom_video_render_remote_frame_data, IntPtr.Zero);
+            IExpressPlayerInternal.zego_register_player_state_update_callback(zego_on_player_state_update, IntPtr.Zero);
+            IExpressPlayerInternal.zego_register_player_quality_update_callback(zego_on_player_quality_update, IntPtr.Zero);
+            IExpressPlayerInternal.zego_register_player_media_event_callback(zego_on_player_media_event, IntPtr.Zero);
+            IExpressPlayerInternal.zego_register_player_recv_audio_first_frame_callback(zego_on_player_recv_audio_first_frame, IntPtr.Zero);
+            IExpressPlayerInternal.zego_register_player_recv_video_first_frame_callback(zego_on_player_recv_video_first_frame, IntPtr.Zero);
+            IExpressPlayerInternal.zego_register_player_render_video_first_frame_callback(zego_on_player_render_video_first_frame, IntPtr.Zero);
+            IExpressPlayerInternal.zego_register_player_video_size_changed_callback(zego_on_player_video_size_changed, IntPtr.Zero);
+            IExpressIMInternal.zego_register_im_recv_barrage_message_callback(zego_on_im_recv_barrage_message, IntPtr.Zero);
+            IExpressIMInternal.zego_register_im_recv_broadcast_message_callback(zego_on_im_recv_broadcast_message, IntPtr.Zero);
+            IExpressIMInternal.zego_register_im_recv_custom_command_callback(zego_on_im_recv_custom_command, IntPtr.Zero);
+            IExpressIMInternal.zego_register_im_send_barrage_message_result_callback(zego_on_im_send_barrage_message_result, IntPtr.Zero);
+            IExpressIMInternal.zego_register_im_send_broadcast_message_result_callback(zego_on_im_send_broadcast_message_result, IntPtr.Zero);
+            IExpressIMInternal.zego_register_im_send_custom_command_result_callback(zego_on_im_send_custom_command_result, IntPtr.Zero);
+            IExpressPublisherInternal.zego_register_publisher_update_cdn_url_result_callback(zego_on_publisher_update_cdn_url_result, IntPtr.Zero);
+            IExpressPublisherInternal.zego_register_publisher_relay_cdn_state_update_callback(zego_on_publisher_relay_cdn_state_update, IntPtr.Zero);
+            IExpressDeviceInternal.zego_register_captured_sound_level_update_callback(zego_on_captured_sound_level_update, IntPtr.Zero);
+            IExpressDeviceInternal.zego_register_remote_sound_level_update_callback(zego_on_remote_sound_level_update, IntPtr.Zero);
+            IExpressDeviceInternal.zego_register_captured_audio_spectrum_update_callback(zego_on_captured_audio_spectrum_update, IntPtr.Zero);
+            IExpressDeviceInternal.zego_register_remote_audio_spectrum_update_callback(zego_on_remote_audio_spectrum_update, IntPtr.Zero);
+            IExpressPlayerInternal.zego_register_player_recv_sei_callback(zego_on_player_recv_sei, IntPtr.Zero);
+            IExpressEngineInternal.zego_register_debug_error_callback(zego_on_debug_error, IntPtr.Zero);
+            IExpressRoomInternal.zego_register_room_stream_extra_info_update_callback(zego_on_room_stream_extra_info_update, IntPtr.Zero);
+            IExpressPublisherInternal.zego_register_publisher_update_stream_extra_info_result_callback(zego_on_publisher_update_stream_extra_info_result, IntPtr.Zero);
+            IExpressCustomVideoInternal.zego_register_custom_video_capture_start_callback(zego_on_custom_video_capture_start, IntPtr.Zero);
+            IExpressCustomVideoInternal.zego_register_custom_video_capture_stop_callback(zego_on_custom_video_capture_stop, IntPtr.Zero);
+            IExpressRoomInternal.zego_register_room_set_room_extra_info_result_callback(zego_on_room_set_room_extra_info_result, IntPtr.Zero);
+            IExpressRoomInternal.zego_register_room_extra_info_update_callback(zego_on_room_extra_info_update, IntPtr.Zero);
+            IExpressEngineInternal.zego_register_engine_state_update_callback(zego_on_engine_state_update, IntPtr.Zero);
+            IExpressRoomInternal.zego_register_room_online_user_count_update_callback(zego_on_room_online_user_count_update, IntPtr.Zero);
+            IExpressMediaPlayerInternal.zego_register_media_player_state_update_callback(zego_on_mediaplayer_state_update, IntPtr.Zero);
+            IExpressMediaPlayerInternal.zego_register_media_player_load_resource_callback(zego_on_mediaplayer_load_resource_result, IntPtr.Zero);
+            IExpressMediaPlayerInternal.zego_register_media_player_playing_progress_callback(zego_on_mediaplayer_playing_progress, IntPtr.Zero);
+            IExpressMediaPlayerInternal.zego_register_media_player_network_event_callback(zego_on_mediaplayer_network_event, IntPtr.Zero);
+            IExpressMediaPlayerInternal.zego_register_media_player_seek_to_callback(zego_on_mediaplayer_seek_to_time_result, IntPtr.Zero);
+            IExpressMediaPlayerInternal.zego_register_media_player_audio_frame_callback(zego_on_mediaplayer_audio_data, IntPtr.Zero);
+            IExpressMediaPlayerInternal.zego_register_media_player_video_frame_callback(zego_on_mediaplayer_video_data, IntPtr.Zero);
+            IExpressMixerInternal.zego_register_mixer_start_result_callback(zego_on_mixer_start_result, IntPtr.Zero);
+            IExpressMixerInternal.zego_register_mixer_stop_result_callback(zego_on_mixer_stop_result, IntPtr.Zero);
+            IExpressMixerInternal.zego_register_mixer_relay_cdn_state_update_callback(zego_on_mixer_relay_cdn_state_update, IntPtr.Zero);
+            IExpressMixerInternal.zego_register_mixer_sound_level_update_callback(zego_on_mixer_sound_level_update, IntPtr.Zero);
+            IExpressDeviceInternal.zego_register_device_error_callback(zego_on_device_error, IntPtr.Zero);
+            IExpressDeviceInternal.zego_register_remote_camera_state_update_callback(zego_on_remote_camera_state_update, IntPtr.Zero);
+            IExpressDeviceInternal.zego_register_remote_mic_state_update_callback(zego_on_remote_mic_state_update, IntPtr.Zero);
+            IExpressAudioEffectPlayerInternal.zego_register_audio_effect_player_seek_to_callback(zego_on_audio_effect_player_seek_to, IntPtr.Zero);
+            IExpressAudioEffectPlayerInternal.zego_register_audio_effect_player_load_resource_callback(zego_on_audio_effect_player_load_resource, IntPtr.Zero);
+            IExpressAudioEffectPlayerInternal.zego_register_audio_effect_play_state_update_callback(zego_on_audio_effect_play_state_update, IntPtr.Zero);
+            IExpressCustomAudioIOInternal.zego_register_captured_audio_data_callback(zego_on_captured_audio_data, IntPtr.Zero);
+            IExpressCustomAudioIOInternal.zego_register_mixed_audio_data_callback(zego_on_mixed_audio_data, IntPtr.Zero);
+            IExpressCustomAudioIOInternal.zego_register_playback_audio_data_callback(zego_on_playback_audio_data, IntPtr.Zero);
+            IExpressCustomAudioIOInternal.zego_register_player_audio_data_callback(zego_on_player_audio_data, IntPtr.Zero);
+            IExpressRecordInternal.zego_register_captured_data_record_state_update_callback(zego_on_captured_data_record_state_update, IntPtr.Zero);
+            IExpressRecordInternal.zego_register_captured_data_record_progress_update_callback(zego_on_captured_data_record_progress_update, IntPtr.Zero);
         }
 
         public static void zego_on_mixer_start_result(int error_code, int seq, [System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string extended_data, System.IntPtr user_context)
@@ -429,6 +244,38 @@ namespace ZEGO
             }), null);
 
         }
+
+        public static void zego_on_mixer_relay_cdn_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string task_id, System.IntPtr info_list, uint info_count, System.IntPtr user_context)
+        {
+            if (enginePtr == null || enginePtr.onMixerRelayCDNStateUpdate == null) return;
+            string log = string.Format("zego_on_mixer_relay_cdn_state_update task_id:{0}  info_count:{1}", task_id, info_count);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            zego_stream_relay_cdn_info[] zego_Stream_Relay_Cdn_Infos = new zego_stream_relay_cdn_info[info_count];
+            ZegoUtil.GetStructListByPtr(ref zego_Stream_Relay_Cdn_Infos, info_list, info_count);
+            List<ZegoStreamRelayCDNInfo> result = ChangeZegoStreamRelayCDNInfoStructListToClassList(zego_Stream_Relay_Cdn_Infos);
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+
+                enginePtr?.onMixerRelayCDNStateUpdate?.Invoke(task_id, result);
+
+            }),null);
+        }
+
+        public static void zego_on_mixer_sound_level_update(IntPtr sound_levels, uint info_count, System.IntPtr user_context)
+        {
+            if (enginePtr == null || enginePtr.onMixerSoundLevelUpdate == null) return;
+            string log = string.Format("zego_on_mixer_sound_level_update  info_count:{0}", info_count);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            zego_mixer_sound_level_info[] zego_Mixer_Sound_Level_Infos = new zego_mixer_sound_level_info[info_count];
+            ZegoUtil.GetStructListByPtr(ref zego_Mixer_Sound_Level_Infos, sound_levels, info_count);
+            Dictionary<uint, float> result = ChangeZegoMixerSoundLevelInfoStructListToDictionary(zego_Mixer_Sound_Level_Infos);
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+
+                enginePtr?.onMixerSoundLevelUpdate?.Invoke(result);
+
+            }), null);
+        }
         public static void zego_on_mediaplayer_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, zego_media_player_instance_index instance_index, System.IntPtr user_context)
         {
             ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
@@ -469,7 +316,7 @@ namespace ZEGO
         }
         private static void DefaultOpenCustomRender()//结构体是栈区分配，值类型，传递的时候是值拷贝，通过ref引用传递值类型解决
         {
-            if(enginePtr == null)
+            if (enginePtr == null)
             {
                 ZegoUtil.ZegoPrivateLog(-1, "enginePtr is null.", false, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMVIDEOIO);
                 return;
@@ -559,6 +406,7 @@ namespace ZEGO
             onPublisherUpdateCdnUrlResultDics.Clear();
             onMixerStartResultDics.Clear();
             onMixerStopResultDics.Clear();
+            onRoomSetRoomExtraInfoResultDics.Clear();
             //setEngineConfigFlag = false;
         }
 
@@ -771,12 +619,14 @@ namespace ZEGO
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
             }
         }
-        public override void EnableAudioDataCallback(bool enable, uint callbackBitMask, ZegoAudioFrameParam param)
+
+        [Obsolete]
+        public override void  EnableAudioDataCallback(bool enable, uint callbackBitMask, ZegoAudioFrameParam param)
         {
             if (enginePtr != null)
             {
                 zego_audio_frame_param audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
-                int result = IExpressCustomAudioIO.zego_express_enable_audio_data_callback(enable, (uint)callbackBitMask, audio_Frame_Param);
+                int result = IExpressCustomAudioIOInternal.zego_express_enable_audio_data_callback(enable, (uint)callbackBitMask, audio_Frame_Param);
                 string log = string.Format("EnableAudioDataCallback  enable:{0} callbackBitMask:{1} channel:{2} sampleRate:{3} result:{4}", enable, callbackBitMask, param.channel, param.sampleRate, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO);
             }
@@ -787,7 +637,7 @@ namespace ZEGO
             {
                 zego_custom_audio_config custom_Audio_Config = ChangeZegoCustomAudioConfigClassToStruct(config);
                 IntPtr ptr = ZegoUtil.GetStructPointer(custom_Audio_Config);
-                int result = IExpressCustomAudioIO.zego_express_enable_custom_audio_io(enable, ptr, channel);
+                int result = IExpressCustomAudioIOInternal.zego_express_enable_custom_audio_io(enable, ptr, channel);
                 string log = string.Format("EnableCustomAudioIO  enable:{0} source_type:{1} channel:{2}  result:{3}", enable, config.sourceType, channel, result);
                 ZegoUtil.ReleaseStructPointer(ptr);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO);
@@ -813,7 +663,7 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 zego_audio_frame_param zego_Audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
-                int result = IExpressCustomAudioIO.zego_express_send_custom_audio_capture_aac_data(data, dataLength, configLength, referenceTimeMillisecond, zego_Audio_Frame_Param, channel);
+                int result = IExpressCustomAudioIOInternal.zego_express_send_custom_audio_capture_aac_data(data, dataLength, configLength, referenceTimeMillisecond, zego_Audio_Frame_Param, channel);
                 string log = string.Format("SendCustomAudioCaptureAACData result:{0}", result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO, false);
             }
@@ -823,7 +673,7 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 zego_audio_frame_param zego_Audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
-                int result = IExpressCustomAudioIO.zego_express_send_custom_audio_capture_pcm_data(data, dataLength, zego_Audio_Frame_Param, channel);
+                int result = IExpressCustomAudioIOInternal.zego_express_send_custom_audio_capture_pcm_data(data, dataLength, zego_Audio_Frame_Param, channel);
                 string log = string.Format("SendCustomAudioCapturePCMData result:{0}", result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO, false);
             }
@@ -833,7 +683,7 @@ namespace ZEGO
             if (enginePtr != null)
             {
                 zego_audio_frame_param zego_Audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
-                int result = IExpressCustomAudioIO.zego_express_fetch_custom_audio_render_pcm_data(data, dataLength, zego_Audio_Frame_Param);
+                int result = IExpressCustomAudioIOInternal.zego_express_fetch_custom_audio_render_pcm_data(data, dataLength, zego_Audio_Frame_Param);
                 string log = string.Format("FetchCustomAudioRenderPCMData result:{0}", result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO, false);
             }
@@ -983,15 +833,15 @@ namespace ZEGO
 
         }
 
-        public static void zego_on_debug_error(int error_code, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string func_name, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string info, System.IntPtr user_context)
+        public static void zego_on_debug_error(int error_code, [In()][MarshalAs(UnmanagedType.LPStr)] string func_name, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string info, System.IntPtr user_context)
         {
             if (enginePtr == null || enginePtr.onDebugError == null) return;
-            context?.Post(new SendOrPostCallback((o) =>
-            {
+            //context?.Post(new SendOrPostCallback((o) =>
+            //{
 
-                enginePtr?.onDebugError?.Invoke(error_code, func_name, info);
+                enginePtr?.onDebugError.Invoke(error_code, func_name, info);
 
-            }), null);
+            //}), null);
 
         }
 
@@ -1624,7 +1474,7 @@ namespace ZEGO
             return publishStreamQuality;
         }
 
-        public static void zego_on_publisher_recv_audio_captured_first_frame(System.IntPtr userContext)
+        public static void zego_on_publisher_captured_audio_first_frame(System.IntPtr userContext)
         {
             if (enginePtr == null || enginePtr.onPublisherCapturedAudioFirstFrame == null) return;
 
@@ -1641,7 +1491,7 @@ namespace ZEGO
 
         }
 
-        public static void zego_on_publisher_recv_video_captured_first_frame(ZegoPublishChannel channel, System.IntPtr userContext)
+        public static void zego_on_publisher_captured_video_first_frame(ZegoPublishChannel channel, System.IntPtr userContext)
         {
             if (enginePtr == null || enginePtr.onPublisherCapturedVideoFirstFrame == null) return;
 
@@ -1701,7 +1551,7 @@ namespace ZEGO
                 zego_mixer_task zego_Mixer_Task = ChangeZegoMixerTaskClassToStruct(task);
                 int result = IExpressMixerInternal.zego_express_start_mixer_task(zego_Mixer_Task);//result is seq
                 string log = string.Format("StartMixerTask  result:{0}", result);
-                ZegoUtil.ReleaseAllStructPointers(arrayList);
+                ZegoUtil.ReleaseAllStructPointers(mixerPtrArrayList);
                 ZegoUtil.ReleaseStructPointer(zego_Mixer_Task.watermark);
                 onMixerStartResultDics.AddOrUpdate(result, onMixerStartResult, (key, oldValue) => onMixerStartResult);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -1781,7 +1631,7 @@ namespace ZEGO
                 zego_mixer_task zego_Mixer_Task = ChangeZegoMixerTaskClassToStruct(task);
                 int result = IExpressMixerInternal.zego_express_stop_mixer_task(zego_Mixer_Task);
                 string log = string.Format("StopMixerTask  result:{0}", result);
-                ZegoUtil.ReleaseAllStructPointers(arrayList);
+                ZegoUtil.ReleaseAllStructPointers(mixerPtrArrayList);
                 ZegoUtil.ReleaseStructPointer(zego_Mixer_Task.watermark);
                 onMixerStopResultDics.AddOrUpdate(result, onMixerStopResult, (key, oldValue) => onMixerStopResult);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -2123,6 +1973,8 @@ namespace ZEGO
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
+
+        [Obsolete]
         public override void SetDebugVerbose(bool enable, ZegoLanguage language)
         {
             if (enginePtr != null)
@@ -2320,6 +2172,70 @@ namespace ZEGO
             ZegoUtil.ZegoPrivateLog(0, log, false, 0);
 
         }
+
+        public static void zego_on_room_set_room_extra_info_result(int error_code, [In()][MarshalAs(UnmanagedType.LPStr)] string room_id, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string key, int seq, System.IntPtr user_context)
+        {
+            if (enginePtr == null || onRoomSetRoomExtraInfoResultDics == null) return;
+
+            string log = string.Format("onRoomSetRoomExtraInfoResultDics, errorCode:{0} seq{1}", error_code, seq);
+            ZegoUtil.ZegoPrivateLog(error_code, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_ROOM);
+
+            var onRoomSetRoomExtraInfoResult = GetCallbackFromSeq<OnRoomSetRoomExtraInfoResult>(onRoomSetRoomExtraInfoResultDics, seq);
+            if (onRoomSetRoomExtraInfoResult == null)
+            {
+                return;
+            }
+
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+                onRoomSetRoomExtraInfoResult?.Invoke(error_code);
+                onRoomSetRoomExtraInfoResultDics?.TryRemove(seq, out _);
+            }), null);
+        }
+
+        public static void zego_on_room_extra_info_update([In()][MarshalAs(UnmanagedType.LPStr)] string room_id, IntPtr room_extra_info_list, uint room_extra_info_count, System.IntPtr user_context)
+        {
+            if (enginePtr == null || enginePtr.onRoomExtraInfoUpdate == null) return;
+            string log = string.Format("onRoomExtraInfoUpdate roomId:{0} stream_info_count:{1}", room_id, room_extra_info_list);
+            zego_room_extra_info[] zego_Room_Extra_Infos = new zego_room_extra_info[room_extra_info_count];
+            ZegoUtil.GetStructListByPtr<zego_room_extra_info>(ref zego_Room_Extra_Infos, room_extra_info_list, room_extra_info_count);//get StructLists by pointer
+            List<ZegoRoomExtraInfo> result = ChangeZegoRoomExtraInfoStructListToClassList(zego_Room_Extra_Infos);
+
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+                enginePtr?.onRoomExtraInfoUpdate?.Invoke(room_id, result);
+
+            }), null);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+        }
+
+        public static void zego_on_engine_state_update(ZegoEngineState state, System.IntPtr user_context)
+        {
+
+            if (enginePtr == null || enginePtr.onEngineStateUpdate == null) return;
+            string log = string.Format("zego_on_engine_state_update state:{0}", state);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+
+                enginePtr?.onEngineStateUpdate?.Invoke(state);
+
+            }), null);
+        }
+        public static void zego_on_room_online_user_count_update([In()][MarshalAs(UnmanagedType.LPStr)] string room_id, int count, IntPtr user_context)
+        {
+            if (enginePtr == null || enginePtr.onRoomOnlineUserCountUpdate == null) return;
+            string log = string.Format("onRoomOnlineUserCountUpdate roomId:{0} count:{1}", room_id, count);
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+
+                enginePtr?.onRoomOnlineUserCountUpdate?.Invoke(room_id, count);
+
+            }), null);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+        }
+
+
         public static void zego_on_captured_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, System.IntPtr user_context)
         {
             if (enginePtr == null || enginePtr.onCapturedAudioData == null) return;
@@ -2342,6 +2258,14 @@ namespace ZEGO
             ZegoAudioFrameParam zegoAudioFrameParam = ChangeZegoAudioFrameStructToClass(param);
             enginePtr.onPlaybackAudioData(data, data_length, zegoAudioFrameParam);
         }
+
+        public static void zego_on_player_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, IntPtr user_context)
+        {
+            if (enginePtr == null || enginePtr.onPlayerAudioData == null) return;
+            ZegoAudioFrameParam zegoAudioFrameParam = ChangeZegoAudioFrameStructToClass(param);
+            enginePtr.onPlayerAudioData(data, data_length, zegoAudioFrameParam, stream_id);
+        }
+
         public static void zego_on_im_recv_broadcast_message([System.Runtime.InteropServices.InAttribute()][System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, System.IntPtr message_info_list, uint message_count, System.IntPtr user_context)
         {
 
@@ -2840,12 +2764,12 @@ namespace ZEGO
         }
 
 
-        public static void zego_on_custom_video_render_captured_frame_data(IntPtr[] data, uint[] dataLength, zego_video_frame_param param, ZegoVideoFlipMode flipMode, ZegoPublishChannel channel, System.IntPtr userContext)
+        public static void zego_on_custom_video_render_captured_frame_data(ref IntPtr data, ref uint dataLength, zego_video_frame_param param, ZegoVideoFlipMode flipMode, ZegoPublishChannel channel, System.IntPtr userContext)
         {
             //预览数据回调（写数据） 推流不会触发该回调
             if (enginePtr == null || enginePtr.onCapturedVideoFrameRawData == null) return;
             ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
-            enginePtr.onCapturedVideoFrameRawData(data, dataLength, zegoVideoFrameParam, flipMode, channel);
+            enginePtr.onCapturedVideoFrameRawData(ref data, ref dataLength, zegoVideoFrameParam, flipMode, channel);
         }
 
 
@@ -2863,13 +2787,13 @@ namespace ZEGO
             return zegoVideoFrameParam;
         }
 
-        public static void zego_on_custom_video_render_remote_frame_data(string streamID, IntPtr[] data, uint[] dataLength, zego_video_frame_param param, System.IntPtr userContext)
+        public static void zego_on_custom_video_render_remote_frame_data(string streamID, ref IntPtr data, ref uint dataLength, zego_video_frame_param param, System.IntPtr userContext)
         {
             //拉流数据回调（写数据）
             if (enginePtr == null || enginePtr.onRemoteVideoFrameRawData == null) return;
             ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
 
-            enginePtr.onRemoteVideoFrameRawData(data, dataLength, zegoVideoFrameParam, streamID);
+            enginePtr.onRemoteVideoFrameRawData(ref data, ref dataLength, zegoVideoFrameParam, streamID);
         }
 
         private static ZegoDataRecordProgress ChangeZegoDataRecordProgresstructToClass(zego_data_record_progress config)
@@ -3033,11 +2957,11 @@ namespace ZEGO
             if (enginePtr == null || enginePtr.onDeviceError == null) return;
             string log = string.Format("zego_on_device_error  error_code:{0} device_name:{1}", error_code, device_name);
             ZegoUtil.ZegoPrivateLog(0, log, false, 0);
-            context?.Post(new SendOrPostCallback((o) =>
-            {
+            //context?.Post(new SendOrPostCallback((o) =>
+            //{
                 enginePtr?.onDeviceError?.Invoke(error_code, device_name);
 
-            }), null);
+            //}), null);
         }
 
         public static void zego_on_remote_camera_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, System.IntPtr user_context)

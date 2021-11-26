@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using static ZEGO.IZegoEventHandler;
-
+using static ZEGO.IZegoCustomVideoProcessHandler;
 //version tag:
 namespace ZEGO
 {
@@ -27,7 +27,7 @@ namespace ZEGO
         
         public static ZegoExpressEngine CreateEngine(ZegoEngineProfile profile, SynchronizationContext uiThreadContext)
         {
-            return ZegoExpressEngineImpl.CreateEngineWithProfile(profile, uiThreadContext);
+            return ZegoExpressEngineImpl.CreateEngine(profile, uiThreadContext);
         }
 
         /**
@@ -44,7 +44,7 @@ namespace ZEGO
         public static void DestroyEngine(IZegoDestroyCompletionCallback onDestroyCompletion = null)
         {
             ZegoExpressEngineImpl.DestroyEngine(onDestroyCompletion);
-        }
+        } 
 
         /**
          * Returns the singleton instance of ZegoExpressEngine.
@@ -59,7 +59,7 @@ namespace ZEGO
         public static ZegoExpressEngine GetEngine()
         {
             return ZegoExpressEngineImpl.GetEngine();
-        }
+        } 
 
         /**
          * Set advanced engine configuration.
@@ -74,7 +74,23 @@ namespace ZEGO
         public static void SetEngineConfig(ZegoEngineConfig config)
         {
             ZegoExpressEngineImpl.SetEngineConfig(config);
-        }
+        } 
+
+        /**
+         * Set log configuration.
+         *
+         * Available since: 2.3.0
+         * Description: If you need to customize the log file size and path, please call this function to complete the configuration.
+         * When to call: It must be set before calling [createEngine] to take effect. If it is set after [createEngine], it will take effect at the next [createEngine] after [destroyEngine].
+         * Restrictions: None.
+         * Caution: Once this interface is called, the method of setting log size and path via [setEngineConfig] will be invalid.Therefore, it is not recommended to use [setEngineConfig] to set the log size and path.
+         *
+         * @param config log configuration.
+         */
+        public static void SetLogConfig(ZegoLogConfig config)
+        {
+            ZegoExpressEngineImpl.SetLogConfig(config);
+        } 
 
         /**
          * Set room mode.
@@ -90,7 +106,7 @@ namespace ZEGO
         public static void SetRoomMode(ZegoRoomMode mode)
         {
             ZegoExpressEngineImpl.SetRoomMode(mode);
-        }
+        } 
 
         /**
          * Gets the SDK's version number.
@@ -106,7 +122,7 @@ namespace ZEGO
         public static string GetVersion()
         {
             return ZegoExpressEngineImpl.GetVersion();
-        }
+        } 
 
         /**
          * Uploads logs to the ZEGO server.
@@ -735,8 +751,6 @@ namespace ZEGO
 
         public OnMixerSoundLevelUpdate onMixerSoundLevelUpdate;
 
-        public OnAutoMixerSoundLevelUpdate onAutoMixerSoundLevelUpdate;
-
         /**
          * Mutes or unmutes the microphone.
          *
@@ -968,8 +982,6 @@ namespace ZEGO
         public OnRemoteCameraStateUpdate onRemoteCameraStateUpdate;
 
         public OnRemoteMicStateUpdate onRemoteMicStateUpdate;
-
-        public OnRemoteSpeakerStateUpdate onRemoteSpeakerStateUpdate;
 
         /**
          * Whether to enable acoustic echo cancellation (AEC).
@@ -1315,7 +1327,9 @@ namespace ZEGO
          * @param referenceTimeMillisecond video frame reference time, UNIX timestamp, in milliseconds.
          * @param channel Publishing stream channel.Required: No.Default value: Main publish channel.
          */
-        public abstract void SendCustomVideoProcessedRawData(IntPtr data, IntPtr dataLength, ZegoVideoFrameParam param, ulong referenceTimeMillisecond, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+        public abstract void SendCustomVideoProcessedRawData(ref IntPtr data, ref uint data_length, ZegoVideoFrameParam param, ulong referenceTimeMillisecond, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+
+        public OnCapturedUnprocessedRawData onCapturedUnprocessedRawData;
 #endif
 
 #if UNITY_STANDALONE_OSX || UNITY_IOS
@@ -1334,6 +1348,8 @@ namespace ZEGO
          * @param channel Publishing stream channel.
          */
         public abstract void SendCustomVideoProcessedCVPixelBuffer(IntPtr buffer, ulong timestamp, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+
+        public OnCapturedUnprocessedCVPixelBuffer onCapturedUnprocessedCVPixelBuffer;
 #endif
 
 #if UNITY_ANDROID
@@ -1354,6 +1370,8 @@ namespace ZEGO
          * @param channel Publishing stream channel.
          */
         public abstract void SendCustomVideoProcessedTextureData(int textureID, int width, int height, ulong referenceTimeMillisecond, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+        
+        public OnCapturedUnprocessedTextureData onCapturedUnprocessedTextureData;
 #endif
 
         /**
@@ -1447,10 +1465,11 @@ namespace ZEGO
          * @param scenario The application scenario. Developers can choose one of ZegoScenario based on the scenario of the app they are developing, and the engine will preset a more general setting for specific scenarios based on the set scenario. After setting specific scenarios, developers can still call specific functions to set specific parameters if they have customized parameter settings.The recommended configuration for different application scenarios can be referred to: https://doc-zh.zego.im/faq/profile_difference.
          * @return Engine singleton instance.
          */
+        [Obsolete("Deprecated since 2.14.0, please use the method with the same name without [isTestEnv] parameter instead.",false)]
         public static ZegoExpressEngine CreateEngine(uint appID, string appSign, bool isTestEnv, ZegoScenario scenario)
         {
             return ZegoExpressEngineImpl.CreateEngine(appID, appSign, isTestEnv, scenario);
-        }
+        } 
 
         /**
          * [Deprecated] Turns on/off verbose debugging and sets up the log language.
@@ -1462,6 +1481,7 @@ namespace ZEGO
          * @param enable Detailed debugging information switch
          * @param language Debugging information language
          */
+        [Obsolete("This function has been deprecated after version 2.3.0, please use the [setEngineConfig] function to set the advanced configuration property advancedConfig to achieve the original function.",false)]
         public abstract void SetDebugVerbose(bool enable, ZegoLanguage language);
 
         /**
@@ -1475,6 +1495,7 @@ namespace ZEGO
          * @param callbackBitMask The callback function bitmask marker for receive audio data, refer to enum [ZegoAudioDataCallbackBitMask], when this param converted to binary, 0b01 that means 1 << 0 for triggering [onCapturedAudioData], 0x10 that means 1 << 1 for triggering [onPlaybackAudioData], 0x100 that means 1 << 2 for triggering [onMixedAudioData], 0x1000 that means 1 << 3 for triggering [onPlayerAudioData]. The masks can be combined to allow different callbacks to be triggered simultaneously.
          * @param param param of audio frame
          */
+        [Obsolete("This function has been deprecated since version 2.7.0, please use [startAudioDataObserver] instead.",false)]
         public abstract void EnableAudioDataCallback(bool enable, uint callbackBitMask, ZegoAudioFrameParam param);
 
     }

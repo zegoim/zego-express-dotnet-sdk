@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using static ZEGO.ZegoConstans;
-
 namespace ZEGO
 {
     public class IExpressRecordInternal
@@ -24,5 +23,6 @@ namespace ZEGO
 
         [DllImport(LIB_NAME, EntryPoint = "zego_register_captured_data_record_progress_update_callback", CallingConvention = ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_captured_data_record_progress_update_callback(zego_on_captured_data_record_progress_update callback_func, IntPtr user_context);
+
     }
 }

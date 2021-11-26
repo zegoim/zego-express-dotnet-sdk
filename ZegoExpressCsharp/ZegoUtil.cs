@@ -141,7 +141,7 @@ namespace ZEGO
         }
         private static void ZegoLog(string log)
         {
-            IExpressPrivateInternal.zego_express_custom_log(log, ZegoConstans.MOUDLE);
+            IExpressPrivateInternal.zego_express_custom_log(log, ZegoConstans.MODULE);
         }
 
         private static void HandleDebug(int module, int errorCode, string funcName)
@@ -170,18 +170,289 @@ namespace ZEGO
 
     }
 
-    class ZegoImplCallChangeUtil
+    class ZegoCallBackChangeUtil
     {
-        public static ArrayList mixerPtrArrayList;
+        public static T GetCallbackFromSeq<T>(ConcurrentDictionary<int, T> dics, int seq)
+        {
+            T callbak = default(T);
+            dics.TryGetValue(seq, out callbak);
+            return callbak;
+        }
+        public static T GetObjectFromIndex<T>(ConcurrentDictionary<int, T> dics, int index)
+        {
+            T obj = default(T);
+            dics.TryGetValue(index, out obj);
+            return obj;
+        }
+        public static List<ZegoRoomExtraInfo> ChangeZegoRoomExtraInfoStructListToClassList(zego_room_extra_info[] zego_Room_Extra_Infos)
+        {
 
+            int length = zego_Room_Extra_Infos.Length;
+            List<ZegoRoomExtraInfo> result = new List<ZegoRoomExtraInfo>();
+            for (int i = 0; i < length; i++)
+            {
+                result.Add(ChangeZegoRoomExtraInfoStructToClass(zego_Room_Extra_Infos[i]));
+            }
+            return result;
+        }
+        private static ZegoRoomExtraInfo ChangeZegoRoomExtraInfoStructToClass(zego_room_extra_info zego_room_extra_info)
+        {
+            ZegoRoomExtraInfo zegoRoomExtraInfo = new ZegoRoomExtraInfo();
+            zegoRoomExtraInfo.key = Encoding.UTF8.GetString(zego_room_extra_info.key);
+            zegoRoomExtraInfo.value = Encoding.UTF8.GetString(zego_room_extra_info.value);
+            zegoRoomExtraInfo.updateTime = zego_room_extra_info.update_time;
+            zegoRoomExtraInfo.updateUser = ChangeZegoUserStructToClass(zego_room_extra_info.update_user);
+            return zegoRoomExtraInfo;
+        }
+        public static ZegoUser ChangeZegoUserStructToClass(zego_user user)
+        {
+            ZegoUser zegoUser = new ZegoUser();
+            zegoUser.userID = Encoding.UTF8.GetString(user.user_id);
+            zegoUser.userName = Encoding.UTF8.GetString(user.user_name);
+            return zegoUser;
+        }
+
+        public static List<ZegoStream> ChangeZegoStreamStructListToClassList(zego_stream[] streams)
+        {
+            int length = streams.Length;
+            List<ZegoStream> zegoStreams = new List<ZegoStream>();
+            for (int i = 0; i < length; i++)
+            {
+                zegoStreams.Add(ChangeZegoStreamStructToClass(streams[i]));
+            }
+            return zegoStreams;
+        }
+        private static ZegoStream ChangeZegoStreamStructToClass(zego_stream stream)
+        {
+            ZegoStream zegoStream = new ZegoStream();
+            zegoStream.streamID = Encoding.UTF8.GetString(stream.stream_id);
+            zegoStream.extraInfo = Encoding.UTF8.GetString(stream.extra_info);
+            zegoStream.user = ChangeZegoUserStructToClass(stream.user);
+            return zegoStream;
+        }
+
+        public static ZegoPlayStreamQuality ChangePlayerQualityStructToClass(zego_play_stream_quality quality)
+        {
+            ZegoPlayStreamQuality playStreamQuality = new ZegoPlayStreamQuality();
+            playStreamQuality.videoRecvFPS = quality.video_recv_fps;
+            playStreamQuality.videoDejitterFPS = quality.video_dejitter_fps;
+            playStreamQuality.videoDecodeFPS = quality.video_decode_fps;
+            playStreamQuality.videoRenderFPS = quality.video_render_fps;
+            playStreamQuality.videoKBPS = quality.video_kbps;
+            playStreamQuality.videoBreakRate = quality.video_break_rate;
+            playStreamQuality.audioRecvFPS = quality.audio_recv_fps;
+            playStreamQuality.audioDejitterFPS = quality.audio_dejitter_fps;
+            playStreamQuality.audioDecodeFPS = quality.audio_decode_fps;
+            playStreamQuality.audioRenderFPS = quality.audio_render_fps;
+            playStreamQuality.audioKBPS = quality.audio_kbps;
+            playStreamQuality.audioBreakRate = quality.audio_break_rate;
+            playStreamQuality.rtt = quality.rtt;
+            playStreamQuality.packetLostRate = quality.packet_lost_rate;
+            playStreamQuality.peerToPeerDelay = quality.peer_to_peer_delay;
+            playStreamQuality.peerToPeerPacketLostRate = quality.peer_to_peer_packet_lost_rate;
+            playStreamQuality.level = quality.level;
+            playStreamQuality.delay = quality.delay;
+            playStreamQuality.avTimestampDiff = quality.av_timestamp_diff;
+            playStreamQuality.isHardwareDecode = quality.is_hardware_decode;
+            playStreamQuality.videoCodecID = quality.video_codec_id;
+            playStreamQuality.totalRecvBytes = quality.total_recv_bytes;
+            playStreamQuality.audioRecvBytes = quality.audio_recv_bytes;
+            playStreamQuality.videoRecvBytes = quality.video_recv_bytes;
+            return playStreamQuality;
+
+        }
+        public static List<ZegoStreamRelayCDNInfo> ChangeZegoStreamRelayCDNInfoStructListToClassList(zego_stream_relay_cdn_info[] infos)
+        {
+            List<ZegoStreamRelayCDNInfo> lists = new List<ZegoStreamRelayCDNInfo>();
+            for (int i = 0; i < infos.Length; i++)
+            {
+                lists.Add(ChangeZegoStreamRelayCDNInfoStructToClass(infos[i]));
+            }
+            return lists;
+        }
+
+        private static ZegoStreamRelayCDNInfo ChangeZegoStreamRelayCDNInfoStructToClass(zego_stream_relay_cdn_info zego_stream_relay_cdn_info)
+        {
+            ZegoStreamRelayCDNInfo zegoStreamRelayCDNInfo = new ZegoStreamRelayCDNInfo();
+            zegoStreamRelayCDNInfo.state = zego_stream_relay_cdn_info.state;
+            zegoStreamRelayCDNInfo.updateReason = zego_stream_relay_cdn_info.update_reason;
+            zegoStreamRelayCDNInfo.stateTime = zego_stream_relay_cdn_info.state_time;
+            zegoStreamRelayCDNInfo.url = Encoding.UTF8.GetString(zego_stream_relay_cdn_info.url);
+            return zegoStreamRelayCDNInfo;
+        }
+
+
+        public static ZegoPublishStreamQuality ChangePublishQualityToClass(zego_publish_stream_quality quality)
+        {
+            ZegoPublishStreamQuality publishStreamQuality = new ZegoPublishStreamQuality();
+            publishStreamQuality.videoCaptureFPS = quality.video_capture_fps;
+            publishStreamQuality.videoEncodeFPS = quality.video_encode_fps;
+            publishStreamQuality.videoSendFPS = quality.video_send_fps;
+            publishStreamQuality.videoKBPS = quality.video_kbps;
+            publishStreamQuality.audioCaptureFPS = quality.audio_capture_fps;
+            publishStreamQuality.audioSendFPS = quality.audio_send_fps;
+            publishStreamQuality.audioKBPS = quality.audio_kbps;
+            publishStreamQuality.rtt = quality.rtt;
+            publishStreamQuality.packetLostRate = quality.packet_lost_rate;
+            publishStreamQuality.level = quality.level;
+            publishStreamQuality.isHardwareEncode = quality.is_hardware_encode;
+            publishStreamQuality.videoCodecID = quality.video_codec_id;
+            publishStreamQuality.totalSendBytes = quality.total_send_bytes;
+            publishStreamQuality.audioSendBytes = quality.audio_send_bytes;
+            publishStreamQuality.videoSendBytes = quality.video_send_bytes;
+            return publishStreamQuality;
+        }
+
+        public static float[] GetZegoAudioSpectrumInfoStructSpectrumList(zego_audio_spectrum_info zegoAudioSpectrumInfo)
+        {
+
+            float[] results = new float[zegoAudioSpectrumInfo.spectrum_count];
+            ZegoUtil.GetStructListByPtr<float>(ref results, zegoAudioSpectrumInfo.spectrum_list, zegoAudioSpectrumInfo.spectrum_count);
+            return results;
+        }
+
+        public static List<ZegoUser> ChangeZegoUserStructListToClassList(zego_user[] users)
+        {
+            int length = users.Length;
+            List<ZegoUser> zegoUsers = new List<ZegoUser>();
+            for (int i = 0; i < length; i++)
+            {
+                zegoUsers.Add(ChangeZegoUserStructToClass(users[i]));
+            }
+            return zegoUsers;
+        }
+        public static List<ZegoBarrageMessageInfo> ChangeBarrageMessageStructListToClassList(zego_barrage_message_info[] infos)
+        {
+            List<ZegoBarrageMessageInfo> zegoBarrageMessageInfos = new List<ZegoBarrageMessageInfo>();
+            for (int i = 0; i < infos.Length; i++)
+            {
+                zegoBarrageMessageInfos.Add(ChangeBarrageMessageStructToClass(infos[i]));
+            }
+            return zegoBarrageMessageInfos;
+
+        }
+
+        public static Dictionary<string, float[]> ChangeZegoAudioSpectrumInfoListToDictionary(zego_audio_spectrum_info[] infos)
+        {
+            Dictionary<string, float[]> keyValuePairs = new Dictionary<string, float[]>();
+            for (int i = 0; i < infos.Length; i++)
+            {
+                string stream_id = Encoding.UTF8.GetString(infos[i].stream_id);
+                if (keyValuePairs.ContainsKey(stream_id))
+                {
+                    keyValuePairs[stream_id] = GetZegoAudioSpectrumInfoStructSpectrumList(infos[i]);
+                }
+                else
+                {
+                    keyValuePairs.Add(stream_id, GetZegoAudioSpectrumInfoStructSpectrumList(infos[i]));
+                }
+            }
+            return keyValuePairs;
+        }
+        private static ZegoBarrageMessageInfo ChangeBarrageMessageStructToClass(zego_barrage_message_info zego_barrage_message_info)
+        {
+            ZegoBarrageMessageInfo zegoBarrageMessageInfo = new ZegoBarrageMessageInfo();
+            zegoBarrageMessageInfo.message = Encoding.UTF8.GetString(zego_barrage_message_info.message);
+            zegoBarrageMessageInfo.messageID = Encoding.UTF8.GetString(zego_barrage_message_info.message_id);
+            zegoBarrageMessageInfo.sendTime = zego_barrage_message_info.send_time;
+            zegoBarrageMessageInfo.fromUser = ChangeZegoUserStructToClass(zego_barrage_message_info.from_user);
+            return zegoBarrageMessageInfo;
+        }
+        public static List<ZegoBroadcastMessageInfo> ChangeBroadMessageStructListToClassList(zego_broadcast_message_info[] infos)
+        {
+            List<ZegoBroadcastMessageInfo> zegoBroadMessageInfos = new List<ZegoBroadcastMessageInfo>();
+            for (int i = 0; i < infos.Length; i++)
+            {
+                zegoBroadMessageInfos.Add(ChangeBroadMessageStructToClass(infos[i]));
+            }
+            return zegoBroadMessageInfos;
+
+        }
+
+        private static ZegoBroadcastMessageInfo ChangeBroadMessageStructToClass(zego_broadcast_message_info zego_broad_message_info)
+        {
+            ZegoBroadcastMessageInfo zegoBroadMessageInfo = new ZegoBroadcastMessageInfo();
+            zegoBroadMessageInfo.message = Encoding.UTF8.GetString(zego_broad_message_info.message);
+            zegoBroadMessageInfo.messageID = zego_broad_message_info.message_id;
+            zegoBroadMessageInfo.sendTime = zego_broad_message_info.send_time;
+            zegoBroadMessageInfo.fromUser = ChangeZegoUserStructToClass(zego_broad_message_info.from_user);
+            return zegoBroadMessageInfo;
+        }
+
+        public static Dictionary<string, float> ChangeZegoSoundLevelInfoStructListToDictionary(zego_sound_level_info[] infos)
+        {
+            Dictionary<string, float> keyValuePairs = new Dictionary<string, float>();
+            for (int i = 0; i < infos.Length; i++)
+            {
+                string stream_id = Encoding.UTF8.GetString(infos[i].stream_id);
+                if (keyValuePairs.ContainsKey(stream_id))
+                {
+                    keyValuePairs[stream_id] = infos[i].sound_level;
+                }
+                else
+                {
+                    keyValuePairs.Add(stream_id, infos[i].sound_level);
+                }
+            }
+            return keyValuePairs;
+        }
+        public static Dictionary<uint, float> ChangeZegoMixerSoundLevelInfoStructListToDictionary(zego_mixer_sound_level_info[] infos)
+        {
+            Dictionary<uint, float> keyValuePairs = new Dictionary<uint, float>();
+            for (int i = 0; i < infos.Length; i++)
+            {
+                if (keyValuePairs.ContainsKey(infos[i].sound_level_id))
+                {
+                    keyValuePairs[infos[i].sound_level_id] = infos[i].sound_level;
+                }
+                else
+                {
+                    keyValuePairs.Add(infos[i].sound_level_id, infos[i].sound_level);
+                }
+            }
+            return keyValuePairs;
+        }
+        public static ZegoAudioFrameParam ChangeZegoAudioFrameStructToClass(zego_audio_frame_param param)
+        {
+            ZegoAudioFrameParam zegoAudioFrameParam = new ZegoAudioFrameParam();
+            zegoAudioFrameParam.channel = param.channel;
+            zegoAudioFrameParam.sampleRate = param.samples_rate;
+            return zegoAudioFrameParam;
+        }
+
+        public static ZegoVideoFrameParam ChangeZegoVideoFrameStructToClass(zego_video_frame_param param)
+        {
+            ZegoVideoFrameParam param_ = new ZegoVideoFrameParam();
+            param_.format = param.format;
+            param_.height = param.height;
+            param_.rotation = param.rotation;
+            param_.strides = param.strides;
+            param_.width = param.width;
+            return param_;
+        }
         public static ZegoDataRecordConfig ChangeZegoDataRecordConfigStructToClass(zego_data_record_config config)
         {
             return new ZegoDataRecordConfig
             {
-                filePath = ZegoUtil.GetUTF8String(config.file_path),
+                filePath = Encoding.UTF8.GetString(config.file_path),
                 recordType = config.record_type,
             };
         }
+
+        public static ZegoDataRecordProgress ChangeZegoDataRecordProgresstructToClass(zego_data_record_progress config)
+        {
+            return new ZegoDataRecordProgress
+            {
+                currentFileSize = config.current_file_size,
+                duration = config.duration,
+            };
+        }
+
+    }
+
+    class ZegoImplCallChangeUtil
+    {
+        public static ArrayList mixerPtrArrayList;
 
         public static zego_engine_config ChangeZegoEngineConfigClassToStruct(ZegoEngineConfig config)
         {
@@ -196,7 +467,8 @@ namespace ZEGO
                 if(config.logConfig.logPath != null)
                 {
                     logConfig.log_path = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.logConfig.logPath), 0, logConfig.log_path, 0, config.logConfig.logPath.Length);
+                    var bytes = Encoding.UTF8.GetBytes(config.logConfig.logPath);
+                    Buffer.BlockCopy(bytes, 0, logConfig.log_path, 0, bytes.Length);
                 }
                 logConfig.log_size = config.logConfig.logSize;
                 engineConfig.log_config = ZegoUtil.GetStructPointer(logConfig);
@@ -217,7 +489,8 @@ namespace ZEGO
                 if(config.logConfig.logPath != null)
                 {
                     engineConfig.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.logConfig.logPath), 0, engineConfig.advanced_config, 0, config.logConfig.logPath.Length);
+                    var bytes = Encoding.UTF8.GetBytes(config.logConfig.logPath);
+                    Buffer.BlockCopy(bytes, 0, engineConfig.advanced_config, 0, bytes.Length);
                 }
             }
             else
@@ -226,6 +499,25 @@ namespace ZEGO
             }
             return engineConfig;
 
+        }
+
+        public static zego_log_config ChangeZegoLogConfigClassToStruct(ZegoLogConfig config)
+        {
+            zego_log_config log_config = new zego_log_config();
+
+            if(config != null)
+            {
+                if(config.logPath != null)
+                {
+                    log_config.log_path = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                    var bytes = Encoding.UTF8.GetBytes(config.logPath);
+                    Buffer.BlockCopy(bytes, 0, log_config.log_path, 0, bytes.Length);
+                }
+                
+                log_config.log_size = config.logSize;
+            }
+
+            return log_config;
         }
 
         public static ZegoVideoConfig ChangeVideoConfigStructToClass(zego_video_config zego_Video_Config)
@@ -260,7 +552,7 @@ namespace ZEGO
                 result.height = param.height;
                 result.width = param.width;
                 result.rotation = param.rotation;
-                Buffer.BlockCopy(param.strides, 0, result.strides, 0, 4);
+                result.strides = param.strides;
             }
             return result;
         }
@@ -287,7 +579,8 @@ namespace ZEGO
                 if(config.token != null)
                 {
                     roomConfig.thrid_token = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.token), 0, roomConfig.thrid_token, 0, config.token.Length);
+                    var bytes = Encoding.UTF8.GetBytes(config.token);
+                    Buffer.BlockCopy(bytes, 0, roomConfig.thrid_token, 0, bytes.Length);
                 }
 
                 roomConfig.is_user_status_notify = config.isUserStatusNotify;
@@ -315,8 +608,10 @@ namespace ZEGO
                 zegoUser = new zego_user();
                 zegoUser.user_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_USERID_LEN];
                 zegoUser.user_name = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_USERNAME_LEN];
-                Buffer.BlockCopy(Encoding.UTF8.GetBytes(user.userID), 0, zegoUser.user_id, 0, user.userID.Length);
-                Buffer.BlockCopy(Encoding.UTF8.GetBytes(user.userName), 0, zegoUser.user_name, 0, user.userName.Length);
+                var bytes_user_id = Encoding.UTF8.GetBytes(user.userID);
+                var bytes_user_name = Encoding.UTF8.GetBytes(user.userName);
+                Buffer.BlockCopy(bytes_user_id, 0, zegoUser.user_id, 0, bytes_user_id.Length);
+                Buffer.BlockCopy(bytes_user_name, 0, zegoUser.user_name, 0, bytes_user_name.Length);
             }
             return zegoUser;
         }
@@ -341,7 +636,8 @@ namespace ZEGO
                 engine_profile = new zego_engine_profile();
                 engine_profile.app_id = profile.appID;
                 engine_profile.app_sign = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_APPSIGN_LEN];
-                Buffer.BlockCopy(Encoding.UTF8.GetBytes(profile.appSign), 0, engine_profile.app_sign, 0, profile.appSign.Length);
+                var bytes = Encoding.UTF8.GetBytes(profile.appSign);
+                Buffer.BlockCopy(bytes, 0, engine_profile.app_sign, 0, bytes.Length);
                 engine_profile.scenario = profile.scenario;
             }
             return engine_profile;
@@ -397,7 +693,8 @@ namespace ZEGO
                 if(config.roomID != null)
                 {
                     zegoPlayerConfig.room_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.roomID), 0, zegoPlayerConfig.room_id, 0, config.roomID.Length);
+                    var bytes = Encoding.UTF8.GetBytes(config.roomID);
+                    Buffer.BlockCopy(bytes, 0, zegoPlayerConfig.room_id, 0, bytes.Length);
                 }
                 Console.WriteLine(string.Format("StartPlayingStream ZegoPlayerConfig url:{0} authParam:{1} video_layer{2}", config.cdnConfig.url, config.cdnConfig.authParam, config.videoLayer));
                 return zegoPlayerConfig;
@@ -413,12 +710,14 @@ namespace ZEGO
                 if(cDNConfig.authParam != null)
                 {
                     config.auth_param = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(cDNConfig.authParam), 0, config.auth_param, 0, cDNConfig.authParam.Length);
+                    var bytes = Encoding.UTF8.GetBytes(cDNConfig.authParam);
+                    Buffer.BlockCopy(bytes, 0, config.auth_param, 0, bytes.Length);
                 }
                 if (cDNConfig.url != null)
                 {
                     config.url = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(cDNConfig.url), 0, config.url, 0, cDNConfig.url.Length);
+                    var bytes = Encoding.UTF8.GetBytes(cDNConfig.url);
+                    Buffer.BlockCopy(bytes, 0, config.url, 0, bytes.Length);
                 }
             }
             return config;
@@ -489,7 +788,8 @@ namespace ZEGO
                 if(watermark.imageURL != null)
                 {
                     zegoWatermark.image = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(watermark.imageURL), 0, zegoWatermark.image, 0, watermark.imageURL.Length);
+                    var bytes = Encoding.UTF8.GetBytes(watermark.imageURL);
+                    Buffer.BlockCopy(bytes, 0, zegoWatermark.image, 0, bytes.Length);
                 }
                 zegoWatermark.layout = ChangeRectClassToStruct(watermark.layout);
                 return zegoWatermark;
@@ -506,9 +806,9 @@ namespace ZEGO
             {
                 zego_rect rect = new zego_rect();
                 rect.top = layout.y;
-                rect.bottom = layout.height;
+                rect.bottom = layout.y + layout.height;
                 rect.left = layout.x;
-                rect.right = layout.width;
+                rect.right = layout.x + layout.width;
                 return rect;
             }
         }
@@ -525,15 +825,30 @@ namespace ZEGO
                 if(task.taskID != null)
                 {
                     result.task_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_MIXER_TASK_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(task.taskID), 0, result.task_id, 0, task.taskID.Length);
+                    var bytes = Encoding.UTF8.GetBytes(task.taskID);
+                    Buffer.BlockCopy(bytes, 0, result.task_id, 0, bytes.Length);
                 }
                 zego_mixer_input[] zego_Mixer_Inputs = ChangeZegoMixerInputClassListToStructList(task.inputList);
                 result.input_list_count = (uint)zego_Mixer_Inputs.Length;
                 IntPtr inputListPtr = GetMixerInputListPtr(zego_Mixer_Inputs);
                 mixerPtrArrayList.Add(inputListPtr);
                 result.input_list = inputListPtr;
+
+                foreach(var output_config in task.outputList)
+                {
+                    if(output_config.videoConfig.bitrate <= 0)
+                    {
+                        output_config.videoConfig.bitrate = task.videoConfig.bitrate;
+                    }
+                }
+
                 zego_mixer_output[] zego_Mixer_Outputs = ChangeZegoMixerOutputClassListToStructList(task.outputList);
                 result.output_list_count = (uint)zego_Mixer_Outputs.Length;
+
+                foreach(var x in zego_Mixer_Outputs)
+                {
+                    mixerPtrArrayList.Add(x.video_config);
+                }
                 IntPtr outPutListPtr = GetMixerOutputListPtr(zego_Mixer_Outputs);
                 mixerPtrArrayList.Add(outPutListPtr);
                 result.output_list = outPutListPtr;
@@ -547,7 +862,8 @@ namespace ZEGO
                 if(task.backgroundImageURL != null)
                 {
                     result.background_image_url = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(task.backgroundImageURL), 0, result.background_image_url, 0, task.backgroundImageURL.Length);
+                    var bytes = Encoding.UTF8.GetBytes(task.backgroundImageURL);
+                    Buffer.BlockCopy(bytes, 0, result.background_image_url, 0, bytes.Length);
                 }
                 result.enable_sound_level = task.enableSoundLevel;
                 result.stream_alignment_mode = task.streamAlignmentMode;
@@ -561,7 +877,8 @@ namespace ZEGO
                 if(advanceConfig != null)
                 {
                     result.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(advanceConfig), 0, result.advanced_config, 0, advanceConfig.Length);
+                    var bytes = Encoding.UTF8.GetBytes(advanceConfig);
+                    Buffer.BlockCopy(bytes, 0, result.advanced_config, 0, bytes.Length);
                 }
             }
             return result;
@@ -651,7 +968,8 @@ namespace ZEGO
                 if(zegoMixerInput.streamID != null)
                 {
                     zego_Mixer_Input.stream_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(zegoMixerInput.streamID), 0, zego_Mixer_Input.stream_id, 0, zegoMixerInput.streamID.Length);
+                    var bytes = Encoding.UTF8.GetBytes(zegoMixerInput.streamID);
+                    Buffer.BlockCopy(bytes, 0, zego_Mixer_Input.stream_id, 0, bytes.Length);
                 }
                 zego_Mixer_Input.layout = ChangeRectClassToStruct(zegoMixerInput.layout);
                 zego_Mixer_Input.is_audio_focus = zegoMixerInput.isAudioFocus;
@@ -664,9 +982,19 @@ namespace ZEGO
                 if (zegoMixerInput.label.text != null)
                 {
                     zego_Mixer_Input.label.text = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(zegoMixerInput.label.text), 0, zego_Mixer_Input.label.text, 0, zegoMixerInput.label.text.Length);
+                    var bytes = Encoding.UTF8.GetBytes(zegoMixerInput.label.text);
+                    Buffer.BlockCopy(bytes, 0, zego_Mixer_Input.label.text, 0, bytes.Length);
                 }
                 zego_Mixer_Input.label.top = zegoMixerInput.label.top;
+                zego_Mixer_Input.render_mode = zegoMixerInput.renderMode;
+                if(zego_Mixer_Input.audio_direction < 0)
+                {
+                    zego_Mixer_Input.enable_audio_direction = false;
+                }
+                else
+                {
+                    zego_Mixer_Input.enable_audio_direction = true;
+                }
             }
             return zego_Mixer_Input;
         }
@@ -695,8 +1023,16 @@ namespace ZEGO
             if(zegoMixerOutput.target != null)
             {
                 zego_Mixer_Output.target = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
-                Buffer.BlockCopy(Encoding.UTF8.GetBytes(zegoMixerOutput.target), 0, zego_Mixer_Output.target, 0, zegoMixerOutput.target.Length);
+                var bytes = Encoding.UTF8.GetBytes(zegoMixerOutput.target);
+                Buffer.BlockCopy(bytes, 0, zego_Mixer_Output.target, 0, bytes.Length);
             }
+            zego_mixer_output_video_config video_config = new zego_mixer_output_video_config();
+            video_config.bitrate = zegoMixerOutput.videoConfig.bitrate;
+            video_config.encode_latency = zegoMixerOutput.videoConfig.encodeLatency;
+            video_config.encode_profile = zegoMixerOutput.videoConfig.encodeProfile;
+            video_config.video_codec_id = zegoMixerOutput.videoConfig.videoCodecID;
+            IntPtr video_config_ptr = ZegoUtil.GetStructPointer(video_config);
+            zego_Mixer_Output.video_config = video_config_ptr;
             return zego_Mixer_Output;
         }
 
@@ -713,16 +1049,16 @@ namespace ZEGO
 
             return index;
         }
-        //public static zego_audio_effect_play_config ChangeZegoAudioEffectPlayConfigClassToStruct(ZegoAudioEffectPlayConfig config)
-        //{
-        //    zego_audio_effect_play_config zego_Audio_Effect_Play_Config = new zego_audio_effect_play_config();
-        //    if (config != null)
-        //    {
-        //        zego_Audio_Effect_Play_Config.is_publish_out = config.isPublishOut;
-        //        zego_Audio_Effect_Play_Config.play_count = config.playCount;
-        //    }
-        //    return zego_Audio_Effect_Play_Config;
-        //}
+        public static zego_audio_effect_play_config ChangeZegoAudioEffectPlayConfigClassToStruct(ZegoAudioEffectPlayConfig config)
+        {
+            zego_audio_effect_play_config zego_Audio_Effect_Play_Config = new zego_audio_effect_play_config();
+            if (config != null)
+            {
+                zego_Audio_Effect_Play_Config.is_publish_out = config.isPublishOut;
+                zego_Audio_Effect_Play_Config.play_count = config.playCount;
+            }
+            return zego_Audio_Effect_Play_Config;
+        }
 
         public static zego_audio_frame_param ChangeZegoAudioFrameParamClassToStruct(ZegoAudioFrameParam param)
         {
@@ -759,7 +1095,8 @@ namespace ZEGO
                 if(config.filePath != null)
                 {
                     result.file_path = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.filePath), 0, result.file_path, 0, config.filePath.Length);
+                    var bytes = Encoding.UTF8.GetBytes(config.filePath);
+                    Buffer.BlockCopy(bytes, 0, result.file_path, 0, bytes.Length);
                 }
                 result.record_type = config.recordType;
             }
@@ -804,7 +1141,8 @@ namespace ZEGO
                 if(config.roomID != null)
                 {
                     result.room_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN];
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(config.roomID), 0, result.room_id, 0, config.roomID.Length);
+                    var bytes = Encoding.UTF8.GetBytes(config.roomID);
+                    Buffer.BlockCopy(bytes, 0, result.room_id, 0, bytes.Length);
                 }
                 //result.force_synchronous_network_time//TODO
             }

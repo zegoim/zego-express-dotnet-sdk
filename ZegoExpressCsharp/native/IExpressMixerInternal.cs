@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 namespace ZEGO
 {
@@ -43,6 +41,20 @@ namespace ZEGO
         ///seq: int
         ///user_context: void*
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
-        public delegate void zego_on_mixer_stop_result(int error_code, int seq, IntPtr user_context);
+        public delegate void zego_on_mixer_stop_result(int error_code, int seq, System.IntPtr user_context);
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public delegate void zego_on_mixer_relay_cdn_state_update([In()] [MarshalAs(UnmanagedType.LPStr)] string task_id, System.IntPtr info_list, uint info_count, System.IntPtr user_context);
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public delegate void zego_on_mixer_sound_level_update(System.IntPtr sound_levels, uint info_count, System.IntPtr user_context);
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_mixer_relay_cdn_state_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_mixer_relay_cdn_state_update_callback(zego_on_mixer_relay_cdn_state_update callback_func, System.IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_mixer_sound_level_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_mixer_sound_level_update_callback(zego_on_mixer_sound_level_update callback_func, System.IntPtr user_context);
+
     }
 }

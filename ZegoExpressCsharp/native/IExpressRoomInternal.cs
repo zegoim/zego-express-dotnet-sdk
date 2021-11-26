@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using static ZEGO.ZegoConstans;
+//using UnityEngine;
 namespace ZEGO
 {
     public class IExpressRoomInternal
@@ -21,6 +21,9 @@ namespace ZEGO
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_login_room", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_login_room([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id,zego_user user, System.IntPtr config);
+
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_login_multi_room", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_login_multi_room([InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string room_id, System.IntPtr config);
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_logout_room", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_logout_room([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string room_id);
@@ -49,6 +52,33 @@ namespace ZEGO
         [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_room_extra_info", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_set_room_extra_info([In()][MarshalAs(UnmanagedType.LPStr)] string room_id, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string key, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string value);
 
+
+        /// Return Type: void
+        ///callback_func: zego_on_room_extra_info_update
+        ///user_context: void*
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_room_extra_info_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_room_extra_info_update_callback(zego_on_room_extra_info_update callback_func, System.IntPtr user_context);
+
+
+        /// Return Type: void
+        ///callback_func: zego_on_room_set_room_extra_info_result
+        ///user_context: void*
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_room_set_room_extra_info_result_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_room_set_room_extra_info_result_callback(zego_on_room_set_room_extra_info_result callback_func, System.IntPtr user_context);
+
+        [UnmanagedFunctionPointer(ZEGO_CALINGCONVENTION)]
+        public delegate void zego_on_room_extra_info_update([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, IntPtr room_extra_info_list, uint room_extra_info_count, System.IntPtr user_context);
+
+        [UnmanagedFunctionPointer(ZEGO_CALINGCONVENTION)]
+        public delegate void zego_on_room_set_room_extra_info_result(int error_code, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string room_id, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPStr)] string key, int seq, System.IntPtr user_context);
+
+        [UnmanagedFunctionPointer(ZEGO_CALINGCONVENTION)]
+        public delegate void zego_on_room_online_user_count_update([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id, int count, IntPtr user_context);
+
+        [DllImport(LIB_NAME, EntryPoint = "zego_register_room_online_user_count_update_callback", CallingConvention = ZEGO_CALINGCONVENTION)]
+        public static extern void zego_register_room_online_user_count_update_callback(zego_on_room_online_user_count_update callback_func, IntPtr user_context);
+
+        
     }
 
 

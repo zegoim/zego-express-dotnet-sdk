@@ -33,6 +33,11 @@ namespace ZEGO
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
         public delegate void zego_on_engine_uninit(System.IntPtr user_context);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "GetJVM", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern System.IntPtr GetJVM();
+#endif
+
         [DllImport("ZegoExpressEngine", EntryPoint = "zego_express_set_room_mode", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_set_room_mode(ZegoRoomMode mode);
 
@@ -139,6 +144,10 @@ namespace ZEGO
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_engine_uninit_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern void zego_register_engine_uninit_callback(zego_on_engine_uninit callback_func, System.IntPtr user_context);
+
+
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_log_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern void zego_express_set_log_config(zego_log_config log_config);
     }
 }
 
