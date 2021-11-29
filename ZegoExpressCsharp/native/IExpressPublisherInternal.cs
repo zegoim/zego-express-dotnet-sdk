@@ -94,6 +94,12 @@ namespace ZEGO
         [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_audio_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
         public static extern int zego_express_set_audio_config(zego_audio_config audio_config);
 
+        /// Return Type: int
+        ///audio_config: zego_audio_config
+        ///chanel: zego_publish_channel
+        [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_audio_config_by_channel", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        public static extern int zego_express_set_audio_config_by_channel(zego_audio_config audio_config, ZegoPublishChannel channel);
+
 
         /// Return Type: int
         ///mute: boolean

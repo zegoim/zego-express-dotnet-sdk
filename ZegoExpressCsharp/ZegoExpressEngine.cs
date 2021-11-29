@@ -391,6 +391,21 @@ namespace ZEGO
         public abstract void SetAudioConfig(ZegoAudioConfig config);
 
         /**
+         * Sets up the audio configurations for the specified publish channel.
+         *
+         * Available since: 1.3.4
+         * Description: You can set the combined value of the audio codec, bit rate, and audio channel through this function. If the preset value cannot meet the developer's scenario, the developer can set the parameters according to the business requirements.
+         * Default value: The default audio config refers to the default value of [ZegoAudioConfig]. 
+         * When to call: After the engine is created [createEngine], and before publishing [startPublishingStream].
+         * Restrictions: None.
+         * Related APIs: [getAudioConfig].
+         *
+         * @param config Audio config.
+         * @param channel Publish stream channel.
+         */
+        public abstract void SetAudioConfig(ZegoAudioConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+        
+        /**
          * Gets the current audio configurations.
          *
          * Available since: 1.8.0
