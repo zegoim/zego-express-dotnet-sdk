@@ -798,6 +798,17 @@ namespace ZEGO
         First = 0
     }
 
+    /** VOD billing mode. */
+    public enum ZegoCopyrightedMusicBillingMode
+    {
+        /** Pay-per-use. */
+        Count,
+        /** Monthly billing by user. */
+        User,
+        /** Monthly billing by room. */
+        Room
+    }
+
     /** Font type. */
     public enum ZegoFontType
     {
@@ -2155,6 +2166,19 @@ namespace ZEGO
 
         /** User object instance, configure userID, userName. Note that the userID needs to be globally unique with the same appID, otherwise the user who logs in later will kick out the user who logged in first. */
         public ZegoUser user;
+
+    }
+
+    /**
+     * Request configuration of song or accompaniment.
+     */
+    public class ZegoCopyrightedMusicRequestConfig {
+
+        /** the ID of the song. */
+        public string songID;
+
+        /** VOD billing mode. */
+        public ZegoCopyrightedMusicBillingMode mode;
 
     }
 

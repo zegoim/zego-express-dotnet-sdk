@@ -376,21 +376,6 @@ namespace ZEGO
         public abstract void SetAppOrientation(ZegoOrientation orientation, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
         /**
-         * Sets up the audio configurations.
-         *
-         * Available since: 1.3.4
-         * Description: You can set the combined value of the audio codec, bit rate, and audio channel through this function. If the preset value cannot meet the developer's scenario, the developer can set the parameters according to the business requirements.
-         * Default value: The default audio config refers to the default value of [ZegoAudioConfig]. 
-         * When to call: After the engine is created [createEngine], and before publishing [startPublishingStream].
-         * Restrictions: None.
-         * Caution: Act on the main publish channel ZegoPublishChannel.Main.
-         * Related APIs: [getAudioConfig].
-         *
-         * @param config Audio config.
-         */
-        public abstract void SetAudioConfig(ZegoAudioConfig config);
-
-        /**
          * Sets up the audio configurations for the specified publish channel.
          *
          * Available since: 1.3.4
@@ -1463,6 +1448,29 @@ namespace ZEGO
         public OnMixedAudioData onMixedAudioData;
 
         public OnPlayerAudioData onPlayerAudioData;
+
+        /**
+         * Creates a copyrighted music instance.
+         *
+         * Available since: 2.13.0
+         * Description: Creates a copyrighted music instance.
+         * Use case: Often used in online KTV chorus scenarios, users can use related functions by creating copyrighted music instance objects.
+         * When to call: It can be called after the engine by [createEngine] has been initialized.
+         * Restrictions: The SDK only supports the creation of one instance of CopyrightedMusic. Multiple calls to this function return the same object.
+         *
+         * @return copyrighted music instance, multiple calls to this function return the same object.
+         */
+        public abstract ZegoCopyrightedMusic CreateCopyrightedMusic();
+
+        /**
+         * Destroys a copyrighted music instance.
+         *
+         * Available since: 2.13.0
+         * Description: Destroys a copyrighted music instance.
+         *
+         * @param copyrightedMusic The copyrighted music instance object to be destroyed.
+         */
+        public abstract void DestroyCopyrightedMusic(ZegoCopyrightedMusic copyrightedMusic);
 
         /**
          * [Deprecated] Create ZegoExpressEngine singleton object and initialize SDK.

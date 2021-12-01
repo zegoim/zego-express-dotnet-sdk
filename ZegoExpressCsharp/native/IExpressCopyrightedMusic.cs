@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using static ZEGO.ZegoConstans;
 using static ZEGO.ZegoUtil;
 
-namespace ZEGO.native
+namespace ZEGO
 {
     class IExpressCopyrightedMusic
     {

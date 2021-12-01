@@ -20,6 +20,7 @@ namespace ZEGO
         public static ZegoExpressEngineImpl enginePtr = null;
         public static zego_engine_config engineConfig = new zego_engine_config();
         private static object zegoExpressEngineLock = new object();
+        private static object zegoCopyMusicLock = new object();
         public static ConcurrentDictionary<int, OnPublisherUpdateCdnUrlResult> onPublisherUpdateCdnUrlResultDics = new ConcurrentDictionary<int, OnPublisherUpdateCdnUrlResult>();
         public static IZegoDestroyCompletionCallback onDestroyCompletion;
         public static ConcurrentDictionary<int, OnIMSendBroadcastMessageResult> onIMSendBroadcastMessageResultDics = new ConcurrentDictionary<int, OnIMSendBroadcastMessageResult>();
@@ -33,6 +34,9 @@ namespace ZEGO
         public static ConcurrentDictionary<int, OnMixerStartResult> onMixerStartResultDics = new ConcurrentDictionary<int, OnMixerStartResult>();
         public static ConcurrentDictionary<int, OnMixerStopResult> onMixerStopResultDics = new ConcurrentDictionary<int, OnMixerStopResult>();
         public static ConcurrentDictionary<int, ZegoAudioEffectPlayer> audioEffectPlayerAndIndex = new ConcurrentDictionary<int, ZegoAudioEffectPlayer>();
+
+        ZegoCopyrightedMusic copyrighted_music_instance = null;
+
         //避免GC回收
         private static IExpressEngineInternal.zego_on_engine_uninit zegoOnEngineUninit;
         private static IExpressMediaPlayerInternal.zego_on_media_player_playing_progress zegoOnMediaplayerPlayingProgress;
@@ -1232,15 +1236,15 @@ namespace ZEGO
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
             }
         }
-        public override void SetAudioConfig(ZegoAudioConfig config)
-        {
-            if (enginePtr != null)
-            {
-                int result = IExpressPublisherInternal.zego_express_set_audio_config(ChangeAudioConfigClassToStruct(config));
-                string log = string.Format("SetAudioConfig result:{0}", result);
-                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
-            }
-        }
+        //public override void SetAudioConfig(ZegoAudioConfig config)
+        //{
+        //    if (enginePtr != null)
+        //    {
+        //        int result = IExpressPublisherInternal.zego_express_set_audio_config(ChangeAudioConfigClassToStruct(config));
+        //        string log = string.Format("SetAudioConfig result:{0}", result);
+        //        ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_PUBLISHER);
+        //    }
+        //}
 
         public override void SetAudioConfig(ZegoAudioConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main)
         {
@@ -1659,6 +1663,43 @@ namespace ZEGO
                 int result = IExpressDeviceInternal.zego_express_set_headphone_monitor_volume(volume);
                 string log = string.Format("SetHeadphoneMonitorVolume  result:{0} volume:{1}", result, volume);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_DEVICE);
+            }
+        }
+
+        public override ZegoCopyrightedMusic CreateCopyrightedMusic()
+        {
+            lock (zegoCopyMusicLock)
+            {
+                if (enginePtr != null)
+                {
+                    if (copyrighted_music_instance == null)
+                    {
+                        IExpressCopyrightedMusic.zego_express_create_copyrighted_music();
+                        ZegoUtil.ZegoPrivateLog(0, string.Format("CreateCopyrightedMusic"), false, 0);
+
+                        copyrighted_music_instance = new ZegoCopyrightedMusicImpl();
+                    }
+                }
+
+                return copyrighted_music_instance;
+            }
+        }
+
+        public override void DestroyCopyrightedMusic(ZegoCopyrightedMusic copyrightedMusic)
+        {
+            lock (zegoCopyMusicLock)
+            {
+                if (enginePtr != null)
+                {
+                    IExpressCopyrightedMusic.zego_express_destroy_copyrighted_music();
+                    ZegoUtil.ZegoPrivateLog(0, string.Format("DestroyCopyrightedMusic"), false, 0);
+
+                    if(copyrighted_music_instance != null)
+                    {
+                        copyrighted_music_instance = null;
+                    }
+                }
+                return;
             }
         }
 

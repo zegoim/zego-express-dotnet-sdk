@@ -714,5 +714,68 @@ namespace ZEGO
      */
     public delegate void OnIMSendCustomCommandResult(int errorCode);
 
+    /**
+     * Callback for copyrighted music init.
+     *
+     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     */
+    public delegate void OnCopyrightedMusicInit(int errorCode, IntPtr user_context);
+
+    /**
+     * Callback for copyrighted music init.
+     *
+     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param command request command, see details for specific supported commands.
+     * @param result request result, each request command has corresponding request result, see details.
+     */
+    public delegate void OnCopyrightedMusicSendExtendedRequest(int errorCode, string command, string result);
+
+    /**
+     * Get lrc format lyrics complete callback.
+     *
+     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param lyrics lrc format lyrics.
+     */
+    public delegate void OnCopyrightedMusicGetLrcLyric(int errorCode, string lyrics);
+
+    /**
+     * Get krc format lyrics complete callback.
+     *
+     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param lyrics krc format lyrics.
+     */
+    public delegate void OnCopyrightedMusicGetKrcLyricByToken(int errorCode, string lyrics);
+
+    /**
+     * Callback for request song.
+     *
+     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param resource song resource information.
+     */
+    public delegate void OnCopyrightedMusicRequestSong(int errorCode, string resource);
+
+    /**
+     * Callback for request accompaniment.
+     *
+     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param resource accompany resource information.
+     */
+    public delegate void OnCopyrightedMusicRequestAccompaniment(int errorCode, string resource);
+
+    /**
+     * Callback for acquire songs or accompaniment through authorization token.
+     *
+     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param resource song or accompany resource information.
+     */
+    public delegate void OnCopyrightedMusicGetMusicByToken(int errorCode, string resource);
+
+    /**
+     * Callback for download song or accompaniment.
+     *
+     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     */
+    public delegate void OnCopyrightedMusicDownload(int errorCode);
+
 
 }
