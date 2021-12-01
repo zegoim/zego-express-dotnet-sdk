@@ -92,7 +92,7 @@
       <DependentUpon>CommonUsage.cs</DependentUpon>
     </Compile>
     <Compile Include="Examples\QuickStart\Playing\Playing.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Examples\QuickStart\Playing\Playing.Designer.cs">
       <DependentUpon>Playing.cs</DependentUpon>
@@ -121,6 +121,9 @@
     <Compile Include="Utils\ZegoUtil.cs" />
     <EmbeddedResource Include="Examples\QuickStart\CommonUsage\CommonUsage.resx">
       <DependentUpon>CommonUsage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Examples\QuickStart\Playing\Playing.resx">
+      <DependentUpon>Playing.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Examples\QuickStart\Publishing\Publishing.resx">
       <DependentUpon>Publishing.cs</DependentUpon>

@@ -29,6 +29,7 @@ namespace ZegoCsharpWinformDemo.Common
             engine.onDebugError = OnDebugError;
             engine.onRoomStateUpdate = OnRoomStateUpdate;
             engine.onPublisherStateUpdate = OnPublisherStateUpdate;
+            engine.onPlayerStateUpdate = OnPlayerStateUpdate;
         }
 
         public void OnDebugError(int errorCode, string funcName, string info)
@@ -48,6 +49,12 @@ namespace ZegoCsharpWinformDemo.Common
             ZegoUtil.PrintLogToView(string.Format("OnPublisherStateUpdate, streamID:{0}, state:{1}, errorCode:{2}, extendedData:{3}", streamID, state, errorCode, extendedData));
             event_handler.OnPublisherStateUpdate(streamID, state, errorCode, extendedData);
         }
+
+        public void OnPlayerStateUpdate(string streamID, ZegoPlayerState state, int errorCode, string extendedData)
+        {
+            ZegoUtil.PrintLogToView(string.Format("OnPlayerStateUpdate, streamID:{0}, state:{1}, errorCode:{2}, extendedData:{3}", streamID, state, errorCode, extendedData));
+            event_handler.OnPlayerStateUpdate(streamID, state, errorCode, extendedData);
+        }
     }
 
     class ZegoEventHandler
@@ -55,15 +62,16 @@ namespace ZegoCsharpWinformDemo.Common
         public IZegoEventHandler.OnDebugError onDebugError;
         public IZegoEventHandler.OnRoomStateUpdate onRoomStateUpdate;
         public IZegoEventHandler.OnPublisherStateUpdate onPublisherStateUpdate;
+        public IZegoEventHandler.OnPlayerStateUpdate onPlayerStateUpdate;
 
         public ZegoEventHandler()
         {
 
         }
 
-        public void OnDebugError(int errorCode, string funcName, string info) 
+        public void OnDebugError(int errorCode, string funcName, string info)
         {
-            if(onDebugError != null)
+            if (onDebugError != null)
                 onDebugError(errorCode, funcName, info);
         }
 
@@ -75,8 +83,14 @@ namespace ZegoCsharpWinformDemo.Common
 
         public void OnPublisherStateUpdate(string streamID, ZegoPublisherState state, int errorCode, string extendedData)
         {
-            if(onPublisherStateUpdate != null)
+            if (onPublisherStateUpdate != null)
                 onPublisherStateUpdate(streamID, state, errorCode, extendedData);
         }
+        public void OnPlayerStateUpdate(string streamID, ZegoPlayerState state, int errorCode, string extendedData)
+        {
+            if (onPlayerStateUpdate != null)
+                onPlayerStateUpdate(streamID, state, errorCode, extendedData);
+        }
+
     }
 }

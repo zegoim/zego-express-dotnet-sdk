@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using ZEGO;
 using ZegoCsharpWinformDemo.Examples.QuickStart.Publishing;
+using ZegoCsharpWinformDemo.Examples.QuickStart.Playing;
 
 namespace ZegoCsharpWinformDemo
 {
@@ -47,6 +48,11 @@ namespace ZegoCsharpWinformDemo
         {
             var item = listBox_Quickstart.SelectedItem;
 
+            if(item == null)
+            {
+                return;
+            }
+
             string itemStr = item.ToString();
 
             // Dispose old window
@@ -63,10 +69,15 @@ namespace ZegoCsharpWinformDemo
                 case "推流":
                 {
                     current_page = new Publishing();
-                    current_page.Dock = DockStyle.Fill;
-                    panel1.Controls.Add(current_page);
+                }break;
+                case "拉流":
+                {
+                    current_page = new Playing();
                 }break;
             }
+
+            current_page.Dock = DockStyle.Fill;
+            panel1.Controls.Add(current_page);
             Console.WriteLine(itemStr);
         }
     }
