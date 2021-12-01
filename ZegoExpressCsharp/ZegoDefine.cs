@@ -459,6 +459,50 @@ namespace ZEGO
         Sharpen = 1 << 3
     }
 
+    /** Device type. */
+    public enum ZegoDeviceType
+    {
+        /** Unknown device type. */
+        Unknown,
+        /** Camera device. */
+        Camera,
+        /** Microphone device. */
+        Microphone,
+        /** Speaker device. */
+        Speaker,
+        /** Audio device. (Other audio device that cannot be accurately classified into microphones or speakers.) */
+        AudioDevice
+    }
+
+    /** The exception type for the device. */
+    public enum ZegoDeviceExceptionType
+    {
+        /** Unknown device exception. */
+        Unknown,
+        /** Generic device exception. */
+        Generic,
+        /** Invalid device ID exception. */
+        InvalidId,
+        /** Device permission is not granted. */
+        PermissionNotGranted,
+        /** The capture frame rate of the device is 0. */
+        ZeroCaptureFps,
+        /** The device is being occupied. */
+        DeviceOccupied,
+        /** The device is unplugged (not plugged in). */
+        DeviceUnplugged,
+        /** The device requires the system to restart before it can work (Windows platform only). */
+        RebootRequired,
+        /** The system media service is unavailable, e.g. when the iOS system detects that the current pressure is huge (such as playing a lot of animation), it is possible to disable all media related services (Apple platform only). */
+        MediaServicesWereLost,
+        /** The device is being occupied by Siri (Apple platform only). */
+        SiriIsRecording,
+        /** The device captured sound level is too low (Windows platform only). */
+        SoundLevelTooLow,
+        /** The device is being occupied, and maybe cause by iPad magnetic case (Apple platform only). */
+        MagneticCase
+    }
+
     /** Remote device status. */
     public enum ZegoRemoteDeviceState
     {
@@ -2101,6 +2145,16 @@ namespace ZEGO
 
         /** Whether to mix audio effects into the publishing stream, the default is false. */
         public bool isPublishOut;
+
+    }
+
+    /**
+     * CopyrightedMusic play configuration.
+     */
+    public class ZegoCopyrightedMusicConfig {
+
+        /** User object instance, configure userID, userName. Note that the userID needs to be globally unique with the same appID, otherwise the user who logs in later will kick out the user who logged in first. */
+        public ZegoUser user;
 
     }
 

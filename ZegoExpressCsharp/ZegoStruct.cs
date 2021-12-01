@@ -28,6 +28,20 @@ namespace ZEGO
 
     };
 
+    /** VOD billing mode. */
+    public enum zego_copyrighted_music_billing_mode
+    {
+        /** Pay-per-use. */
+        zego_copyrighted_music_billing_mode_count = 0,
+
+        /** Monthly billing by user. */
+        zego_copyrighted_music_billing_mode_user = 1,
+
+        /** Monthly billing by room. */
+        zego_copyrighted_music_billing_mode_room = 2
+
+    };
+
     /// 
     /// struct
     ///
@@ -961,5 +975,26 @@ namespace ZEGO
         public uint spectrum_count;
     }
 
+    /**
+     * CopyrightedMusic play configuration.
+     */
+    public struct zego_copyrighted_music_config
+    {
+        /** User object instance, configure userID, userName. Note that the userID needs to be globally unique with the same appID, otherwise the user who logs in later will kick out the user who logged in first. */
+        public zego_user user;
 
+    }
+
+    /**
+     * Request configuration of song or accompaniment.
+     */
+    public struct zego_copyrighted_music_request_config
+    {
+        /** the ID of the song. */
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
+        public byte[] song_id;
+
+        /** VOD billing mode. */
+        public zego_copyrighted_music_billing_mode mode;
+};
 }

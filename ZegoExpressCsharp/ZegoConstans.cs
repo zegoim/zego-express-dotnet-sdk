@@ -21,7 +21,7 @@ namespace ZEGO
 #endif
         //public const string ZEGO_CALLBACK_GAME_OBJ_NAME = "ZEGO_CALLBACK_GAME_OBJECT";
 
-        public const CallingConvention ZEGO_CALINGCONVENTION = CallingConvention.Cdecl;
+        public const CallingConvention ZEGO_CALLINGCONVENTION = CallingConvention.Cdecl;
         public const int ZEGO_EXPRESS_MAX_COMMON_LEN = 512;
         public const int ZEGO_EXPRESS_MAX_APPSIGN_LEN = 64;
         public const int ZEGO_EXPRESS_MAX_USERID_LEN = 64;

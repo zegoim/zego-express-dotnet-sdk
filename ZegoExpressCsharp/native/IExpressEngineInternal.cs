@@ -13,7 +13,7 @@ namespace ZEGO
          * @param info 错误的详细信息
          * @param user_context 用户上下文
          */
-        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public delegate void zego_on_debug_error(int error_code, [In()] [MarshalAs(UnmanagedType.LPStr)] string func_name, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string info, System.IntPtr user_context);
         /**
          * 音视频引擎状态变更回调
@@ -22,7 +22,7 @@ namespace ZEGO
          * @discussion 当开发者使用异步销毁引擎时，必须要确保收到音视频引擎停止通知之后才能表示内部已完全释放资源。此后才能再进行下一次的创建引擎的操作
          * @param user_context 用户上下文
          */
-        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public delegate void zego_on_engine_state_update(ZegoEngineState state, System.IntPtr user_context);
         /**
         * 音视频引擎销毁通知回调
@@ -30,15 +30,15 @@ namespace ZEGO
         * @discussion 当开发者使用异步销毁引擎时，可通过监听此回调来获取SDK是否已经完全释放资源
         * @param user_context 用户上下文
         */
-        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public delegate void zego_on_engine_uninit(System.IntPtr user_context);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "GetJVM", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "GetJVM", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern System.IntPtr GetJVM();
 #endif
 
-        [DllImport("ZegoExpressEngine", EntryPoint = "zego_express_set_room_mode", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImport("ZegoExpressEngine", EntryPoint = "zego_express_set_room_mode", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern int zego_express_set_room_mode(ZegoRoomMode mode);
 
         /**
@@ -47,7 +47,7 @@ namespace ZEGO
           * @return (const char*), ZegoExpressSDK 版本号
           */
 
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_version", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_version", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern System.IntPtr zego_express_get_version();
 
 
@@ -59,7 +59,7 @@ namespace ZEGO
          * @param app_context Android 应用上下文
          * @return (zego_error), 错误码
          */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_android_env", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_android_env", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern int zego_express_set_android_env(System.IntPtr jvm, System.IntPtr app_context);
         /**
         * 获取之前设置好的 Android 的上下文环境
@@ -67,14 +67,14 @@ namespace ZEGO
         * @return (void*), context 当初始化SDK之前没有调用过 zego_express_Set_android_env，或者不是在 android平台下调用，则返回 NULL
         */
 
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_android_context", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_android_context", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern System.IntPtr zego_express_get_android_context();
         /**
          * 设置初始化预配置
          * 
          * @param config 高级配置，可选配置，设置为空则使用默认配置
          */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_engine_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_engine_config", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_express_set_engine_config(zego_engine_config config);
 
         /**
@@ -84,7 +84,7 @@ namespace ZEGO
          * @param event_handler 事件通知回调对象
          * @return (zego_error), 错误码
          */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_init_with_profile", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_init_with_profile", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern int zego_express_engine_init_with_profile(zego_engine_profile profile);
 
         /**
@@ -97,14 +97,14 @@ namespace ZEGO
          * @param event_handler 事件通知回调对象
          * @return (zego_error), 错误码
          */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_init", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_init", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern int zego_express_engine_init(uint app_id, [In()] [MarshalAs(UnmanagedType.LPStr)] string app_sign, bool is_test_env, ZegoScenario scenario);
         /**
          * 同步销毁引擎实例对象
          * 用于释放 SDK 使用的资源。同步销毁会阻塞当前线程，若开发者不希望在这途中阻塞UI线程，可在其他线程调用。
          * @return (zego_error), 错误码
          */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_uninit_async", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_uninit_async", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern int zego_express_engine_uninit_async();
 
 
@@ -112,7 +112,7 @@ namespace ZEGO
          * 上传日志到 ZEGO 服务器
          * 
          */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_upload_log", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_upload_log", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_express_upload_log();
         /**
          * 设置调试详细信息开关以及语言
@@ -120,7 +120,7 @@ namespace ZEGO
          * @param enable 详细调试信息开关
          * @param language 调试信息语种，默认为英文
          */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_debug_verbose", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_debug_verbose", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_express_set_debug_verbose(bool enable, ZegoLanguage language);
         /**
          * 注册调试错误回调
@@ -129,7 +129,7 @@ namespace ZEGO
          * @param callback_func 调试信息回调接口
          * @param user_context 用户上下文
          */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_debug_error_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_debug_error_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_register_debug_error_callback(zego_on_debug_error callback_func, System.IntPtr user_context);
         /**
          * 注册接收音视频引擎状态变更回调
@@ -138,15 +138,15 @@ namespace ZEGO
          * @param callback_func 调试信息回调接口
          * @param user_context 用户上下文
          */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_engine_state_update_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_engine_state_update_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_register_engine_state_update_callback(zego_on_engine_state_update callback_func, System.IntPtr user_context);
 
 
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_engine_uninit_callback", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_engine_uninit_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_register_engine_uninit_callback(zego_on_engine_uninit callback_func, System.IntPtr user_context);
 
 
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_log_config", CallingConvention = ZegoConstans.ZEGO_CALINGCONVENTION)]
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_log_config", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_express_set_log_config(zego_log_config log_config);
     }
 }
