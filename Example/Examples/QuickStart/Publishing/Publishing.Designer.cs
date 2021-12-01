@@ -46,6 +46,17 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.checkBox_Microphone = new System.Windows.Forms.CheckBox();
+            this.checkBox_Camera = new System.Windows.Forms.CheckBox();
+            this.comboBox_SwitchMicrophone = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.comboBox_SwitchCamera = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.comboBox_ViewMode = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.comboBox_MirrorMode = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -142,12 +153,94 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
             // 
             resources.ApplyResources(this.panel3, "panel3");
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.checkBox_Microphone);
+            this.panel3.Controls.Add(this.checkBox_Camera);
+            this.panel3.Controls.Add(this.comboBox_SwitchMicrophone);
+            this.panel3.Controls.Add(this.label14);
+            this.panel3.Controls.Add(this.label13);
+            this.panel3.Controls.Add(this.comboBox_SwitchCamera);
+            this.panel3.Controls.Add(this.label12);
+            this.panel3.Controls.Add(this.comboBox_ViewMode);
+            this.panel3.Controls.Add(this.label10);
+            this.panel3.Controls.Add(this.comboBox_MirrorMode);
+            this.panel3.Controls.Add(this.label9);
             this.panel3.Controls.Add(this.button_StartPublishing);
             this.panel3.Controls.Add(this.textBox_PublishStreamID);
             this.panel3.Controls.Add(this.label6);
             this.panel3.Controls.Add(this.label7);
             this.panel3.Controls.Add(this.label5);
             this.panel3.Name = "panel3";
+            // 
+            // checkBox_Microphone
+            // 
+            resources.ApplyResources(this.checkBox_Microphone, "checkBox_Microphone");
+            this.checkBox_Microphone.Name = "checkBox_Microphone";
+            this.checkBox_Microphone.UseVisualStyleBackColor = true;
+            this.checkBox_Microphone.CheckedChanged += new System.EventHandler(this.checkBox_Microphone_CheckedChanged);
+            // 
+            // checkBox_Camera
+            // 
+            resources.ApplyResources(this.checkBox_Camera, "checkBox_Camera");
+            this.checkBox_Camera.Name = "checkBox_Camera";
+            this.checkBox_Camera.UseVisualStyleBackColor = true;
+            this.checkBox_Camera.CheckedChanged += new System.EventHandler(this.checkBox_Camera_CheckedChanged);
+            // 
+            // comboBox_SwitchMicrophone
+            // 
+            resources.ApplyResources(this.comboBox_SwitchMicrophone, "comboBox_SwitchMicrophone");
+            this.comboBox_SwitchMicrophone.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_SwitchMicrophone.FormattingEnabled = true;
+            this.comboBox_SwitchMicrophone.Name = "comboBox_SwitchMicrophone";
+            this.comboBox_SwitchMicrophone.SelectedIndexChanged += new System.EventHandler(this.comboBox_SwitchMicrophone_SelectedIndexChanged);
+            // 
+            // label14
+            // 
+            resources.ApplyResources(this.label14, "label14");
+            this.label14.Name = "label14";
+            // 
+            // label13
+            // 
+            resources.ApplyResources(this.label13, "label13");
+            this.label13.Name = "label13";
+            // 
+            // comboBox_SwitchCamera
+            // 
+            resources.ApplyResources(this.comboBox_SwitchCamera, "comboBox_SwitchCamera");
+            this.comboBox_SwitchCamera.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_SwitchCamera.FormattingEnabled = true;
+            this.comboBox_SwitchCamera.Name = "comboBox_SwitchCamera";
+            this.comboBox_SwitchCamera.SelectedIndexChanged += new System.EventHandler(this.comboBox_SwitchCamera_SelectedIndexChanged);
+            // 
+            // label12
+            // 
+            resources.ApplyResources(this.label12, "label12");
+            this.label12.Name = "label12";
+            // 
+            // comboBox_ViewMode
+            // 
+            resources.ApplyResources(this.comboBox_ViewMode, "comboBox_ViewMode");
+            this.comboBox_ViewMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_ViewMode.FormattingEnabled = true;
+            this.comboBox_ViewMode.Name = "comboBox_ViewMode";
+            this.comboBox_ViewMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ViewMode_SelectedIndexChanged);
+            // 
+            // label10
+            // 
+            resources.ApplyResources(this.label10, "label10");
+            this.label10.Name = "label10";
+            // 
+            // comboBox_MirrorMode
+            // 
+            resources.ApplyResources(this.comboBox_MirrorMode, "comboBox_MirrorMode");
+            this.comboBox_MirrorMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_MirrorMode.FormattingEnabled = true;
+            this.comboBox_MirrorMode.Name = "comboBox_MirrorMode";
+            this.comboBox_MirrorMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_MirrorMode_SelectedIndexChanged);
+            // 
+            // label9
+            // 
+            resources.ApplyResources(this.label9, "label9");
+            this.label9.Name = "label9";
             // 
             // panel1
             // 
@@ -283,5 +376,16 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
         private System.Windows.Forms.Label label_StreamID;
         private System.Windows.Forms.Label label_StreamIDLabel;
         private System.Windows.Forms.Label label_ViewName;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox comboBox_SwitchMicrophone;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.ComboBox comboBox_SwitchCamera;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox comboBox_ViewMode;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ComboBox comboBox_MirrorMode;
+        private System.Windows.Forms.CheckBox checkBox_Microphone;
+        private System.Windows.Forms.CheckBox checkBox_Camera;
     }
 }

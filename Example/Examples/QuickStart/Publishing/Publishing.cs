@@ -22,6 +22,8 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
         private SynchronizationContext context;
         private Common.ZegoEventHandlerWithLog event_handler_with_log = new Common.ZegoEventHandlerWithLog();
         private Common.ZegoEventHandler event_handler = new Common.ZegoEventHandler();
+        private List<ZegoDeviceInfo> video_device_list = new List<ZegoDeviceInfo>();
+        private List<ZegoDeviceInfo> microphone_device_list = new List<ZegoDeviceInfo>();
 
         public Publishing()
         {
@@ -35,10 +37,77 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
             room_id = "0002";
             publish_stream_id = "0002";
 
+            List<string> mirrorModeList = new List<string>
+            {
+                /** The mirror image only for previewing locally. This mode is used by default. */
+                "OnlyPreviewMirror",
+                /** Both the video previewed locally and the far end playing the stream will see mirror image. */
+                "BothMirror",
+                /** Both the video previewed locally and the far end playing the stream will not see mirror image. */
+                "NoMirror",
+                /** The mirror image only for far end playing the stream. */
+                "OnlyPublishMirror"
+            };
+
+            List<string> viewModeList = new List<string>
+            {
+                /** The proportional scaling up, there may be black borders */
+                "AspectFit",
+                /** The proportional zoom fills the entire View and may be partially cut */
+                "AspectFill",
+                /** Fill the entire view, the image may be stretched */
+                "ScaleToFill"
+            };
+
             textBox_RoomID.Text = room_id;
             textBox_UserID.Text = user.userID;
             textBox_PublishStreamID.Text = publish_stream_id;
             ZegoUtil.SetRoomState(room_state);
+
+            comboBox_MirrorMode.SelectedIndexChanged -= comboBox_MirrorMode_SelectedIndexChanged;
+            comboBox_MirrorMode.DataSource = mirrorModeList;
+            comboBox_MirrorMode.SelectedIndexChanged += comboBox_MirrorMode_SelectedIndexChanged;
+
+            comboBox_ViewMode.SelectedIndexChanged -= comboBox_ViewMode_SelectedIndexChanged;
+            comboBox_ViewMode.DataSource = viewModeList;
+            comboBox_ViewMode.SelectedIndexChanged += comboBox_ViewMode_SelectedIndexChanged;
+
+            // camera list
+            if (engine!=null)
+            {
+                var video_device = engine.GetVideoDeviceList();
+                List<string> video_device_name_list = new List<string>();
+                foreach(var device in video_device)
+                {
+                    video_device_list.Add(device);
+                    video_device_name_list.Add(device.deviceName);
+                }
+
+                comboBox_SwitchCamera.SelectedIndexChanged -= comboBox_SwitchCamera_SelectedIndexChanged;
+                comboBox_SwitchCamera.DataSource = video_device_name_list;
+                comboBox_SwitchCamera.SelectedIndexChanged += comboBox_SwitchCamera_SelectedIndexChanged;
+
+                var audio_input_device = engine.GetAudioDeviceList(ZegoAudioDeviceType.Input);
+                List<string> microphone_name_list = new List<string>();
+                foreach(var device in audio_input_device)
+                {
+                    microphone_device_list.Add(device);
+                    microphone_name_list.Add(device.deviceName);
+                }
+
+                comboBox_SwitchMicrophone.SelectedIndexChanged -= comboBox_SwitchMicrophone_SelectedIndexChanged;
+                comboBox_SwitchMicrophone.DataSource = microphone_name_list;
+                comboBox_SwitchMicrophone.SelectedIndexChanged += comboBox_SwitchMicrophone_SelectedIndexChanged;
+            }
+
+            checkBox_Camera.CheckedChanged -= checkBox_Camera_CheckedChanged;
+            checkBox_Camera.Checked = true;
+            checkBox_Camera.CheckedChanged += checkBox_Camera_CheckedChanged;
+
+            checkBox_Microphone.CheckedChanged -= checkBox_Microphone_CheckedChanged;
+            checkBox_Microphone.Checked = true;
+            checkBox_Microphone.CheckedChanged += checkBox_Microphone_CheckedChanged;
+
         }
 
         public void OnRoomStateUpdate(string roomID, ZegoRoomState state, int errorCode, string extendedData)
@@ -63,6 +132,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
                     label_RoomID.Text = "";
                     button_LoginRoom.Text = "Login Room";
                     button_StartPublishing.Text = "Start Publishing";
+                    label_StreamID.Text = "";
                 }
             }
         }
@@ -70,8 +140,9 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
         public void OnPublisherStateUpdate(string streamID, ZegoPublisherState state, int errorCode, string extendedData)
         {
             publisher_state = state;
+            label_StreamID.Text = "";
 
-            if(state == ZegoPublisherState.PublishRequesting)
+            if (state == ZegoPublisherState.PublishRequesting)
             {
                 button_StartPublishing.Enabled = false;
             }
@@ -86,6 +157,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
                 else if(state == ZegoPublisherState.Publishing)
                 {
                     button_StartPublishing.Text = "Stop Publishing";
+                    label_StreamID.Text = publish_stream_id;
                 }
             }
         }
@@ -151,6 +223,9 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
         {
             ZegoCanvas canvas = new ZegoCanvas();
             canvas.view = pictureBox1.Handle;
+            // set view mode before preview
+            canvas.viewMode = (ZegoViewMode)comboBox_ViewMode.SelectedIndex;
+            engine.StartPreview(canvas);
 
             ZegoUtil.PrintLogToView(string.Format("StartPreview"));
             engine.StartPreview(canvas);
@@ -207,6 +282,41 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
             {
                 ZegoUtil.PrintLogToView(string.Format("Invalid publish state:{0}", publisher_state));
             }
+        }
+
+        private void comboBox_ViewMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ZegoUtil.PrintLogToView(string.Format("Set view mode, mode:{0}", (ZegoViewMode)comboBox_ViewMode.SelectedIndex));
+        }
+
+        private void comboBox_MirrorMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ZegoUtil.PrintLogToView(string.Format("SetVideoMirrorMode, mode:{0}", (ZegoVideoMirrorMode)comboBox_MirrorMode.SelectedIndex));
+            engine.SetVideoMirrorMode((ZegoVideoMirrorMode)comboBox_MirrorMode.SelectedIndex);
+        }
+
+        private void comboBox_SwitchCamera_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ZegoUtil.PrintLogToView(string.Format("UseVideoDevice: {0}", comboBox_SwitchCamera.SelectedItem.ToString()));
+            engine.UseVideoDevice(video_device_list.ElementAt(comboBox_SwitchCamera.SelectedIndex).deviceID);
+        }
+
+        private void comboBox_SwitchMicrophone_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ZegoUtil.PrintLogToView(string.Format("UseAudioDevice: {0}", comboBox_SwitchMicrophone.SelectedItem.ToString()));
+            engine.UseAudioDevice(ZegoAudioDeviceType.Input, microphone_device_list.ElementAt(comboBox_SwitchMicrophone.SelectedIndex).deviceID);
+        }
+
+        private void checkBox_Camera_CheckedChanged(object sender, EventArgs e)
+        {
+            ZegoUtil.PrintLogToView(string.Format("EnableCamera: {0}", checkBox_Camera.Checked));
+            engine.EnableCamera(checkBox_Camera.Checked);
+        }
+
+        private void checkBox_Microphone_CheckedChanged(object sender, EventArgs e)
+        {
+            ZegoUtil.PrintLogToView(string.Format("MuteMicrophone,{0}", !checkBox_Microphone.Checked));
+            engine.MuteMicrophone(!checkBox_Microphone.Checked);
         }
     }
 }
