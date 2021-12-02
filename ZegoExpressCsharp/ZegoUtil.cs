@@ -1234,6 +1234,25 @@ namespace ZEGO
             return music_config;
         }
 
+        public static zego_copyrighted_music_request_config ChangeZegoCopyrightedMusicRequestConfigClassToStruct(ZegoCopyrightedMusicRequestConfig config)
+        {
+            zego_copyrighted_music_request_config request_config = new zego_copyrighted_music_request_config();
+
+            if(config != null)
+            {
+                request_config.mode = (zego_copyrighted_music_billing_mode)config.mode;
+                if(config.songID != null)
+                {
+                    request_config.song_id = new byte[ZEGO_EXPRESS_MAX_COMMON_LEN];
+                    var bytes = Encoding.UTF8.GetBytes(config.songID);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                    Buffer.BlockCopy(bytes, 0, request_config.song_id, 0, count);
+                }
+            }
+
+            return request_config;
+        }
+
     }
 }
 

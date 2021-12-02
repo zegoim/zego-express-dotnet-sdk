@@ -91,5 +91,11 @@ namespace ZEGO
         public const int ZEGO_EXPRESS_MODULE_MEDIAPUBLISHER = 13;
 
         public const int ZEGO_EXPRESS_MODULE_AUDIOEFFECTPLAYER = 14;
+
+        public const int ZEGO_EXPRESS_MODULE_UTILITIES = 15;
+
+        public const int ZEGO_EXPRESS_MODULE_RANGEAUDIO = 16;
+
+        public const int ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC = 17;
     }
 }

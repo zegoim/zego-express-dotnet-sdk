@@ -996,5 +996,5 @@ namespace ZEGO
 
         /** VOD billing mode. */
         public zego_copyrighted_music_billing_mode mode;
-};
+    };
 }
