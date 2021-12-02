@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.IO;
+using static ZEGO.ZegoConstans;
 
 namespace ZEGO
 {
@@ -479,7 +480,8 @@ namespace ZEGO
                 {
                     logConfig.log_path = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
                     var bytes = Encoding.UTF8.GetBytes(config.logConfig.logPath);
-                    Buffer.BlockCopy(bytes, 0, logConfig.log_path, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                    Buffer.BlockCopy(bytes, 0, logConfig.log_path, 0, count);
                 }
                 logConfig.log_size = config.logConfig.logSize;
                 engineConfig.log_config = ZegoUtil.GetStructPointer(logConfig);
@@ -501,7 +503,8 @@ namespace ZEGO
                 {
                     engineConfig.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
                     var bytes = Encoding.UTF8.GetBytes(config.logConfig.logPath);
-                    Buffer.BlockCopy(bytes, 0, engineConfig.advanced_config, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                    Buffer.BlockCopy(bytes, 0, engineConfig.advanced_config, 0, count);
                 }
             }
             else
@@ -522,7 +525,8 @@ namespace ZEGO
                 {
                     log_config.log_path = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
                     var bytes = Encoding.UTF8.GetBytes(config.logPath);
-                    Buffer.BlockCopy(bytes, 0, log_config.log_path, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                    Buffer.BlockCopy(bytes, 0, log_config.log_path, 0, count);
                 }
                 
                 log_config.log_size = config.logSize;
@@ -591,7 +595,8 @@ namespace ZEGO
                 {
                     roomConfig.thrid_token = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
                     var bytes = Encoding.UTF8.GetBytes(config.token);
-                    Buffer.BlockCopy(bytes, 0, roomConfig.thrid_token, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                    Buffer.BlockCopy(bytes, 0, roomConfig.thrid_token, 0, count);
                 }
 
                 roomConfig.is_user_status_notify = config.isUserStatusNotify;
@@ -621,8 +626,10 @@ namespace ZEGO
                 zegoUser.user_name = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_USERNAME_LEN];
                 var bytes_user_id = Encoding.UTF8.GetBytes(user.userID);
                 var bytes_user_name = Encoding.UTF8.GetBytes(user.userName);
-                Buffer.BlockCopy(bytes_user_id, 0, zegoUser.user_id, 0, bytes_user_id.Length);
-                Buffer.BlockCopy(bytes_user_name, 0, zegoUser.user_name, 0, bytes_user_name.Length);
+                int count_user_id = Math.Min(bytes_user_id.Length, ZEGO_EXPRESS_MAX_USERID_LEN);
+                int count_user_name = Math.Min(bytes_user_name.Length, ZEGO_EXPRESS_MAX_USERNAME_LEN);
+                Buffer.BlockCopy(bytes_user_id, 0, zegoUser.user_id, 0, count_user_id);
+                Buffer.BlockCopy(bytes_user_name, 0, zegoUser.user_name, 0, count_user_name);
             }
             return zegoUser;
         }
@@ -648,7 +655,8 @@ namespace ZEGO
                 engine_profile.app_id = profile.appID;
                 engine_profile.app_sign = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_APPSIGN_LEN];
                 var bytes = Encoding.UTF8.GetBytes(profile.appSign);
-                Buffer.BlockCopy(bytes, 0, engine_profile.app_sign, 0, bytes.Length);
+                int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_APPSIGN_LEN);
+                Buffer.BlockCopy(bytes, 0, engine_profile.app_sign, 0, count);
                 engine_profile.scenario = profile.scenario;
             }
             return engine_profile;
@@ -705,7 +713,8 @@ namespace ZEGO
                 {
                     zegoPlayerConfig.room_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN];
                     var bytes = Encoding.UTF8.GetBytes(config.roomID);
-                    Buffer.BlockCopy(bytes, 0, zegoPlayerConfig.room_id, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_ROOMID_LEN);
+                    Buffer.BlockCopy(bytes, 0, zegoPlayerConfig.room_id, 0, count);
                 }
                 Console.WriteLine(string.Format("StartPlayingStream ZegoPlayerConfig url:{0} authParam:{1} video_layer{2}", config.cdnConfig.url, config.cdnConfig.authParam, config.videoLayer));
                 return zegoPlayerConfig;
@@ -722,13 +731,15 @@ namespace ZEGO
                 {
                     config.auth_param = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
                     var bytes = Encoding.UTF8.GetBytes(cDNConfig.authParam);
-                    Buffer.BlockCopy(bytes, 0, config.auth_param, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                    Buffer.BlockCopy(bytes, 0, config.auth_param, 0, count);
                 }
                 if (cDNConfig.url != null)
                 {
                     config.url = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
                     var bytes = Encoding.UTF8.GetBytes(cDNConfig.url);
-                    Buffer.BlockCopy(bytes, 0, config.url, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_URL_LEN);
+                    Buffer.BlockCopy(bytes, 0, config.url, 0, count);
                 }
             }
             return config;
@@ -800,7 +811,8 @@ namespace ZEGO
                 {
                     zegoWatermark.image = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
                     var bytes = Encoding.UTF8.GetBytes(watermark.imageURL);
-                    Buffer.BlockCopy(bytes, 0, zegoWatermark.image, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                    Buffer.BlockCopy(bytes, 0, zegoWatermark.image, 0, count);
                 }
                 zegoWatermark.layout = ChangeRectClassToStruct(watermark.layout);
                 return zegoWatermark;
@@ -837,7 +849,8 @@ namespace ZEGO
                 {
                     result.task_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_MIXER_TASK_LEN];
                     var bytes = Encoding.UTF8.GetBytes(task.taskID);
-                    Buffer.BlockCopy(bytes, 0, result.task_id, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_MIXER_TASK_LEN);
+                    Buffer.BlockCopy(bytes, 0, result.task_id, 0, count);
                 }
                 zego_mixer_input[] zego_Mixer_Inputs = ChangeZegoMixerInputClassListToStructList(task.inputList);
                 result.input_list_count = (uint)zego_Mixer_Inputs.Length;
@@ -874,7 +887,8 @@ namespace ZEGO
                 {
                     result.background_image_url = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
                     var bytes = Encoding.UTF8.GetBytes(task.backgroundImageURL);
-                    Buffer.BlockCopy(bytes, 0, result.background_image_url, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_URL_LEN);
+                    Buffer.BlockCopy(bytes, 0, result.background_image_url, 0, ZEGO_EXPRESS_MAX_URL_LEN);
                 }
                 result.enable_sound_level = task.enableSoundLevel;
                 result.stream_alignment_mode = task.streamAlignmentMode;
@@ -889,7 +903,8 @@ namespace ZEGO
                 {
                     result.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
                     var bytes = Encoding.UTF8.GetBytes(advanceConfig);
-                    Buffer.BlockCopy(bytes, 0, result.advanced_config, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                    Buffer.BlockCopy(bytes, 0, result.advanced_config, 0, count);
                 }
             }
             return result;
@@ -980,7 +995,8 @@ namespace ZEGO
                 {
                     zego_Mixer_Input.stream_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN];
                     var bytes = Encoding.UTF8.GetBytes(zegoMixerInput.streamID);
-                    Buffer.BlockCopy(bytes, 0, zego_Mixer_Input.stream_id, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_STREAM_LEN);
+                    Buffer.BlockCopy(bytes, 0, zego_Mixer_Input.stream_id, 0, count);
                 }
                 zego_Mixer_Input.layout = ChangeRectClassToStruct(zegoMixerInput.layout);
                 zego_Mixer_Input.is_audio_focus = zegoMixerInput.isAudioFocus;
@@ -994,7 +1010,8 @@ namespace ZEGO
                 {
                     zego_Mixer_Input.label.text = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
                     var bytes = Encoding.UTF8.GetBytes(zegoMixerInput.label.text);
-                    Buffer.BlockCopy(bytes, 0, zego_Mixer_Input.label.text, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                    Buffer.BlockCopy(bytes, 0, zego_Mixer_Input.label.text, 0, count);
                 }
                 zego_Mixer_Input.label.top = zegoMixerInput.label.top;
                 zego_Mixer_Input.render_mode = zegoMixerInput.renderMode;
@@ -1035,7 +1052,8 @@ namespace ZEGO
             {
                 zego_Mixer_Output.target = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
                 var bytes = Encoding.UTF8.GetBytes(zegoMixerOutput.target);
-                Buffer.BlockCopy(bytes, 0, zego_Mixer_Output.target, 0, bytes.Length);
+                int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                Buffer.BlockCopy(bytes, 0, zego_Mixer_Output.target, 0, count);
             }
             zego_mixer_output_video_config video_config = new zego_mixer_output_video_config();
             video_config.bitrate = zegoMixerOutput.videoConfig.bitrate;
@@ -1107,7 +1125,8 @@ namespace ZEGO
                 {
                     result.file_path = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
                     var bytes = Encoding.UTF8.GetBytes(config.filePath);
-                    Buffer.BlockCopy(bytes, 0, result.file_path, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_URL_LEN);
+                    Buffer.BlockCopy(bytes, 0, result.file_path, 0, count);
                 }
                 result.record_type = config.recordType;
             }
@@ -1153,7 +1172,8 @@ namespace ZEGO
                 {
                     result.room_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN];
                     var bytes = Encoding.UTF8.GetBytes(config.roomID);
-                    Buffer.BlockCopy(bytes, 0, result.room_id, 0, bytes.Length);
+                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_ROOMID_LEN);
+                    Buffer.BlockCopy(bytes, 0, result.room_id, 0, count);
                 }
                 //result.force_synchronous_network_time//TODO
             }
@@ -1186,6 +1206,32 @@ namespace ZEGO
                 result.view_mode = zegoCanvas.viewMode;
                 return result;
             }
+        }
+
+        public static zego_copyrighted_music_config ChangeZegoCopyrightedMusicConfigClassToStruct(ZegoCopyrightedMusicConfig config)
+        {
+            zego_copyrighted_music_config music_config = new zego_copyrighted_music_config();
+
+            if (config != null)
+            {
+                if (config.user != null)
+                { 
+                    if(config.user.userID!= null)
+                    {
+                        music_config.user.user_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_USERID_LEN];
+                        var bytes = Encoding.UTF8.GetBytes(config.user.userID);
+                        int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_USERID_LEN);
+                        Buffer.BlockCopy(bytes, 0, music_config.user.user_id, 0, count);
+                    }
+                    if(config.user.userName != null)
+                    {
+
+                    }
+                }
+                //music_config
+            }
+
+            return music_config;
         }
 
     }
