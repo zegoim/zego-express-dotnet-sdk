@@ -9,7 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using ZEGO;
 
-namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
+namespace ZegoCsharpWinformDemo.Examples
 {
     public partial class Publishing : UserControl
     {
@@ -117,7 +117,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
             if (state == ZegoRoomState.Connecting)
             {
                 button_LoginRoom.Enabled = false;
-                button_LoginRoom.Text = "";
+                label_RoomID.Text = "";
             }
             else
             {
@@ -244,13 +244,9 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
             {
                 LoginRoom();
             }
-            else if(room_state == ZegoRoomState.Connected)
-            {
-                LogoutRoom();
-            }
             else
             {
-                ZegoUtil.PrintLogToView(string.Format("Invalid room state:{0}", room_state));
+                LogoutRoom();
             }
         }
 

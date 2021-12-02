@@ -32,11 +32,11 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
             this.listBox_Quickstart = new System.Windows.Forms.ListBox();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.listBox_Others = new System.Windows.Forms.ListBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.listBox_DebugAndSetting = new System.Windows.Forms.ListBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,9 +47,9 @@
             this.flowLayoutPanel1.Controls.Add(this.label4);
             this.flowLayoutPanel1.Controls.Add(this.listBox_Quickstart);
             this.flowLayoutPanel1.Controls.Add(this.label5);
-            this.flowLayoutPanel1.Controls.Add(this.listBox1);
+            this.flowLayoutPanel1.Controls.Add(this.listBox_Others);
             this.flowLayoutPanel1.Controls.Add(this.label6);
-            this.flowLayoutPanel1.Controls.Add(this.listBox2);
+            this.flowLayoutPanel1.Controls.Add(this.listBox_DebugAndSetting);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             // 
             // label4
@@ -65,37 +65,37 @@
             this.listBox_Quickstart.Name = "listBox_Quickstart";
             this.listBox_Quickstart.SelectedIndexChanged += new System.EventHandler(this.listBox_Quickstart_SelectedIndexChanged);
             // 
-            // panel1
-            // 
-            resources.ApplyResources(this.panel1, "panel1");
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Name = "panel1";
-            // 
             // label5
             // 
             resources.ApplyResources(this.label5, "label5");
             this.label5.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label5.Name = "label5";
             // 
-            // listBox1
+            // listBox_Others
             // 
-            resources.ApplyResources(this.listBox1, "listBox1");
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Name = "listBox1";
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox_Quickstart_SelectedIndexChanged);
-            // 
-            // listBox2
-            // 
-            resources.ApplyResources(this.listBox2, "listBox2");
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.Name = "listBox2";
-            this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox_Quickstart_SelectedIndexChanged);
+            resources.ApplyResources(this.listBox_Others, "listBox_Others");
+            this.listBox_Others.FormattingEnabled = true;
+            this.listBox_Others.Name = "listBox_Others";
+            this.listBox_Others.SelectedIndexChanged += new System.EventHandler(this.listBox_Others_SelectedIndexChanged);
             // 
             // label6
             // 
             resources.ApplyResources(this.label6, "label6");
             this.label6.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label6.Name = "label6";
+            // 
+            // listBox_DebugAndSetting
+            // 
+            resources.ApplyResources(this.listBox_DebugAndSetting, "listBox_DebugAndSetting");
+            this.listBox_DebugAndSetting.FormattingEnabled = true;
+            this.listBox_DebugAndSetting.Name = "listBox_DebugAndSetting";
+            this.listBox_DebugAndSetting.SelectedIndexChanged += new System.EventHandler(this.listBox_DebugAndSetting_SelectedIndexChanged);
+            // 
+            // panel1
+            // 
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Name = "panel1";
             // 
             // HomePage
             // 
@@ -116,8 +116,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ListBox listBox_Quickstart;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox listBox_Others;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.ListBox listBox_DebugAndSetting;
     }
 }

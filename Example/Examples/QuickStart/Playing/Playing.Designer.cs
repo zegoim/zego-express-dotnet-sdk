@@ -1,5 +1,5 @@
 ﻿
-namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
+namespace ZegoCsharpWinformDemo.Examples
 {
     partial class Playing
     {
@@ -70,8 +70,8 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // richTextBox_LogView
             // 
-            this.richTextBox_LogView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.richTextBox_LogView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox_LogView.BackColor = System.Drawing.SystemColors.InfoText;
             this.richTextBox_LogView.ForeColor = System.Drawing.SystemColors.Info;
@@ -84,7 +84,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pictureBox1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -96,7 +96,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // panel5
             // 
-            this.panel5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel5.Controls.Add(this.label_RoomID);
@@ -129,7 +129,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // label_RoomState
             // 
-            this.label_RoomState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.label_RoomState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label_RoomState.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.label_RoomState.Location = new System.Drawing.Point(214, 10);
@@ -149,7 +149,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // panel4
             // 
-            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel4.Controls.Add(this.label_StreamID);
@@ -187,7 +187,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             this.label_ViewName.Name = "label_ViewName";
             this.label_ViewName.Size = new System.Drawing.Size(29, 12);
             this.label_ViewName.TabIndex = 0;
-            this.label_ViewName.Text = "预览";
+            this.label_ViewName.Text = "拉流";
             // 
             // panel2
             // 
@@ -202,7 +202,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.button_LoginRoom);
@@ -219,7 +219,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // button_LoginRoom
             // 
-            this.button_LoginRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.button_LoginRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.button_LoginRoom.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.button_LoginRoom.Location = new System.Drawing.Point(3, 64);
@@ -242,7 +242,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // textBox_UserID
             // 
-            this.textBox_UserID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBox_UserID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_UserID.Location = new System.Drawing.Point(211, 36);
             this.textBox_UserID.Name = "textBox_UserID";
@@ -289,7 +289,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // panel3
             // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.checkBox_Audio);
@@ -352,7 +352,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // button_StartPlaying
             // 
-            this.button_StartPlaying.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.button_StartPlaying.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.button_StartPlaying.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.button_StartPlaying.Location = new System.Drawing.Point(3, 65);
@@ -365,7 +365,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // textBox_PlayStreamID
             // 
-            this.textBox_PlayStreamID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBox_PlayStreamID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_PlayStreamID.Location = new System.Drawing.Point(116, 38);
             this.textBox_PlayStreamID.Name = "textBox_PlayStreamID";
@@ -374,7 +374,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             // 
             // label6
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
             this.label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;

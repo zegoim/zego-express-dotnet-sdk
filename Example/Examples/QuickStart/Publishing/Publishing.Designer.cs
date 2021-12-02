@@ -1,5 +1,5 @@
 ﻿
-namespace ZegoCsharpWinformDemo.Examples.QuickStart.Publishing
+namespace ZegoCsharpWinformDemo.Examples
 {
     partial class Publishing
     {

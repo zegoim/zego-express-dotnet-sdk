@@ -9,7 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using ZEGO;
 
-namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
+namespace ZegoCsharpWinformDemo.Examples
 {
     public partial class Playing : UserControl
     {
@@ -83,7 +83,7 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             if (state == ZegoRoomState.Connecting)
             {
                 button_LoginRoom.Enabled = false;
-                button_LoginRoom.Text = "";
+                label_RoomID.Text = "";
             }
             else
             {
@@ -153,7 +153,9 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             ZegoCanvas canvas = new ZegoCanvas();
             canvas.view = pictureBox1.Handle;
             canvas.viewMode = (ZegoViewMode)comboBox_ViewMode.SelectedIndex;
-            engine.StartPlayingStream(play_stream_id, canvas);
+            ZegoPlayerConfig config = new ZegoPlayerConfig();
+            config.resourceMode = ZegoStreamResourceMode.OnlyRTC;
+            engine.StartPlayingStream(play_stream_id, canvas, config);
         }
         private void StopPlayStream()
         {
@@ -173,13 +175,9 @@ namespace ZegoCsharpWinformDemo.Examples.QuickStart.Playing
             {
                 LoginRoom();
             }
-            else if (room_state == ZegoRoomState.Connected)
-            {
-                LogoutRoom();
-            }
             else
             {
-                ZegoUtil.PrintLogToView(string.Format("Invalid room state:{0}", room_state));
+                LogoutRoom();
             }
         }
 

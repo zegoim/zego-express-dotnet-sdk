@@ -716,7 +716,7 @@ namespace ZEGO
                     int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_ROOMID_LEN);
                     Buffer.BlockCopy(bytes, 0, zegoPlayerConfig.room_id, 0, count);
                 }
-                Console.WriteLine(string.Format("StartPlayingStream ZegoPlayerConfig url:{0} authParam:{1} video_layer{2}", config.cdnConfig.url, config.cdnConfig.authParam, config.videoLayer));
+                //Console.WriteLine(string.Format("StartPlayingStream ZegoPlayerConfig url:{0} authParam:{1} video_layer{2}", config.cdnConfig.url, config.cdnConfig.authParam, config.videoLayer));
                 return zegoPlayerConfig;
             }
 

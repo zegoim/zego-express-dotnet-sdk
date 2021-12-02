@@ -4,17 +4,22 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using ZEGO;
-using ZegoCsharpWinformDemo.Examples.QuickStart.Publishing;
-using ZegoCsharpWinformDemo.Examples.QuickStart.Playing;
+using ZegoCsharpWinformDemo.Examples;
 
 namespace ZegoCsharpWinformDemo
 {
     public partial class HomePage : Form
     {
-        private ZegoExpressEngine engine;
         private UserControl current_page;
 
         Random ran = new Random();
+
+        private static Dictionary<string, DemoPage> page_dics = new Dictionary<string, DemoPage>() {
+            { "推流", DemoPage.PAGE_OTHERS_MULTIPLE_ROOM},
+            { "拉流", DemoPage.PAGE_OTHERS_MULTIPLE_ROOM},
+            { "多房间", DemoPage.PAGE_OTHERS_MULTIPLE_ROOM}
+        };
+
         public HomePage()
         {
             InitializeComponent();
@@ -30,6 +35,7 @@ namespace ZegoCsharpWinformDemo
             //string testStr = System.property
             listBox_Quickstart.Items.Add("推流");
             listBox_Quickstart.Items.Add("拉流");
+            listBox_Others.Items.Add("多房间");
         }
 
         private void Load_1(object sender, EventArgs e)
@@ -48,15 +54,20 @@ namespace ZegoCsharpWinformDemo
         {
             var item = listBox_Quickstart.SelectedItem;
 
-            if(item == null)
+            ShowPage(item);
+        }
+
+        private void ShowPage(object item)
+        {
+            if (item == null)
             {
                 return;
             }
 
-            string itemStr = item.ToString();
+            string page_title = item.ToString();
 
             // Dispose old window
-            if(current_page != null)
+            if (current_page != null)
             {
                 current_page.Dispose();
                 current_page = null;
@@ -64,21 +75,40 @@ namespace ZegoCsharpWinformDemo
 
             panel1.Controls.Clear();
 
-            switch(itemStr)
+            if (page_title == "推流")
             {
-                case "推流":
-                {
-                    current_page = new Publishing();
-                }break;
-                case "拉流":
-                {
-                    current_page = new Playing();
-                }break;
+                current_page = new Publishing();
+            }
+            else if (page_title == "拉流")
+            {
+                current_page = new Playing();
+            }
+            else if (page_title == "多房间")
+            {
+                current_page = new MultipleRooms();
+            }
+            else
+            {
+
             }
 
             current_page.Dock = DockStyle.Fill;
             panel1.Controls.Add(current_page);
-            Console.WriteLine(itemStr);
+        }
+
+        private void listBox_Others_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var item = listBox_Others.SelectedItem;
+
+            ShowPage(item);
+        }
+
+        private void listBox_DebugAndSetting_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            var item = listBox_DebugAndSetting.SelectedItem;
+
+            ShowPage(item);
         }
     }
 }

@@ -30,6 +30,7 @@ namespace ZegoCsharpWinformDemo.Common
             engine.onRoomStateUpdate = OnRoomStateUpdate;
             engine.onPublisherStateUpdate = OnPublisherStateUpdate;
             engine.onPlayerStateUpdate = OnPlayerStateUpdate;
+            engine.onRoomStreamUpdate = OnRoomStreamUpdate;
         }
 
         public void OnDebugError(int errorCode, string funcName, string info)
@@ -55,6 +56,15 @@ namespace ZegoCsharpWinformDemo.Common
             ZegoUtil.PrintLogToView(string.Format("OnPlayerStateUpdate, streamID:{0}, state:{1}, errorCode:{2}, extendedData:{3}", streamID, state, errorCode, extendedData));
             event_handler.OnPlayerStateUpdate(streamID, state, errorCode, extendedData);
         }
+
+        public void OnRoomStreamUpdate(string roomID, ZegoUpdateType updateType, List<ZegoStream> streamList, string extendedData)
+        {
+            streamList.ForEach((stream) =>
+            {
+                ZegoUtil.PrintLogToView(string.Format("OnRoomStreamUpdate, roomID:{0}, updateType:{1}, streamID:{2}, extendedData:{3}", roomID, updateType, stream.streamID, extendedData));
+            });
+            event_handler.OnRoomStreamUpdate(roomID, updateType, streamList, extendedData);
+        }
     }
 
     class ZegoEventHandler
@@ -63,6 +73,7 @@ namespace ZegoCsharpWinformDemo.Common
         public IZegoEventHandler.OnRoomStateUpdate onRoomStateUpdate;
         public IZegoEventHandler.OnPublisherStateUpdate onPublisherStateUpdate;
         public IZegoEventHandler.OnPlayerStateUpdate onPlayerStateUpdate;
+        public IZegoEventHandler.OnRoomStreamUpdate onRoomStreamUpdate;
 
         public ZegoEventHandler()
         {
@@ -90,6 +101,12 @@ namespace ZegoCsharpWinformDemo.Common
         {
             if (onPlayerStateUpdate != null)
                 onPlayerStateUpdate(streamID, state, errorCode, extendedData);
+        }
+
+        public void OnRoomStreamUpdate(string roomID, ZegoUpdateType updateType, List<ZegoStream> streamList, string extendedData)
+        {
+            if (onRoomStreamUpdate != null)
+                onRoomStreamUpdate(roomID, updateType, streamList, extendedData);
         }
 
     }

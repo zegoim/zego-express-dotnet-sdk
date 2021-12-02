@@ -17,4 +17,11 @@ namespace ZegoCsharpWinformDemo
         LOG_WARN    = 2,
         LOG_ERROR   = 3
     }
+
+    enum DemoPage
+    {
+        PAGE_QUICK_START_PUBLISH = 0,   //推流
+        PAGE_QUICK_START_PLAYING,       //拉流
+        PAGE_OTHERS_MULTIPLE_ROOM,      //多房间
+    }
 }
