@@ -1225,7 +1225,10 @@ namespace ZEGO
                     }
                     if(config.user.userName != null)
                     {
-
+                        music_config.user.user_name = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_USERNAME_LEN];
+                        var bytes = Encoding.UTF8.GetBytes(config.user.userName);
+                        int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_USERNAME_LEN);
+                        Buffer.BlockCopy(bytes, 0, music_config.user.user_name, 0, count);
                     }
                 }
                 //music_config

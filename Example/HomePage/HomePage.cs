@@ -36,6 +36,7 @@ namespace ZegoCsharpWinformDemo
             listBox_Quickstart.Items.Add("推流");
             listBox_Quickstart.Items.Add("拉流");
             listBox_Others.Items.Add("多房间");
+            listBox_Others.Items.Add("版权音乐");
         }
 
         private void Load_1(object sender, EventArgs e)
@@ -87,9 +88,9 @@ namespace ZegoCsharpWinformDemo
             {
                 current_page = new MultipleRooms();
             }
-            else
+            else if(page_title == "版权音乐")
             {
-
+                current_page = new CopyrightedMusic();
             }
 
             current_page.Dock = DockStyle.Fill;

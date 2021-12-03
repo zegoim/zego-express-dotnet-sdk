@@ -1472,6 +1472,8 @@ namespace ZEGO
          */
         public abstract void DestroyCopyrightedMusic(ZegoCopyrightedMusic copyrightedMusic);
 
+        public OnCopyrightedMusicDownloadProgressUpdate onCopyrightedMusicDownloadProgressUpdate;
+
         /**
          * [Deprecated] Create ZegoExpressEngine singleton object and initialize SDK.
          *

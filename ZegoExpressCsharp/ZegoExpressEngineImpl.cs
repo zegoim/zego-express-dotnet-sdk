@@ -11,6 +11,8 @@ using static ZEGO.ZegoImplCallChangeUtil;
 using static ZEGO.ZegoCallBackChangeUtil;
 using static ZEGO.ZegoAudioEffectPlayerImpl;
 using static ZEGO.ZegoExpressEngineCallBack;
+using static ZEGO.ZegoCopyrightedMusicImpl;
+using static ZEGO.IExpressCopyrightedMusic;
 
 namespace ZEGO
 {
@@ -35,7 +37,7 @@ namespace ZEGO
         public static ConcurrentDictionary<int, OnMixerStopResult> onMixerStopResultDics = new ConcurrentDictionary<int, OnMixerStopResult>();
         public static ConcurrentDictionary<int, ZegoAudioEffectPlayer> audioEffectPlayerAndIndex = new ConcurrentDictionary<int, ZegoAudioEffectPlayer>();
 
-        ZegoCopyrightedMusicImpl copyrighted_music_instance = null;
+        public static ZegoCopyrightedMusicImpl copyrighted_music_instance = null;
 
         //避免GC回收
         private static IExpressEngineInternal.zego_on_engine_uninit zegoOnEngineUninit;
@@ -102,6 +104,15 @@ namespace ZEGO
         private static IExpressAudioEffectPlayerInternal.zego_on_audio_effect_player_seek_to zegoOnAudioEffectPlayerSeekTo;
         private static IExpressAudioEffectPlayerInternal.zego_on_audio_effect_player_load_resource zegoOnAudioEffectPlayerLoadResource;
         private static IExpressAudioEffectPlayerInternal.zego_on_audio_effect_play_state_update zegoOnAudioEffectPlayerStateUpdate;
+        // Copyrighted music
+        private static IExpressCopyrightedMusic.zego_on_copyrighted_music_send_extended_request zegoOnCopyrightedMusicSendExtendedRequest;
+        private static IExpressCopyrightedMusic.zego_on_copyrighted_music_init zegoOnCopyrightedMusicInit;
+        private static IExpressCopyrightedMusic.zego_on_copyrighted_music_request_accompaniment zegoOnCopyrightedMusciRequestAccompaniment;
+        private static IExpressCopyrightedMusic.zego_on_copyrighted_music_request_song zegoOnCopyreghtedMusicRequestSong;
+        private static zego_on_copyrighted_music_get_lrc_lyric zegoOnCopyreghtedMusicGetLrcLyric;
+        private static zego_on_copyrighted_music_get_krc_lyric_by_token zegoOnCopyrightedMusicGetKrcLyricByToken;
+        private static zego_on_copyrighted_music_download zegoOnCopyrightedMusicDownoad;
+        private static zego_on_copyrighted_music_download_progress_update zegoOnCopyrightedMusicDownloadProgressUpdate;
 
         private ArrayList arrayList;
         public static new void SetEngineConfig(ZegoEngineConfig config)
@@ -240,6 +251,7 @@ namespace ZEGO
             zegoOnRoomStreamExtraInfoUpdate = new IExpressRoomInternal.zego_on_room_stream_extra_info_update(zego_on_room_stream_extra_info_update);
             zegoOnRoomStateUpdate = new IExpressRoomInternal.zego_on_room_state_update(zego_on_room_state_update);
             zegoOnEngineStateUpdate = new IExpressEngineInternal.zego_on_engine_state_update(zego_on_engine_state_update);
+            zegoOnRoomExtraInfoUpdate = new IExpressRoomInternal.zego_on_room_extra_info_update(zego_on_room_extra_info_update);
             zegoOnRoomOnlineUserCountUpdate = new IExpressRoomInternal.zego_on_room_online_user_count_update(zego_on_room_online_user_count_update);
             zegoOnPublisherUpdateStreamExtraInfoResult = new IExpressPublisherInternal.zego_on_publisher_update_stream_extra_info_result(zego_on_publisher_update_stream_extra_info_result);
             zegoOnMediaplayerStateUpdate = new IExpressMediaPlayerInternal.zego_on_media_player_state_update(zego_on_mediaplayer_state_update);
@@ -268,6 +280,15 @@ namespace ZEGO
             zegoOnAudioEffectPlayerLoadResource = new IExpressAudioEffectPlayerInternal.zego_on_audio_effect_player_load_resource(zego_on_audio_effect_player_load_resource);
             zegoOnAudioEffectPlayerStateUpdate = new IExpressAudioEffectPlayerInternal.zego_on_audio_effect_play_state_update(zego_on_audio_effect_play_state_update);
 
+            // Copyrighted music
+            zegoOnCopyrightedMusicSendExtendedRequest = new IExpressCopyrightedMusic.zego_on_copyrighted_music_send_extended_request(zego_on_copyrighted_music_send_extended_request);
+            zegoOnCopyrightedMusicInit = new IExpressCopyrightedMusic.zego_on_copyrighted_music_init(zego_on_copyrighted_music_init);
+            zegoOnCopyrightedMusciRequestAccompaniment = new IExpressCopyrightedMusic.zego_on_copyrighted_music_request_accompaniment(zego_on_copyrighted_music_request_accompaniment);
+            zegoOnCopyreghtedMusicRequestSong = new IExpressCopyrightedMusic.zego_on_copyrighted_music_request_song(zego_on_copyrighted_music_request_song);
+            zegoOnCopyreghtedMusicGetLrcLyric = new zego_on_copyrighted_music_get_lrc_lyric(zego_on_copyrighted_music_get_lrc_lyric);
+            zegoOnCopyrightedMusicGetKrcLyricByToken = new zego_on_copyrighted_music_get_krc_lyric_by_token(zego_on_copyrighted_music_get_krc_lyric_by_token);
+            zegoOnCopyrightedMusicDownoad = new zego_on_copyrighted_music_download(zego_on_copyrighted_music_download);
+            zegoOnCopyrightedMusicDownloadProgressUpdate = new zego_on_copyrighted_music_download_progress_update(zego_on_copyrighted_music_download_progress_update);
 
             IExpressEngineInternal.zego_register_engine_uninit_callback(zegoOnEngineUninit, IntPtr.Zero);
             IExpressRoomInternal.zego_register_room_state_update_callback(zegoOnRoomStateUpdate, IntPtr.Zero);
@@ -332,6 +353,15 @@ namespace ZEGO
             IExpressCustomAudioIOInternal.zego_register_player_audio_data_callback(zegoOnPlayerAudioData, IntPtr.Zero);
             IExpressRecordInternal.zego_register_captured_data_record_state_update_callback(zegoOnCapturedDataRecordStateUpdate, IntPtr.Zero);
             IExpressRecordInternal.zego_register_captured_data_record_progress_update_callback(zegoOnCapturedDataRecordProgressUpdate, IntPtr.Zero);
+            //CopyrightedMusic
+            IExpressCopyrightedMusic.zego_register_copyrighted_music_send_extended_request_callback(zegoOnCopyrightedMusicSendExtendedRequest, IntPtr.Zero);
+            IExpressCopyrightedMusic.zego_register_copyrighted_music_init_callback(zegoOnCopyrightedMusicInit, IntPtr.Zero);
+            IExpressCopyrightedMusic.zego_register_copyrighted_music_request_accompaniment_callback(zegoOnCopyrightedMusciRequestAccompaniment, IntPtr.Zero);
+            zego_register_copyrighted_music_request_song_callback(zegoOnCopyreghtedMusicRequestSong, IntPtr.Zero);
+            zego_register_copyrighted_music_get_lrc_lyric_callback(zegoOnCopyreghtedMusicGetLrcLyric, IntPtr.Zero);
+            zego_register_copyrighted_music_get_krc_lyric_by_token_callback(zegoOnCopyrightedMusicGetKrcLyricByToken, IntPtr.Zero);
+            zego_register_copyrighted_music_download_callback(zegoOnCopyrightedMusicDownoad, IntPtr.Zero);
+            zego_register_copyrighted_music_download_progress_update_callback(zegoOnCopyrightedMusicDownloadProgressUpdate, IntPtr.Zero);
         }
         
         private static void DefaultOpenCustomRender()//结构体是栈区分配，值类型，传递的时候是值拷贝，通过ref引用传递值类型解决
@@ -1068,7 +1098,7 @@ namespace ZEGO
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
-        private static zego_media_player_instance_index GetIndexFromZegoMediaPlayer(ZegoMediaPlayer zegoMediaPlayer)
+        public static zego_media_player_instance_index GetIndexFromZegoMediaPlayer(ZegoMediaPlayer zegoMediaPlayer)
         {
             zego_media_player_instance_index result = zego_media_player_instance_index.zego_media_player_instance_index_null;
             foreach (KeyValuePair<zego_media_player_instance_index, ZegoMediaPlayer> kvp in mediaPlayerAndIndex)

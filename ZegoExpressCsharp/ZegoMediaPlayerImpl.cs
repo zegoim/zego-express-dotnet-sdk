@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace ZEGO
 {
@@ -14,6 +14,16 @@ namespace ZEGO
             this.onLoadResourceCallback = onLoadResourceCallback;
             ZegoExpressEngineImpl.LoadResource(this, path);
         }
+
+        public override void loadCopyrightedMusicResourceWithPosition(string resourceID, ulong startPosition, OnLoadResourceCallback callback)
+        {
+            this.onLoadResourceCallback = callback;
+            zego_media_player_instance_index curIndex = ZegoExpressEngineImpl.GetIndexFromZegoMediaPlayer(this);
+            int result = IExpressMediaPlayerInternal.zego_express_media_player_load_copyrighted_music_resource_with_position(resourceID, (long)startPosition, curIndex);
+            string log = string.Format("loadCopyrightedMusicResourceWithPosition, resourceID:{0}  startPosition:{1} ", resourceID, startPosition);
+            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+        }
+
         public override void EnableRepeat(bool enable)
         {
             ZegoExpressEngineImpl.EnableRepeat(this, enable);

@@ -115,7 +115,7 @@ namespace ZegoCsharpWinformDemo.Examples
                     }
                     else if (roomID == room_id_2)
                     {
-                        button_LoginRoom1.Text = "Logout Room 2";
+                        button_LoginRoom2.Text = "Logout Room 2";
                     }
 
                 }
@@ -127,7 +127,7 @@ namespace ZegoCsharpWinformDemo.Examples
                     }
                     else if (roomID == room_id_2)
                     {
-                        button_LoginRoom1.Text = "Login Room 2";
+                        button_LoginRoom2.Text = "Login Room 2";
                     }
 
                     for (int i=0;i<room_stream_list.Count;i++)
@@ -256,7 +256,6 @@ namespace ZegoCsharpWinformDemo.Examples
 
             ZegoPublisherConfig config = new ZegoPublisherConfig();
             config.roomID = publish_room_id;
-            engine.StartPublishingStream(publish_stream_id, config);
 
             ZegoUtil.PrintLogToView(string.Format("StartPublishingStream, roomID:{0}, streamID:{1}", publish_room_id, publish_stream_id));
             engine.StartPublishingStream(publish_stream_id, config);
@@ -316,37 +315,29 @@ namespace ZegoCsharpWinformDemo.Examples
 
         private void button_LoginRoom1_Click(object sender, EventArgs e)
         {
-            if(is_login_room_1)
+            if(room_1_state == ZegoRoomState.Disconnected)
             {
-                is_login_room_1 = false;
-                button_LoginRoom1.Text = "Login Room 1";
-                LogoutRoom(room_id_1);
-            }
-            else
-            {
-                is_login_room_1 = true;
-                button_LoginRoom1.Text = "Logout Room 1";
                 room_id_1 = textBox_RoomID1.Text;
 
                 LoginRoom(room_id_1);
+            }
+            else
+            {
+                LogoutRoom(room_id_1);
             }
         }
 
         private void button_LoginRoom2_Click(object sender, EventArgs e)
         {
-            if (is_login_room_2)
+            if (room_2_state == ZegoRoomState.Disconnected)
             {
-                is_login_room_2 = false;
-                button_LoginRoom2.Text = "Login Room 2";
-                LogoutRoom(room_id_2);
-            }
-            else
-            {
-                is_login_room_2 = true;
-                button_LoginRoom2.Text = "Logout Room 2";
                 room_id_2 = textBox_RoomID2.Text;
 
                 LoginRoom(room_id_2);
+            }
+            else
+            {
+                LogoutRoom(room_id_2);
             }
         }
 

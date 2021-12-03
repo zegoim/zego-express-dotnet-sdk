@@ -75,16 +75,34 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Commons.cs" />
     <Compile Include="Common\ZegoEventHandler.cs" />
+    <Compile Include="Examples\Others\CopyrightedMusic\CopyrightedMusic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Examples\Others\CopyrightedMusic\CopyrightedMusic.Designer.cs">
+      <DependentUpon>CopyrightedMusic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Examples\Others\MultipleRooms\MultipleRooms.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Examples\Others\MultipleRooms\MultipleRooms.Designer.cs">
+      <DependentUpon>MultipleRooms.cs</DependentUpon>
+    </Compile>
     <Compile Include="Examples\QuickStart\CommonUsage\CommonUsage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,13 +130,13 @@
     <Compile Include="HomePage\HomePage.Designer.cs">
       <DependentUpon>HomePage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Examples\QuickStart\VideoTalk\VideoTalk.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Examples\QuickStart\VideoTalk\VideoTalk.Designer.cs">
-      <DependentUpon>VideoTalk.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utils\ZegoUtil.cs" />
+    <EmbeddedResource Include="Examples\Others\CopyrightedMusic\CopyrightedMusic.resx">
+      <DependentUpon>CopyrightedMusic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Examples\Others\MultipleRooms\MultipleRooms.resx">
+      <DependentUpon>MultipleRooms.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Examples\QuickStart\CommonUsage\CommonUsage.resx">
       <DependentUpon>CommonUsage.cs</DependentUpon>
     </EmbeddedResource>
@@ -130,9 +148,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Examples\QuickStart\Publishing\Publishing.zh-Hans.resx">
       <DependentUpon>Publishing.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Examples\QuickStart\VideoTalk\VideoTalk.resx">
-      <DependentUpon>VideoTalk.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HomePage\HomePage.en.resx">
       <DependentUpon>HomePage.cs</DependentUpon>
@@ -154,6 +169,7 @@
       <DependentUpon>HomePage.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -169,6 +185,9 @@
       <Project>{871f166a-84ac-469a-847f-5274d41383cd}</Project>
       <Name>ZegoExpressCsharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Examples\QuickStart\VideoTalk\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

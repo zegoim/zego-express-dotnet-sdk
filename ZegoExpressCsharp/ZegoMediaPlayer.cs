@@ -74,5 +74,7 @@ namespace ZEGO
 
         public abstract int GetPlayVolume();
         public abstract int GetPublishVolume();
+
+        public abstract void loadCopyrightedMusicResourceWithPosition(string resourceID, ulong startPosition, OnLoadResourceCallback callback);
     }
 }

@@ -31,11 +31,13 @@ namespace ZegoCsharpWinformDemo.Common
             engine.onPublisherStateUpdate = OnPublisherStateUpdate;
             engine.onPlayerStateUpdate = OnPlayerStateUpdate;
             engine.onRoomStreamUpdate = OnRoomStreamUpdate;
+            engine.onCopyrightedMusicDownloadProgressUpdate = OnCopyrightedMusicDownloadProgressUpdate;
         }
 
         public void OnDebugError(int errorCode, string funcName, string info)
         {
-            ZegoUtil.PrintLogToView(string.Format("OnDebugError, errorCode:{0}, funcName:{1}, info:{2}", errorCode, funcName, info));
+            LogLevel level = ZegoUtil.GetLogLevel(errorCode);
+            ZegoUtil.PrintLogToView(string.Format("OnDebugError, errorCode:{0}, funcName:{1}, info:{2}", errorCode, funcName, info), level);
             event_handler.OnDebugError(errorCode, funcName, info);
         }
 
@@ -65,6 +67,11 @@ namespace ZegoCsharpWinformDemo.Common
             });
             event_handler.OnRoomStreamUpdate(roomID, updateType, streamList, extendedData);
         }
+
+        public void OnCopyrightedMusicDownloadProgressUpdate(ZegoCopyrightedMusic copyrightedMusic, string resourceID, float progressRate)
+        {
+            event_handler.OnCopyrightedMusicDownloadProgressUpdate(copyrightedMusic, resourceID, progressRate);
+        }
     }
 
     class ZegoEventHandler
@@ -74,6 +81,7 @@ namespace ZegoCsharpWinformDemo.Common
         public IZegoEventHandler.OnPublisherStateUpdate onPublisherStateUpdate;
         public IZegoEventHandler.OnPlayerStateUpdate onPlayerStateUpdate;
         public IZegoEventHandler.OnRoomStreamUpdate onRoomStreamUpdate;
+        public IZegoEventHandler.OnCopyrightedMusicDownloadProgressUpdate onCopyrightedMusicDownloadProgressUpdate;
 
         public ZegoEventHandler()
         {
@@ -107,6 +115,14 @@ namespace ZegoCsharpWinformDemo.Common
         {
             if (onRoomStreamUpdate != null)
                 onRoomStreamUpdate(roomID, updateType, streamList, extendedData);
+        }
+
+        public void OnCopyrightedMusicDownloadProgressUpdate(ZegoCopyrightedMusic copyrightedMusic, string resourceID, float progressRate)
+        {
+            if(onCopyrightedMusicDownloadProgressUpdate != null)
+            {
+                onCopyrightedMusicDownloadProgressUpdate(copyrightedMusic, resourceID, progressRate);
+            }
         }
 
     }

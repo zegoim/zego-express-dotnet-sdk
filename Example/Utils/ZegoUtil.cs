@@ -9,7 +9,7 @@ using System.Drawing;
 
 namespace ZegoCsharpWinformDemo
 {
-    class ZegoUtil
+    public class ZegoUtil
     {
         private static RichTextBox log_view_control = null;
         private static Label room_state_control = null;
@@ -82,6 +82,18 @@ namespace ZegoCsharpWinformDemo
                 color = Color.DarkGoldenrod;
             }
             return color;
+        }
+
+        public static LogLevel GetLogLevel(int errorCode)
+        {
+            if(errorCode == 0)
+            {
+                return LogLevel.LOG_SUCCESS;
+            }
+            else
+            {
+                return LogLevel.LOG_ERROR;
+            }
         }
 
     }

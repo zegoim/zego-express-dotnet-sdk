@@ -10,7 +10,7 @@ namespace ZegoCsharpWinformDemo
     {
 
     }
-    enum LogLevel
+    public enum LogLevel
     {
         LOG_SUCCESS = 0,
         LOG_INFO    = 1,
@@ -18,7 +18,7 @@ namespace ZegoCsharpWinformDemo
         LOG_ERROR   = 3
     }
 
-    enum DemoPage
+    public enum DemoPage
     {
         PAGE_QUICK_START_PUBLISH = 0,   //推流
         PAGE_QUICK_START_PLAYING,       //拉流

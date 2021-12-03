@@ -1,0 +1,41 @@
+{
+    "/playlist/category": {
+      "describe": "歌单分类列表"
+    },
+    "/playlist/classify": {
+      "describe": "歌单列表"
+      ,"category_id": "77"
+      ,"page": 1
+      ,"size": 10
+    },
+    "/playlist/song": {
+      "describe": "歌单歌曲",
+      "playlist_id": "collection_3_1085322500_243_0",
+      "page": 1,
+      "size": 10
+    },
+    "/song/infos": {
+      "describe": "批量查询歌曲信息",
+      "songs_id": ["28466292","287915293","257333192"]
+    },
+    "/search/tips": {
+      "describe": "搜索提示",
+      "keyword": "周杰"
+    },
+    "/search/song": {
+      "describe": "搜索歌曲",
+      "keyword": "周杰",
+      "page": 1,
+      "size": 10
+    },
+    "/top/song": {
+      "describe": "榜单歌曲",
+      "top_id": "8888",
+      "page": 1,
+      "size": 10
+    },
+    "/song/copyright": {
+      "describe": "歌曲权限",
+      "songs_id": ["28466292","287915293","257333192"]
+    }
+  }

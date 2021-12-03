@@ -646,6 +646,15 @@ namespace ZEGO
          */
         public delegate void OnPlayerAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param, string streamID);
 
+        /**
+         * Callback for download song or accompaniment progress rate.
+         *
+         * @param copyrightedMusic Copyrighted music instance that triggers this callback.
+         * @param resourceID The resource ID of the song or accompaniment that triggered this callback.
+         * @param progressRate download progress rate.
+         */
+        public delegate void OnCopyrightedMusicDownloadProgressUpdate(ZegoCopyrightedMusic copyrightedMusic, string resourceID, float progressRate);
+
 
     }
     /**

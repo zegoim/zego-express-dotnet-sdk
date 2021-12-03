@@ -118,8 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="playSreamId.Location" type="System.Drawing.Point, System.Drawing">
-    <value>442, 278</value>
+  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 234</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="playSreamId.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
   </data>
   <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 110</value>
@@ -127,7 +131,6 @@
   <data name="&gt;&gt;label6.Name" xml:space="preserve">
     <value>label6</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="roomId.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
@@ -155,6 +158,9 @@
   <data name="&gt;&gt;roomId.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
+  <data name="&gt;&gt;listBox2.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
   <data name="&gt;&gt;panel1.Name" xml:space="preserve">
     <value>panel1</value>
   </data>
@@ -175,9 +181,6 @@
   </data>
   <data name="button2.Location" type="System.Drawing.Point, System.Drawing">
     <value>442, 319</value>
-  </data>
-  <data name="&gt;&gt;button3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label3.Parent" xml:space="preserve">
     <value>$this</value>
@@ -236,9 +239,6 @@
   <data name="&gt;&gt;listBox_DebugAndSetting.Type" xml:space="preserve">
     <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="playSreamId.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
   <data name="listBox_Quickstart.Size" type="System.Drawing.Size, System.Drawing">
     <value>205, 88</value>
   </data>
@@ -251,20 +251,20 @@
   <data name="&gt;&gt;label1.Name" xml:space="preserve">
     <value>label1</value>
   </data>
-  <data name="pictureBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 110</value>
-  </data>
   <data name="flowLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
   </data>
   <data name="&gt;&gt;publishSreamID.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
+  <data name="playSreamId.Location" type="System.Drawing.Point, System.Drawing">
+    <value>442, 278</value>
+  </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="&gt;&gt;roomId.Name" xml:space="preserve">
-    <value>roomId</value>
+  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -295,9 +295,6 @@
   </data>
   <data name="&gt;&gt;button4.Name" xml:space="preserve">
     <value>button4</value>
-  </data>
-  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
   </data>
   <data name="&gt;&gt;label5.Name" xml:space="preserve">
     <value>label5</value>
@@ -340,6 +337,9 @@
   </data>
   <data name="&gt;&gt;label4.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="button4.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
   </data>
   <data name="&gt;&gt;button2.Parent" xml:space="preserve">
     <value>$this</value>
@@ -386,8 +386,8 @@
   <data name="label4.Font" type="System.Drawing.Font, System.Drawing">
     <value>宋体, 9pt, style=Bold</value>
   </data>
-  <data name="&gt;&gt;listBox2.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="&gt;&gt;roomId.Name" xml:space="preserve">
+    <value>roomId</value>
   </data>
   <data name="listBox_Quickstart.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 26</value>
@@ -609,14 +609,14 @@
   <data name="label6.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
   </data>
-  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 234</value>
+  <data name="pictureBox2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 110</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="button4.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
+  <data name="&gt;&gt;button3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;button4.Parent" xml:space="preserve">
     <value>$this</value>

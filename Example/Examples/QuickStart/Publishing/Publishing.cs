@@ -264,19 +264,16 @@ namespace ZegoCsharpWinformDemo.Examples
 
         private void button_StartPublishing_Click(object sender, EventArgs e)
         {
-            if(publisher_state == ZegoPublisherState.Publishing)
-            {
-                StopPreview();
-                StopPublishStream();
-            }
-            else if(publisher_state == ZegoPublisherState.NoPublish)
+            
+            if(publisher_state == ZegoPublisherState.NoPublish)
             {
                 StartPreview();
                 StartPublishStream();
             }
             else
             {
-                ZegoUtil.PrintLogToView(string.Format("Invalid publish state:{0}", publisher_state));
+                StopPreview();
+                StopPublishStream();
             }
         }
 
