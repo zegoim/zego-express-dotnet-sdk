@@ -187,9 +187,9 @@ namespace ZegoCsharpWinformDemo.Examples
             // 
             // comboBox_SwitchMicrophone
             // 
-            resources.ApplyResources(this.comboBox_SwitchMicrophone, "comboBox_SwitchMicrophone");
             this.comboBox_SwitchMicrophone.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_SwitchMicrophone.FormattingEnabled = true;
+            resources.ApplyResources(this.comboBox_SwitchMicrophone, "comboBox_SwitchMicrophone");
             this.comboBox_SwitchMicrophone.Name = "comboBox_SwitchMicrophone";
             this.comboBox_SwitchMicrophone.SelectedIndexChanged += new System.EventHandler(this.comboBox_SwitchMicrophone_SelectedIndexChanged);
             // 
@@ -205,9 +205,9 @@ namespace ZegoCsharpWinformDemo.Examples
             // 
             // comboBox_SwitchCamera
             // 
-            resources.ApplyResources(this.comboBox_SwitchCamera, "comboBox_SwitchCamera");
             this.comboBox_SwitchCamera.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_SwitchCamera.FormattingEnabled = true;
+            resources.ApplyResources(this.comboBox_SwitchCamera, "comboBox_SwitchCamera");
             this.comboBox_SwitchCamera.Name = "comboBox_SwitchCamera";
             this.comboBox_SwitchCamera.SelectedIndexChanged += new System.EventHandler(this.comboBox_SwitchCamera_SelectedIndexChanged);
             // 
@@ -218,9 +218,9 @@ namespace ZegoCsharpWinformDemo.Examples
             // 
             // comboBox_ViewMode
             // 
-            resources.ApplyResources(this.comboBox_ViewMode, "comboBox_ViewMode");
             this.comboBox_ViewMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_ViewMode.FormattingEnabled = true;
+            resources.ApplyResources(this.comboBox_ViewMode, "comboBox_ViewMode");
             this.comboBox_ViewMode.Name = "comboBox_ViewMode";
             this.comboBox_ViewMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_ViewMode_SelectedIndexChanged);
             // 
@@ -231,9 +231,9 @@ namespace ZegoCsharpWinformDemo.Examples
             // 
             // comboBox_MirrorMode
             // 
-            resources.ApplyResources(this.comboBox_MirrorMode, "comboBox_MirrorMode");
             this.comboBox_MirrorMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_MirrorMode.FormattingEnabled = true;
+            resources.ApplyResources(this.comboBox_MirrorMode, "comboBox_MirrorMode");
             this.comboBox_MirrorMode.Name = "comboBox_MirrorMode";
             this.comboBox_MirrorMode.SelectedIndexChanged += new System.EventHandler(this.comboBox_MirrorMode_SelectedIndexChanged);
             // 

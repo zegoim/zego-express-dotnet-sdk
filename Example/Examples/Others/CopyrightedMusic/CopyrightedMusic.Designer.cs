@@ -522,7 +522,7 @@ namespace ZegoCsharpWinformDemo.Examples
             this.button_StartPublishing.Name = "button_StartPublishing";
             this.button_StartPublishing.Size = new System.Drawing.Size(374, 23);
             this.button_StartPublishing.TabIndex = 9;
-            this.button_StartPublishing.Text = "开始推流";
+            this.button_StartPublishing.Text = "Start Publishing";
             this.button_StartPublishing.UseVisualStyleBackColor = true;
             this.button_StartPublishing.Click += new System.EventHandler(this.button_StartPublishing_Click);
             // 
@@ -535,7 +535,7 @@ namespace ZegoCsharpWinformDemo.Examples
             this.button_LoginRoom.Name = "button_LoginRoom";
             this.button_LoginRoom.Size = new System.Drawing.Size(374, 23);
             this.button_LoginRoom.TabIndex = 6;
-            this.button_LoginRoom.Text = "登录房间";
+            this.button_LoginRoom.Text = "Login Room";
             this.button_LoginRoom.UseVisualStyleBackColor = true;
             this.button_LoginRoom.Click += new System.EventHandler(this.button_LoginRoom_Click);
             // 

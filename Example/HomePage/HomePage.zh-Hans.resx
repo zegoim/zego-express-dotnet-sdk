@@ -162,11 +162,14 @@
   <data name="label6.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
+  <data name="listBox_DebugAndSetting.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left</value>
+  </data>
   <data name="listBox_DebugAndSetting.ItemHeight" type="System.Int32, mscorlib">
     <value>12</value>
   </data>
   <data name="listBox_DebugAndSetting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 88</value>
+    <value>205, 436</value>
   </data>
   <data name="panel1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
