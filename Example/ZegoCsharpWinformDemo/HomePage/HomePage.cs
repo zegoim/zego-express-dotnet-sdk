@@ -33,6 +33,7 @@ namespace ZegoCsharpWinformDemo
         private void InitUi()
         {
             //string testStr = System.property
+            listBox_Quickstart.Items.Add("视频通话");
             listBox_Quickstart.Items.Add("推流");
             listBox_Quickstart.Items.Add("拉流");
             listBox_Others.Items.Add("多房间");
@@ -76,7 +77,11 @@ namespace ZegoCsharpWinformDemo
 
             panel1.Controls.Clear();
 
-            if (page_title == "推流")
+            if (page_title == "视频通话")
+            {
+                current_page = new VideoTalk();
+            }
+            else if (page_title == "推流")
             {
                 current_page = new Publishing();
             }

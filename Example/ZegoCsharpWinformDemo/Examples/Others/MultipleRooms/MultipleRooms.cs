@@ -289,7 +289,6 @@ namespace ZegoCsharpWinformDemo.Examples
             ZegoCanvas canvas = new ZegoCanvas();
             canvas.view = pictureBox_Remote.Handle;
             ZegoPlayerConfig config = new ZegoPlayerConfig();
-            config.resourceMode = ZegoStreamResourceMode.OnlyRTC;
             config.roomID = playRoomID;
             engine.StartPlayingStream(playStreamID, canvas, config);
         }

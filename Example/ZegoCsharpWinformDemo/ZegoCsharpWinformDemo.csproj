@@ -121,6 +121,12 @@
     <Compile Include="Examples\QuickStart\Publishing\Publishing.Designer.cs">
       <DependentUpon>Publishing.cs</DependentUpon>
     </Compile>
+    <Compile Include="Examples\QuickStart\VideoTalk\VideoTalk.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Examples\QuickStart\VideoTalk\VideoTalk.Designer.cs">
+      <DependentUpon>VideoTalk.cs</DependentUpon>
+    </Compile>
     <Compile Include="KeyCenter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -148,6 +154,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Examples\QuickStart\Publishing\Publishing.zh-Hans.resx">
       <DependentUpon>Publishing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Examples\QuickStart\VideoTalk\VideoTalk.resx">
+      <DependentUpon>VideoTalk.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HomePage\HomePage.en.resx">
       <DependentUpon>HomePage.cs</DependentUpon>
@@ -180,9 +189,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Examples\QuickStart\VideoTalk\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\ZegoExpressCsharp\ZegoExpressCsharp.csproj">
       <Project>{871f166a-84ac-469a-847f-5274d41383cd}</Project>

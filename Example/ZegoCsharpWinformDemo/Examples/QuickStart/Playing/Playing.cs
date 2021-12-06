@@ -156,7 +156,6 @@ namespace ZegoCsharpWinformDemo.Examples
             canvas.view = pictureBox1.Handle;
             canvas.viewMode = (ZegoViewMode)comboBox_ViewMode.SelectedIndex;
             ZegoPlayerConfig config = new ZegoPlayerConfig();
-            config.resourceMode = ZegoStreamResourceMode.OnlyRTC;
             engine.StartPlayingStream(play_stream_id, canvas, config);
         }
         private void StopPlayStream()
