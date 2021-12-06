@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZegoExpressCsharp", "ZegoExpressCsharp\ZegoExpressCsharp.csproj", "{871F166A-84AC-469A-847F-5274D41383CD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZegoCsharpWinformDemo", "Example\ZegoCsharpWinformDemo\ZegoCsharpWinformDemo.csproj", "{AC990781-2A36-4241-BA44-1A2C0627FC28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZegoCsharpWinformDemo", "ZegoCsharpWinformDemo\ZegoCsharpWinformDemo.csproj", "{AC990781-2A36-4241-BA44-1A2C0627FC28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,18 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{871F166A-84AC-469A-847F-5274D41383CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Debug|x64.Build.0 = Debug|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Debug|x86.Build.0 = Debug|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Release|x64.ActiveCfg = Release|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Release|x64.Build.0 = Release|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Release|x86.ActiveCfg = Release|Any CPU
-		{871F166A-84AC-469A-847F-5274D41383CD}.Release|x86.Build.0 = Release|Any CPU
 		{AC990781-2A36-4241-BA44-1A2C0627FC28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC990781-2A36-4241-BA44-1A2C0627FC28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC990781-2A36-4241-BA44-1A2C0627FC28}.Debug|x64.ActiveCfg = Debug|x64
@@ -46,6 +32,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D810B487-64F8-4FA5-97D3-EB8694EEDD30}
+		SolutionGuid = {2DD6424E-251B-497E-BECD-3CAD4A7B8749}
 	EndGlobalSection
 EndGlobal

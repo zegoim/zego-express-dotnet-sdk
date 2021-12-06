@@ -181,18 +181,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ZegoExpressCsharp\ZegoExpressCsharp.csproj">
+    <Folder Include="Examples\QuickStart\VideoTalk\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ZegoExpressCsharp\ZegoExpressCsharp.csproj">
       <Project>{871f166a-84ac-469a-847f-5274d41383cd}</Project>
       <Name>ZegoExpressCsharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Examples\QuickStart\VideoTalk\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(SolutionDir)lib\$(PlatformName)\ZegoExpressEngine.dll $(TargetDir)
-</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y $(ProjectDir)..\lib\$(PlatformName)\ZegoExpressEngine.dll $(TargetDir)
+xcopy /Y $(ProjectDir)..\lib\ZegoExpressCsharp.dll $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

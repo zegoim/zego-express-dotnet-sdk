@@ -244,9 +244,9 @@ namespace ZegoCsharpWinformDemo.Examples
             // 
             this.textBox_UserID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_UserID.Location = new System.Drawing.Point(211, 36);
+            this.textBox_UserID.Location = new System.Drawing.Point(198, 36);
             this.textBox_UserID.Name = "textBox_UserID";
-            this.textBox_UserID.Size = new System.Drawing.Size(82, 21);
+            this.textBox_UserID.Size = new System.Drawing.Size(95, 21);
             this.textBox_UserID.TabIndex = 5;
             // 
             // label1
@@ -264,7 +264,7 @@ namespace ZegoCsharpWinformDemo.Examples
             // 
             this.textBox_RoomID.Location = new System.Drawing.Point(57, 36);
             this.textBox_RoomID.Name = "textBox_RoomID";
-            this.textBox_RoomID.Size = new System.Drawing.Size(101, 21);
+            this.textBox_RoomID.Size = new System.Drawing.Size(88, 21);
             this.textBox_RoomID.TabIndex = 5;
             // 
             // label3
@@ -281,7 +281,7 @@ namespace ZegoCsharpWinformDemo.Examples
             // 
             this.label4.AutoSize = true;
             this.label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label4.Location = new System.Drawing.Point(164, 39);
+            this.label4.Location = new System.Drawing.Point(151, 39);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 4;

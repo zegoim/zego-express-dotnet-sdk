@@ -57,7 +57,7 @@ namespace ZegoCsharpWinformDemo.Examples
 
         public void InitConfig()
         {
-            user.userID = ZegoUtil.DeviceName();
+            user.userID = ZegoUtil.DeviceName() + new Random().Next(0, 99999); ;
             user.userName = user.userID;
             room_id_1 = "00291";
             room_id_2 = "00292";

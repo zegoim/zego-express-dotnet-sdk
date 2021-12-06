@@ -32,7 +32,7 @@ namespace ZegoCsharpWinformDemo.Examples
 
         public void InitConfig()
         {
-            user.userID = ZegoUtil.DeviceName();
+            user.userID = ZegoUtil.DeviceName() + new Random().Next(0, 99999); ;
             user.userName = user.userID;
             room_id = "0002";
             publish_stream_id = "0002";
@@ -193,6 +193,8 @@ namespace ZegoCsharpWinformDemo.Examples
         private void LoginRoom()
         {
             room_id = textBox_RoomID.Text;
+            user.userID = textBox_UserID.Text;
+            user.userName = user.userID;
 
             ZegoUtil.PrintLogToView(string.Format("LoginRoom, roomID:{0}, userID:{1}, userName:{2}", room_id, user.userID, user.userName));
             engine.LoginRoom(room_id, user);
