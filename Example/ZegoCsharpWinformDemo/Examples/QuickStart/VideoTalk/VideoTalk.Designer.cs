@@ -19,6 +19,7 @@ namespace ZegoCsharpWinformDemo.Examples
                 components.Dispose();
             }
             base.Dispose(disposing);
+            DestroyEngine();
         }
 
         #region 组件设计器生成的代码
