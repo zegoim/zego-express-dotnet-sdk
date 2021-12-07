@@ -198,8 +198,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(ProjectDir)..\lib\$(PlatformName)\ZegoExpressEngine.dll $(TargetDir)
-xcopy /Y $(ProjectDir)..\lib\ZegoExpressCsharp.dll $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y $(ProjectDir)..\lib\$(PlatformName)\ZegoExpressEngine.dll $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

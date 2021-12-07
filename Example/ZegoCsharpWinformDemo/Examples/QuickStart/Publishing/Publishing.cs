@@ -227,7 +227,6 @@ namespace ZegoCsharpWinformDemo.Examples
             canvas.view = pictureBox1.Handle;
             // set view mode before preview
             canvas.viewMode = (ZegoViewMode)comboBox_ViewMode.SelectedIndex;
-            engine.StartPreview(canvas);
 
             ZegoUtil.PrintLogToView(string.Format("StartPreview"));
             engine.StartPreview(canvas);

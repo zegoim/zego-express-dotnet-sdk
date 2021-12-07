@@ -28,7 +28,7 @@ namespace ZegoCsharpWinformDemo.Examples
         private SynchronizationContext context;
         private Common.ZegoEventHandlerWithLog event_handler_with_log = new Common.ZegoEventHandlerWithLog();
         private Common.ZegoEventHandler event_handler = new Common.ZegoEventHandler();
-        private ZegoMediaPlayer media_player;
+        private List<ZegoMediaPlayer> media_players = new List<ZegoMediaPlayer>();
         private ZegoCopyrightedMusic copyrighted_music;
         private List<string> request_apis = new List<string>();
         private Dictionary<string, string> request_apis_dics = new Dictionary<string, string>();
@@ -36,6 +36,8 @@ namespace ZegoCsharpWinformDemo.Examples
         private string select_resource_id;
         private ZegoCopyrightedMusicBillingMode billing_mode;
         private ZegoCopyrightedMusicRequestConfig request_config = new ZegoCopyrightedMusicRequestConfig();
+        private int current_player_index;
+        private const int max_player_count = 4;
 
         public CopyrightedMusic()
         {
@@ -57,11 +59,15 @@ namespace ZegoCsharpWinformDemo.Examples
             copyrighted_music = engine.CreateCopyrightedMusic();
 
             // Create Media player
-            media_player = engine.CreateMediaPlayer();
+            for(int i=0;i< max_player_count;i++)
+            {
+                var media_player = engine.CreateMediaPlayer();
+                media_players.Add(media_player);
 
-            media_player.onMediaPlayerPlayingProgress = OnMediaPlayerPlayingProgress;
-            media_player.EnableAux(checkBox_EnableAux.Checked);
-            media_player.EnableRepeat(checkBox_Repeat.Checked);
+                media_player.onMediaPlayerPlayingProgress = OnMediaPlayerPlayingProgress;
+                media_player.EnableAux(checkBox_EnableAux.Checked);
+                media_player.EnableRepeat(checkBox_Repeat.Checked);
+            }
 
             // Init copyrighted music
             InitCopyrightedMusic();
@@ -90,8 +96,9 @@ namespace ZegoCsharpWinformDemo.Examples
 
             trackBar_Volume.Scroll -= trackBar_Volume_Scroll;
             trackBar_Volume.Maximum = 100;
-            trackBar_Volume.Value = 100;
             trackBar_Volume.Scroll += trackBar_Volume_Scroll;
+
+            trackBar_PublishVolume.Maximum = 100;
 
             // Song ID list
             List<string> song_id_list = new List<string>() {
@@ -100,9 +107,9 @@ namespace ZegoCsharpWinformDemo.Examples
                 "300785364",
                 "287915293",
                 "125282604",
+                "345222868",
                 "68431743",
                 "245222868",
-                "345222868",
                 "36365"
             };
 
@@ -110,13 +117,17 @@ namespace ZegoCsharpWinformDemo.Examples
             List<string> resource_id_list = new List<string>() {
                 "z_65973657_1",
                 "z_101846593_1",
+                "z_101846593_2",
                 "z_300785364_1",
+                "z_300785364_2",
                 "z_287915293_1",
+                "z_287915293_2",
                 "z_125282604_1",
+                "z_125282604_2",
                 "z_345222868_1",
+                "z_345222868_2",
                 "z_125282604_1_hq",
                 "z_125282604_1_sq",
-                "z_125282604_2"
             };
 
             List<string> billing_mode_list = new List<string>()
@@ -132,6 +143,12 @@ namespace ZegoCsharpWinformDemo.Examples
             listBox_SoundIDList.DataSource = song_id_list;
             comboBox_BillingMode.DataSource = billing_mode_list;
             listBox_ResourceIDList.DataSource = resource_id_list;
+
+            numericUpDown_PlayerIndex.Maximum = max_player_count - 1;
+            current_player_index = 0;
+            numericUpDown_PlayerIndex.ValueChanged -= numericUpDown_PlayerIndex_ValueChanged;
+            numericUpDown_PlayerIndex.Value = current_player_index;
+            numericUpDown_PlayerIndex.ValueChanged += numericUpDown_PlayerIndex_ValueChanged;
         }
 
         public void OnRoomStateUpdate(string roomID, ZegoRoomState state, int errorCode, string extendedData)
@@ -213,7 +230,10 @@ namespace ZegoCsharpWinformDemo.Examples
 
         public void OnMediaPlayerPlayingProgress(ZegoMediaPlayer mediaPlayer, ulong millisecond)
         {
-            progressBar_MediaPlay.Value = (int)millisecond;
+            if(mediaPlayer.GetIndex() == max_player_count - 1 - current_player_index)
+            {
+                trackBar_MediaPlay.Value = (int)millisecond;
+            }
         }
 
         public void CreateEngine()
@@ -241,8 +261,12 @@ namespace ZegoCsharpWinformDemo.Examples
         {
             if (engine != null)
             {
-                engine.DestroyMediaPlayer(media_player);
-                media_player = null;
+                foreach(var media_player in media_players)
+                {
+                    engine.DestroyMediaPlayer(media_player);
+                }
+                media_players.Clear();
+
                 engine.DestroyCopyrightedMusic(copyrighted_music);
                 copyrighted_music = null;
                 engine = null;
@@ -343,6 +367,11 @@ namespace ZegoCsharpWinformDemo.Examples
                     }
                 }
             }
+
+            if(request_apis_dics.Count > 0)
+            {
+                listBox_RequestList.SelectedIndex = 0;
+            }
         }
 
         private void button_LoginRoom_Click(object sender, EventArgs e)
@@ -388,7 +417,7 @@ namespace ZegoCsharpWinformDemo.Examples
         {
             string req_command, req_param;
             req_command = listBox_RequestList.SelectedItem.ToString();
-            req_param = request_apis_dics[req_command];
+            req_param = textBox_UserJsonRequest.Text;//request_apis_dics[req_command];
 
             PrintLogToView(string.Format("SendExtendedRequest, req_command:{0}, req_param:{1}", req_command, req_param));
             copyrighted_music.SendExtendedRequest(req_command, req_param, (int errorCode, string commands, string result) => {
@@ -417,7 +446,7 @@ namespace ZegoCsharpWinformDemo.Examples
 
         private void button_GetKrcLyric_Click(object sender, EventArgs e)
         {
-            string token = textBox_MusicToken.Text;
+            string token = textBox_LyricToken.Text;
             PrintLogToView(string.Format("GetKrcLyricByToken, token:{0}", token));
             copyrighted_music.GetKrcLyricByToken(token, (int errorCode, string lyrics) => {
                 var level = GetLogLevel(errorCode);
@@ -447,49 +476,71 @@ namespace ZegoCsharpWinformDemo.Examples
         private void button_Play_Click(object sender, EventArgs e)
         {
             PrintLogToView(string.Format("loadCopyrightedMusicResourceWithPosition, resourceID:{0}", select_resource_id));
-            media_player.loadCopyrightedMusicResourceWithPosition(select_resource_id, 0, (int errorCode) =>
+            var media_player = media_players.ElementAt(current_player_index);
+            media_player.LoadCopyrightedMusicResourceWithPosition(select_resource_id, 0, (int errorCode) =>
             {
                 PrintLogToView(string.Format("OnLoadResourceCallback, errorCode:{0}", errorCode));
 
-                progressBar_MediaPlay.Maximum = (int)media_player.GetTotalDuration();
+                trackBar_MediaPlay.Maximum = (int)media_player.GetTotalDuration();
 
-                media_player.Start();
+                // Get current play volume
+                int play_volume = media_player.GetPlayVolume();
+                trackBar_Volume.Value = play_volume;
+
+                // Get current publish volume
+                int publish_volume = media_player.GetPublishVolume();
+                trackBar_PublishVolume.Value = publish_volume;
+
+                // Get audio trace count
+                uint audio_trace_count = media_player.GetAudioTrackCount();
+                numericUpDown_AudioTrackIndex.Maximum = audio_trace_count;
+
+                if(errorCode == 0)
+                {
+                    media_player.Start();
+                }
             });
         }
 
         private void button_Pause_Click(object sender, EventArgs e)
         {
             PrintLogToView(string.Format("Pause"));
+            var media_player = media_players.ElementAt(current_player_index);
             media_player.Pause();
         }
 
         private void button_Resume_Click(object sender, EventArgs e)
         {
             PrintLogToView(string.Format("Resume"));
+            var media_player = media_players.ElementAt(current_player_index);
             media_player.Resume();
         }
 
         private void button_Stop_Click(object sender, EventArgs e)
         {
             PrintLogToView(string.Format("Stop"));
+            var media_player = media_players.ElementAt(current_player_index);
             media_player.Stop();
         }
 
         private void trackBar_Volume_Scroll(object sender, EventArgs e)
         {
             PrintLogToView(string.Format("SetPlayVolume:{0}", trackBar_Volume.Value));
+            var media_player = media_players.ElementAt(current_player_index);
             media_player.SetPlayVolume(trackBar_Volume.Value);
         }
 
         private void checkBox_EnableAux_CheckedChanged(object sender, EventArgs e)
         {
             PrintLogToView(string.Format("EnableAux:{0}", checkBox_EnableAux.Checked));
+            var media_player = media_players.ElementAt(current_player_index);
             media_player.EnableAux(checkBox_EnableAux.Checked);
         }
 
         private void checkBox_Repeat_CheckedChanged(object sender, EventArgs e)
         {
             PrintLogToView(string.Format("EnableRepeat:{0}", checkBox_Repeat.Checked));
+            var media_player = media_players.ElementAt(current_player_index);
             media_player.EnableRepeat(checkBox_Repeat.Checked);
         }
 
@@ -500,7 +551,14 @@ namespace ZegoCsharpWinformDemo.Examples
             {
                 return;
             }
-            PrintLogToView(string.Format("Select json request:{0}", request_apis.ElementAt(select_index)));
+
+            string req_command, req_param;
+            req_command = listBox_RequestList.SelectedItem.ToString();
+            req_param = request_apis_dics[req_command];
+
+            var request_json = request_apis.ElementAt(select_index);
+            textBox_UserJsonRequest.Text = req_param;
+            PrintLogToView(string.Format("Select json request:{0}", request_json));
         }
 
         private void listBox_SoundIDList_SelectedIndexChanged(object sender, EventArgs e)
@@ -524,6 +582,58 @@ namespace ZegoCsharpWinformDemo.Examples
             select_resource_id = listBox_ResourceIDList.SelectedItem.ToString();
 
             PrintLogToView(string.Format("Set resource id:{0}", select_resource_id));
+        }
+
+        private void numericUpDown_PlayerIndex_ValueChanged(object sender, EventArgs e)
+        {
+            current_player_index = ((int)numericUpDown_PlayerIndex.Value);
+
+            PrintLogToView(string.Format("Set player index to:{0}", current_player_index));
+        }
+
+        private void numericUpDown_AudioTrackIndex_ValueChanged(object sender, EventArgs e)
+        {
+            var track_index = ((uint)numericUpDown_AudioTrackIndex.Value);
+            PrintLogToView(string.Format("SetAudioTrackIndex:{0}", track_index));
+            media_players.ElementAt(current_player_index).SetAudioTrackIndex(track_index);
+        }
+
+        private void trackBar_MediaPlay_Scroll(object sender, EventArgs e)
+        {
+            var seek_position = trackBar_MediaPlay.Value;
+            PrintLogToView(string.Format("SeekTo:{0}", seek_position));
+            var media_player = media_players.ElementAt(current_player_index);
+            media_player.SeekTo(((ulong)seek_position), null);
+        }
+
+        private void button_GetSongByToken_Click(object sender, EventArgs e)
+        {
+            string token = textBox_ShareToken.Text;
+            PrintLogToView(string.Format("GetMusicByToken, token:{0}", token));
+            copyrighted_music.GetMusicByToken(token, (int errorCode, string resource) => {
+                var level = GetLogLevel(errorCode);
+                PrintLogToView(string.Format("OnCopyrightedMusicGetMusicByToken, errorCode:{0}, resource:{1}", errorCode, resource), level);
+            });
+        }
+
+        private void textBox_CustomResourceID_TextChanged(object sender, EventArgs e)
+        {
+            if(textBox_CustomResourceID.TextLength > 0)
+            {
+                var resource_id = textBox_CustomResourceID.Text;
+                PrintLogToView(string.Format("Use custom resource id:{0}", resource_id), LogLevel.LOG_WARN);
+                select_resource_id = resource_id;
+            }
+        }
+
+        private void textBox_CustomSongID_TextChanged(object sender, EventArgs e)
+        {
+            if(textBox_CustomSongID.TextLength > 0)
+            {
+                var resource_id = textBox_CustomSongID.Text;
+                PrintLogToView(string.Format("Use custom song id:{0}", resource_id), LogLevel.LOG_WARN);
+                select_song_id = textBox_CustomSongID.Text;
+            }
         }
     }
 }

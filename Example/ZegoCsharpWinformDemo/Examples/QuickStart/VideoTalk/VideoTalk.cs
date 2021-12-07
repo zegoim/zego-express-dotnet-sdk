@@ -250,7 +250,6 @@ namespace ZegoCsharpWinformDemo.Examples
         {
             ZegoCanvas canvas = new ZegoCanvas();
             canvas.view = pictureBox_Local.Handle;
-            engine.StartPreview(canvas);
 
             ZegoUtil.PrintLogToView(string.Format("StartPreview"));
             engine.StartPreview(canvas);

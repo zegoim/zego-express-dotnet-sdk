@@ -15,7 +15,7 @@ namespace ZEGO
             ZegoExpressEngineImpl.LoadResource(this, path);
         }
 
-        public override void loadCopyrightedMusicResourceWithPosition(string resourceID, ulong startPosition, OnLoadResourceCallback callback)
+        public override void LoadCopyrightedMusicResourceWithPosition(string resourceID, ulong startPosition, OnLoadResourceCallback callback)
         {
             this.onLoadResourceCallback = callback;
             zego_media_player_instance_index curIndex = ZegoExpressEngineImpl.GetIndexFromZegoMediaPlayer(this);
@@ -117,6 +117,16 @@ namespace ZEGO
         public override int GetPublishVolume()
         {
             return ZegoExpressEngineImpl.GetMediaPlayerPublishVolume(this);
+        }
+
+        public override uint GetAudioTrackCount()
+        {
+            return ZegoExpressEngineImpl.GetAudioTrackCount(this);
+        }
+
+        public override void SetAudioTrackIndex(uint index)
+        {
+            ZegoExpressEngineImpl.SetAudioTrackIndex(this, index);
         }
     }
 }

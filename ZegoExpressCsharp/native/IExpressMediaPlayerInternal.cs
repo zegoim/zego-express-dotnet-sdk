@@ -275,5 +275,12 @@ namespace ZEGO
 
         [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_load_copyrighted_music_resource_with_position", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern int zego_express_media_player_load_copyrighted_music_resource_with_position([In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string resource_id, long start_position, zego_media_player_instance_index instance_index);
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_audio_track_count", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern uint zego_express_media_player_get_audio_track_count(zego_media_player_instance_index instance_index);
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_set_audio_track_index", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_media_player_set_audio_track_index(uint index, zego_media_player_instance_index instance_index);
+
     }
 }

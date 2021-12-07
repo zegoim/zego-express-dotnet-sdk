@@ -269,5 +269,24 @@ namespace ZEGO
 
             }), null);
         }
+
+        public static void zego_on_copyrighted_music_get_music_by_token(int seq, int error_code, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string resource, IntPtr user_context)
+        {
+            if (onCopyrightedMusicGetMusicByTokenDics == null) return;
+
+            //string log = string.Format("onCopyrightedMusicDownload, seq:{0}  error_code:{1} ", seq, error_code);
+            //ZegoPrivateLog(error_code, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
+            var callback = GetCallbackFromSeq(onCopyrightedMusicGetMusicByTokenDics, seq);
+            if (callback == null)
+            {
+                return;
+            }
+
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+                callback?.Invoke(error_code, resource);
+                onCopyrightedMusicGetMusicByTokenDics?.TryRemove(seq, out _);
+            }), null);
+        }
     }
 }

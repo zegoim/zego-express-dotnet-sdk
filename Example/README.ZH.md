@@ -6,9 +6,9 @@ ZegoExpressCSharp SDK 示例，运行于 Windows 系统。
 
 请确保开发环境满足以下技术要求：
 
-* Windows系统：Windows7、Windows8、Windows10
-* 已安装 Visual Studio 2015 及以上版本，已安装 C# 语言支持框架，已安装 .NET FrameWork 4.5 或以上版本
-* 麦克风、摄像头等支持音视频功能的外部设备
+* Windows系统：Windows7、Windows8、Windows10。
+* 已安装 Visual Studio 2015 及以上版本，已安装 C# 语言支持框架，已安装 .NET FrameWork 4.5 或以上版本。
+* 麦克风、摄像头等支持音视频功能的外部设备。
 
 ## 目录结构说明
 
@@ -46,7 +46,7 @@ ZegoExpressCSharp SDK 示例，运行于 Windows 系统。
 
 > **若如上所示的 SDK 存放目录中已经有了对应的 SDK 文件，则请跳过此步**。
 
-* 下载 [ZegoExpressVideo-Win](https://storage.zego.im/express/video/windows-csharp/zego-express-video-windows-csharp.zip)，解压后放到当前目录下
+* 下载 [ZegoExpressVideo-Win](https://storage.zego.im/express/video/windows-csharp/zego-express-video-windows-csharp.zip)，解压后放到当前目录下。
 
 ## 运行
 
@@ -68,7 +68,7 @@ public static string appSign()
 
 ### 打开工程
 
-示例自带了 Winform 工程文件，支持在 Win 上使用 Visual Studio 打开。
+示例自带了 Winform 工程文件，支持在 Windows 上使用 Visual Studio 打开。
 
 #### 使用 Visual Studio 打开项目
 

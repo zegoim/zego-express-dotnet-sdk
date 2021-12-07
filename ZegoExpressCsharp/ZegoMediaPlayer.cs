@@ -75,6 +75,10 @@ namespace ZEGO
         public abstract int GetPlayVolume();
         public abstract int GetPublishVolume();
 
-        public abstract void loadCopyrightedMusicResourceWithPosition(string resourceID, ulong startPosition, OnLoadResourceCallback callback);
+        public abstract void LoadCopyrightedMusicResourceWithPosition(string resourceID, ulong startPosition, OnLoadResourceCallback callback);
+
+        public abstract uint GetAudioTrackCount();
+
+        public abstract void SetAudioTrackIndex(uint index);
     }
 }

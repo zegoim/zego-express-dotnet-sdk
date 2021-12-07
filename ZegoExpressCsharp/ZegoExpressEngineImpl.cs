@@ -113,6 +113,7 @@ namespace ZEGO
         private static zego_on_copyrighted_music_get_krc_lyric_by_token zegoOnCopyrightedMusicGetKrcLyricByToken;
         private static zego_on_copyrighted_music_download zegoOnCopyrightedMusicDownoad;
         private static zego_on_copyrighted_music_download_progress_update zegoOnCopyrightedMusicDownloadProgressUpdate;
+        private static zego_on_copyrighted_music_get_music_by_token zegoOnCopyrightedMusicGetMusicByToken;
 
         private ArrayList arrayList;
         public static new void SetEngineConfig(ZegoEngineConfig config)
@@ -289,6 +290,7 @@ namespace ZEGO
             zegoOnCopyrightedMusicGetKrcLyricByToken = new zego_on_copyrighted_music_get_krc_lyric_by_token(zego_on_copyrighted_music_get_krc_lyric_by_token);
             zegoOnCopyrightedMusicDownoad = new zego_on_copyrighted_music_download(zego_on_copyrighted_music_download);
             zegoOnCopyrightedMusicDownloadProgressUpdate = new zego_on_copyrighted_music_download_progress_update(zego_on_copyrighted_music_download_progress_update);
+            zegoOnCopyrightedMusicGetMusicByToken = new zego_on_copyrighted_music_get_music_by_token(zego_on_copyrighted_music_get_music_by_token);
 
             IExpressEngineInternal.zego_register_engine_uninit_callback(zegoOnEngineUninit, IntPtr.Zero);
             IExpressRoomInternal.zego_register_room_state_update_callback(zegoOnRoomStateUpdate, IntPtr.Zero);
@@ -362,6 +364,7 @@ namespace ZEGO
             zego_register_copyrighted_music_get_krc_lyric_by_token_callback(zegoOnCopyrightedMusicGetKrcLyricByToken, IntPtr.Zero);
             zego_register_copyrighted_music_download_callback(zegoOnCopyrightedMusicDownoad, IntPtr.Zero);
             zego_register_copyrighted_music_download_progress_update_callback(zegoOnCopyrightedMusicDownloadProgressUpdate, IntPtr.Zero);
+            zego_register_copyrighted_music_get_music_by_token_callback(zegoOnCopyrightedMusicGetMusicByToken, IntPtr.Zero);
         }
         
         private static void DefaultOpenCustomRender()//结构体是栈区分配，值类型，传递的时候是值拷贝，通过ref引用传递值类型解决
@@ -1641,6 +1644,29 @@ namespace ZEGO
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
             return result;
+        }
+
+        public static uint GetAudioTrackCount(ZegoMediaPlayer zegoMediaPlayer)
+        {
+            uint audio_track_count = 0;
+            if(enginePtr != null)
+            {
+                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                audio_track_count = IExpressMediaPlayerInternal.zego_express_media_player_get_audio_track_count(index);
+            }
+
+            return audio_track_count;
+        }
+
+        public static void SetAudioTrackIndex(ZegoMediaPlayer zegoMediaPlayer, uint index)
+        {
+            if (enginePtr != null)
+            {
+                zego_media_player_instance_index player_index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                int result = IExpressMediaPlayerInternal.zego_express_media_player_set_audio_track_index(index, player_index);
+                string log = string.Format("MediaPlayer SetAudioTrackIndex, index:{0}, track index:{1}, result:{2}", player_index, index, result);
+                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
+            }
         }
 
         public override bool IsMicrophoneMuted()
