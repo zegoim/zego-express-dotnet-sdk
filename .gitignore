@@ -3,3 +3,7 @@ ZegoExpressCsharp/bin
 ZegoExpressCsharp/obj
 # User-specific files
 *.suo
+Example/ZegoCsharpWinformDemo/bin
+Example/ZegoCsharpWinformDemo/obj
+*.bak
+*.user
