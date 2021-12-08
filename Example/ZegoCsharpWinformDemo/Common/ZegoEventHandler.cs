@@ -32,7 +32,8 @@ namespace ZegoCsharpWinformDemo.Common
             engine.onPlayerStateUpdate = OnPlayerStateUpdate;
             engine.onRoomStreamUpdate = OnRoomStreamUpdate;
             engine.onCopyrightedMusicDownloadProgressUpdate = OnCopyrightedMusicDownloadProgressUpdate;
-        }
+            engine.onPublisherRelayCDNStateUpdate = OnPublisherRelayCDNStateUpdate;
+    }
 
         public void OnDebugError(int errorCode, string funcName, string info)
         {
@@ -72,6 +73,15 @@ namespace ZegoCsharpWinformDemo.Common
         {
             event_handler.OnCopyrightedMusicDownloadProgressUpdate(copyrightedMusic, resourceID, progressRate);
         }
+
+        public void OnPublisherRelayCDNStateUpdate(string streamID, List<ZegoStreamRelayCDNInfo> infoList)
+        {
+            infoList.ForEach((cdn_info) =>
+            {
+                ZegoUtil.PrintLogToView(string.Format("OnPublisherRelayCDNStateUpdate, streamID:{0}, url:{1}, state:{2}, updateReason:{3}, stateTime{4}", streamID, cdn_info.url, cdn_info.state, cdn_info.updateReason, cdn_info.stateTime));
+            });
+            event_handler.OnPublisherRelayCDNStateUpdate(streamID, infoList);
+        }
     }
 
     class ZegoEventHandler
@@ -82,6 +92,7 @@ namespace ZegoCsharpWinformDemo.Common
         public IZegoEventHandler.OnPlayerStateUpdate onPlayerStateUpdate;
         public IZegoEventHandler.OnRoomStreamUpdate onRoomStreamUpdate;
         public IZegoEventHandler.OnCopyrightedMusicDownloadProgressUpdate onCopyrightedMusicDownloadProgressUpdate;
+        public IZegoEventHandler.OnPublisherRelayCDNStateUpdate onPublisherRelayCDNStateUpdate;
 
         public ZegoEventHandler()
         {
@@ -122,6 +133,14 @@ namespace ZegoCsharpWinformDemo.Common
             if(onCopyrightedMusicDownloadProgressUpdate != null)
             {
                 onCopyrightedMusicDownloadProgressUpdate(copyrightedMusic, resourceID, progressRate);
+            }
+        }
+
+        public void OnPublisherRelayCDNStateUpdate(string streamID, List<ZegoStreamRelayCDNInfo> infoList)
+        {
+            if(onPublisherRelayCDNStateUpdate != null)
+            {
+                onPublisherRelayCDNStateUpdate(streamID, infoList);
             }
         }
 

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.IO;
 using System.Threading;
@@ -20,9 +17,6 @@ namespace ZegoCsharpWinformDemo.Examples
         private ZegoUser user = new ZegoUser();
         private string room_id = "";
         private string publish_stream_id = "";
-        private string play_stream_id = "";
-        private bool is_login_room = false;
-        private bool is_publish = false;
         private ZegoRoomState room_state = ZegoRoomState.Disconnected;
         private ZegoPublisherState publisher_state = ZegoPublisherState.NoPublish;
         private SynchronizationContext context;
@@ -241,8 +235,8 @@ namespace ZegoCsharpWinformDemo.Examples
             if (engine == null)
             {
                 ZegoEngineProfile engine_profile = new ZegoEngineProfile();
-                engine_profile.appID = 2587762184;// KeyCenter.appID();
-                engine_profile.appSign = "63b9f6fc59e483864878bca4e3bc84c531eacf39e5f4ea1858180ee6934adf86";// KeyCenter.appSign();
+                engine_profile.appID = KeyCenter.appID();
+                engine_profile.appSign = KeyCenter.appSign();
                 engine_profile.scenario = ZegoScenario.General;
 
                 ZegoUtil.PrintLogToView(string.Format("CreateEngine, appID:{0}, appSign:{1}, scenario:{2}", engine_profile.appID, engine_profile.appSign, engine_profile.scenario));
