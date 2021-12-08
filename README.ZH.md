@@ -1,6 +1,6 @@
-# ZegoExpressCSharp Topics
+# ZegoExpressCSharp SDK Topics
 
-ZegoExpressCSharp SDK 示例，运行于 Windows 系统。
+ZegoExpressCSharp SDK，运行于 Windows 系统。
 
 ## 准备环境
 
@@ -12,41 +12,48 @@ ZegoExpressCSharp SDK 示例，运行于 Windows 系统。
 
 ## 目录结构说明
 
-> 如下所示是 **ZegoCsharpWinformDemo** 目录的 文件结构，本文后面所涉及到的文件路径均相对于此目录：
+> 如下所示是 **ZegoExpressCsharp** 目录的 文件结构，本文后面所涉及到的文件路径均相对于此目录：
 
 ```bash
-📦ZegoCsharpWinformDemo
- ┣ 📂lib    -------------------------- 包含 C# 版本的库文件以及依赖的库文件
- ┃ ┣ 📂x64
- ┃ ┃ ┣ 📜ZegoExpressEngine.dll    ---- 依赖的 C++ 版本的 64 位 .dll 库文件
- ┃ ┣ 📂x86
- ┃ ┃ ┣ 📜ZegoExpressEngine.dll    ---- 依赖的 C++ 版本的 32 位 .dll 库文件
- ┃ ┗ 📜ZegoExpressCsharp.dll    ------ C# 版本目标平台为 Any CPU 的 .dll 库文件
- ┣ 📂packages
- ┃ ┗ 📂Newtonsoft.Json.13.0.1    ----- 依赖的 Nuget 包
- ┣ 📂ZegoCsharpWinformDemo    -------- 项目文件夹
- ┃ ┣ 📂bin
- ┃ ┣ 📂Common
- ┃ ┣ 📂Examples
- ┃ ┣ 📂HomePage
- ┃ ┣ 📂obj
- ┃ ┣ 📂Properties
- ┃ ┣ 📂Utils
- ┃ ┣ 📜app.config
- ┃ ┣ 📜KeyCenter.cs    ------------------------ appid 配置文件
- ┃ ┣ 📜packages.config
- ┃ ┣ 📜Program.cs
- ┃ ┣ 📜ZegoCsharpWinformDemo.csproj    -------- 项目文件
+📦ZegoExpressCsharp
+ ┣ 📂Example
+ ┃ ┣ 📂packages    --------------------- 依赖的 Nuget 包
+ ┃ ┃ ┗ 📂Newtonsoft.Json.13.0.1
+ ┃ ┣ 📂ZegoCsharpWinformDemo    -------- 项目文件夹
+ ┃ ┃ ┣ 📂bin
+ ┃ ┃ ┣ 📂Common
+ ┃ ┃ ┣ 📂Examples
+ ┃ ┃ ┣ 📂HomePage
+ ┃ ┃ ┣ 📂obj
+ ┃ ┃ ┣ 📂Properties
+ ┃ ┃ ┣ 📂Utils
+ ┃ ┃ ┣ 📜app.config
+ ┃ ┃ ┣ 📜KeyCenter.cs    ------------------------ appid 配置文件
+ ┃ ┃ ┣ 📜packages.config
+ ┃ ┃ ┣ 📜Program.cs
+ ┃ ┃ ┣ 📜ZegoCsharpWinformDemo.csproj    -------- 项目文件
+ ┃ ┣ 📜README.md
+ ┃ ┣ 📜README.ZH.md
+ ┣ 📂libs    ------------------------------------ 依赖的 SDK C++ 版本的 .dll 库文件
+ ┃ ┗ 📂ZegoExpress
+ ┃ ┃ ┗ 📂win
+ ┃ ┃ ┃ ┣ 📂x64
+ ┃ ┃ ┃ ┃ ┣ 📜ZegoExpressEngine.dll
+ ┃ ┃ ┃ ┗ 📂x86
+ ┃ ┃ ┃ ┃ ┣ 📜ZegoExpressEngine.dll
+ ┣ 📂ZegoExpressCsharp
+ ┣ 📜.git
+ ┣ 📜.gitignore
+ ┣ 📜LICENSE
  ┣ 📜README.md
- ┣ 📜README.ZH.md
- ┗ 📜ZegoCsharpWinformDemo.sln    ------------- 解决方案文件
+ ┗ 📜ZegoExpressCsharp.sln    ------------------- 解决方案文件
 ```
 
 ## 下载SDK
 
 > **若如上所示的 SDK 存放目录中已经有了对应的 SDK 文件，则请跳过此步**。
 
-* 下载 [ZegoExpressVideo-Win](https://storage.zego.im/express/video/windows-csharp/zego-express-video-windows-csharp.zip)，解压后放到当前目录下。
+* 下载 [ZegoExpressVideo-Win](https://storage.zego.im/express/video/windows/zego-express-video-windows.zip)，并解压到 “/libs/ZegoExpress/win” 目录。
 
 ## 运行
 
@@ -68,11 +75,11 @@ public static string appSign()
 
 ### 打开工程
 
-示例自带了 Winform 工程文件，支持在 Windows 上使用 Visual Studio 打开。
+示例源码中自带了 SDK C# 版本源码及解决方案文件，开发者可以在 Windows 系统中，使用 Visual Studio 打开示例源码同目录下的 “ZegoExpressCsharp.sln” 解决方案文件。
 
 #### 使用 Visual Studio 打开项目
 
-点击 "菜单栏-->文件-->打开-->项目/解决方案"，打开 `/ZegoCsharpWinformDemo.sln` 工程文件
+点击 "菜单栏-->文件-->打开-->项目/解决方案"，打开 `/ZegoExpressCsharp.sln` 解决方案文件。
 
 ### 启动调试
 
