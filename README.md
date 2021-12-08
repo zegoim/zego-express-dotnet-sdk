@@ -57,7 +57,7 @@ Please ensure that the development environment meets the following technical req
 
 ## Run
 
-### 填写 AppID 和 AppSign
+### Input AppID and AppSign
 
 The AppID and AppSign required by SDK initialization are missing default, please refer to [ZEGO Admin Console User Manual \| _blank](https://doc-en.zego.im/en/1271.html) to obtain AppID and AppSign, and then fill the `/ZegoExpressExample/KeyCenter.cpp` file.
 
