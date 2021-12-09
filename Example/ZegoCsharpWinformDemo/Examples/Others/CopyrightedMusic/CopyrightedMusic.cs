@@ -634,7 +634,7 @@ namespace ZegoCsharpWinformDemo.Examples
         {
             PrintLogToView(string.Format("SetPublishVolume:{0}", trackBar_PublishVolume.Value));
             var media_player = media_players.ElementAt(current_player_index);
-            media_player.SetPublishVolume(trackBar_Volume.Value);
+            media_player.SetPublishVolume(trackBar_PublishVolume.Value);
         }
 
         private void button_GetCacheSize_Click(object sender, EventArgs e)

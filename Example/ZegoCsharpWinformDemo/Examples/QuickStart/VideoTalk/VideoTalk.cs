@@ -183,6 +183,26 @@ namespace ZegoCsharpWinformDemo.Examples
                     label_RemoteUserID.Text = play_stream_user_id;
                 }
             }
+            else if(state == ZegoPlayerState.PlayRequesting)
+            {
+
+            }
+            else if(state == ZegoPlayerState.NoPlay)
+            {
+
+            }
+        }
+
+        public void OnRoomUserUpdate(string roomID, ZegoUpdateType updateType, List<ZegoUser> userList, uint userCount)
+        {
+            if(updateType == ZegoUpdateType.Add)
+            {
+
+            }
+            else if(updateType == ZegoUpdateType.Delete)
+            {
+
+            }
         }
 
         public void CreateEngine()
@@ -203,6 +223,7 @@ namespace ZegoCsharpWinformDemo.Examples
                 event_handler.onPublisherStateUpdate = OnPublisherStateUpdate;
                 event_handler.onRoomStreamUpdate = OnRoomStreamUpdate;
                 event_handler.onPlayerStateUpdate = OnPlayerStateUpdate;
+                event_handler.onRoomUserUpdate = OnRoomUserUpdate;
             }
         }
 
@@ -220,9 +241,11 @@ namespace ZegoCsharpWinformDemo.Examples
             room_id = textBox_RoomID.Text;
             user.userID = textBox_UserID.Text;
             user.userName = user.userID;
+            ZegoRoomConfig config = new ZegoRoomConfig();
+            config.isUserStatusNotify = true;
 
             ZegoUtil.PrintLogToView(string.Format("LoginRoom, roomID:{0}, userID:{1}, userName:{2}", room_id, user.userID, user.userName));
-            engine.LoginRoom(room_id, user);
+            engine.LoginRoom(room_id, user, config);
         }
 
         private void LogoutRoom()

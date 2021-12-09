@@ -7,6 +7,77 @@ using ZEGO;
 
 namespace ZegoCsharpWinformDemo.Common
 {
+    class ZegoEventHandler
+    {
+        public IZegoEventHandler.OnDebugError onDebugError;
+        public IZegoEventHandler.OnRoomStateUpdate onRoomStateUpdate;
+        public IZegoEventHandler.OnPublisherStateUpdate onPublisherStateUpdate;
+        public IZegoEventHandler.OnPlayerStateUpdate onPlayerStateUpdate;
+        public IZegoEventHandler.OnRoomStreamUpdate onRoomStreamUpdate;
+        public IZegoEventHandler.OnCopyrightedMusicDownloadProgressUpdate onCopyrightedMusicDownloadProgressUpdate;
+        public IZegoEventHandler.OnPublisherRelayCDNStateUpdate onPublisherRelayCDNStateUpdate;
+        public IZegoEventHandler.OnRoomUserUpdate onRoomUserUpdate;
+
+        public ZegoEventHandler()
+        {
+
+        }
+
+        public void OnDebugError(int errorCode, string funcName, string info)
+        {
+            if (onDebugError != null)
+                onDebugError(errorCode, funcName, info);
+        }
+
+        public void OnRoomStateUpdate(string roomID, ZegoRoomState state, int errorCode, string extendedData)
+        {
+            if (onRoomStateUpdate != null)
+                onRoomStateUpdate(roomID, state, errorCode, extendedData);
+        }
+
+        public void OnPublisherStateUpdate(string streamID, ZegoPublisherState state, int errorCode, string extendedData)
+        {
+            if (onPublisherStateUpdate != null)
+                onPublisherStateUpdate(streamID, state, errorCode, extendedData);
+        }
+        public void OnPlayerStateUpdate(string streamID, ZegoPlayerState state, int errorCode, string extendedData)
+        {
+            if (onPlayerStateUpdate != null)
+                onPlayerStateUpdate(streamID, state, errorCode, extendedData);
+        }
+
+        public void OnRoomStreamUpdate(string roomID, ZegoUpdateType updateType, List<ZegoStream> streamList, string extendedData)
+        {
+            if (onRoomStreamUpdate != null)
+                onRoomStreamUpdate(roomID, updateType, streamList, extendedData);
+        }
+
+        public void OnCopyrightedMusicDownloadProgressUpdate(ZegoCopyrightedMusic copyrightedMusic, string resourceID, float progressRate)
+        {
+            if (onCopyrightedMusicDownloadProgressUpdate != null)
+            {
+                onCopyrightedMusicDownloadProgressUpdate(copyrightedMusic, resourceID, progressRate);
+            }
+        }
+
+        public void OnPublisherRelayCDNStateUpdate(string streamID, List<ZegoStreamRelayCDNInfo> infoList)
+        {
+            if (onPublisherRelayCDNStateUpdate != null)
+            {
+                onPublisherRelayCDNStateUpdate(streamID, infoList);
+            }
+        }
+
+        public void OnRoomUserUpdate(string roomID, ZegoUpdateType updateType, List<ZegoUser> userList, uint userCount)
+        {
+            if (onRoomUserUpdate != null)
+            {
+                onRoomUserUpdate(roomID, updateType, userList, userCount);
+            }
+        }
+
+    }
+
     class ZegoEventHandlerWithLog
     {
         private ZegoExpressEngine engine;
@@ -33,6 +104,7 @@ namespace ZegoCsharpWinformDemo.Common
             engine.onRoomStreamUpdate = OnRoomStreamUpdate;
             engine.onCopyrightedMusicDownloadProgressUpdate = OnCopyrightedMusicDownloadProgressUpdate;
             engine.onPublisherRelayCDNStateUpdate = OnPublisherRelayCDNStateUpdate;
+            engine.onRoomUserUpdate = OnRoomUserUpdate;
     }
 
         public void OnDebugError(int errorCode, string funcName, string info)
@@ -82,67 +154,15 @@ namespace ZegoCsharpWinformDemo.Common
             });
             event_handler.OnPublisherRelayCDNStateUpdate(streamID, infoList);
         }
+
+        public void OnRoomUserUpdate(string roomID, ZegoUpdateType updateType, List<ZegoUser> userList, uint userCount)
+        {
+            userList.ForEach((user) =>
+            {
+                ZegoUtil.PrintLogToView(string.Format("OnRoomUserUpdate, roomID:{0}, updateType:{1}, userID:{2}", roomID, updateType, user.userID));
+            });
+            event_handler.onRoomUserUpdate(roomID, updateType, userList, userCount);
+        }
     }
 
-    class ZegoEventHandler
-    {
-        public IZegoEventHandler.OnDebugError onDebugError;
-        public IZegoEventHandler.OnRoomStateUpdate onRoomStateUpdate;
-        public IZegoEventHandler.OnPublisherStateUpdate onPublisherStateUpdate;
-        public IZegoEventHandler.OnPlayerStateUpdate onPlayerStateUpdate;
-        public IZegoEventHandler.OnRoomStreamUpdate onRoomStreamUpdate;
-        public IZegoEventHandler.OnCopyrightedMusicDownloadProgressUpdate onCopyrightedMusicDownloadProgressUpdate;
-        public IZegoEventHandler.OnPublisherRelayCDNStateUpdate onPublisherRelayCDNStateUpdate;
-
-        public ZegoEventHandler()
-        {
-
-        }
-
-        public void OnDebugError(int errorCode, string funcName, string info)
-        {
-            if (onDebugError != null)
-                onDebugError(errorCode, funcName, info);
-        }
-
-        public void OnRoomStateUpdate(string roomID, ZegoRoomState state, int errorCode, string extendedData)
-        {
-            if (onRoomStateUpdate != null)
-                onRoomStateUpdate(roomID, state, errorCode, extendedData);
-        }
-
-        public void OnPublisherStateUpdate(string streamID, ZegoPublisherState state, int errorCode, string extendedData)
-        {
-            if (onPublisherStateUpdate != null)
-                onPublisherStateUpdate(streamID, state, errorCode, extendedData);
-        }
-        public void OnPlayerStateUpdate(string streamID, ZegoPlayerState state, int errorCode, string extendedData)
-        {
-            if (onPlayerStateUpdate != null)
-                onPlayerStateUpdate(streamID, state, errorCode, extendedData);
-        }
-
-        public void OnRoomStreamUpdate(string roomID, ZegoUpdateType updateType, List<ZegoStream> streamList, string extendedData)
-        {
-            if (onRoomStreamUpdate != null)
-                onRoomStreamUpdate(roomID, updateType, streamList, extendedData);
-        }
-
-        public void OnCopyrightedMusicDownloadProgressUpdate(ZegoCopyrightedMusic copyrightedMusic, string resourceID, float progressRate)
-        {
-            if(onCopyrightedMusicDownloadProgressUpdate != null)
-            {
-                onCopyrightedMusicDownloadProgressUpdate(copyrightedMusic, resourceID, progressRate);
-            }
-        }
-
-        public void OnPublisherRelayCDNStateUpdate(string streamID, List<ZegoStreamRelayCDNInfo> infoList)
-        {
-            if(onPublisherRelayCDNStateUpdate != null)
-            {
-                onPublisherRelayCDNStateUpdate(streamID, infoList);
-            }
-        }
-
-    }
 }
