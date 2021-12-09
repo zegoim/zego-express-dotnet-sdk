@@ -58,6 +58,10 @@ namespace ZegoCsharpWinformDemo.Examples
             this.button_Pause = new System.Windows.Forms.Button();
             this.button_Play = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBox_CustomSongID = new System.Windows.Forms.TextBox();
+            this.textBox_CustomResourceID = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBox_BillingMode = new System.Windows.Forms.ComboBox();
             this.textBox_ShareToken = new System.Windows.Forms.TextBox();
@@ -71,6 +75,7 @@ namespace ZegoCsharpWinformDemo.Examples
             this.textBox_CacheSize = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.progressBar_Download = new System.Windows.Forms.ProgressBar();
+            this.button_GetCacheSize = new System.Windows.Forms.Button();
             this.button_ClearCache = new System.Windows.Forms.Button();
             this.listBox_ResourceIDList = new System.Windows.Forms.ListBox();
             this.listBox_SoundIDList = new System.Windows.Forms.ListBox();
@@ -89,11 +94,6 @@ namespace ZegoCsharpWinformDemo.Examples
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel7 = new System.Windows.Forms.Panel();
             this.textBox_UserJsonRequest = new System.Windows.Forms.TextBox();
-            this.button_GetCacheSize = new System.Windows.Forms.Button();
-            this.textBox_CustomResourceID = new System.Windows.Forms.TextBox();
-            this.textBox_CustomSongID = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel4.SuspendLayout();
@@ -330,7 +330,7 @@ namespace ZegoCsharpWinformDemo.Examples
             this.trackBar_PublishVolume.TabIndex = 7;
             this.trackBar_PublishVolume.TickStyle = System.Windows.Forms.TickStyle.None;
             this.toolTip1.SetToolTip(this.trackBar_PublishVolume, "SetPubishVolume");
-            this.trackBar_PublishVolume.Scroll += new System.EventHandler(this.trackBar_Volume_Scroll);
+            this.trackBar_PublishVolume.Scroll += new System.EventHandler(this.trackBar_PublishVolume_Scroll);
             // 
             // trackBar_Volume
             // 
@@ -414,6 +414,40 @@ namespace ZegoCsharpWinformDemo.Examples
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(431, 281);
             this.panel3.TabIndex = 1;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(149, 3);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(71, 12);
+            this.label10.TabIndex = 12;
+            this.label10.Text = "Resource ID";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 3);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(47, 12);
+            this.label9.TabIndex = 12;
+            this.label9.Text = "Song ID";
+            // 
+            // textBox_CustomSongID
+            // 
+            this.textBox_CustomSongID.Location = new System.Drawing.Point(3, 18);
+            this.textBox_CustomSongID.Name = "textBox_CustomSongID";
+            this.textBox_CustomSongID.Size = new System.Drawing.Size(140, 21);
+            this.textBox_CustomSongID.TabIndex = 11;
+            this.textBox_CustomSongID.TextChanged += new System.EventHandler(this.textBox_CustomSongID_TextChanged);
+            // 
+            // textBox_CustomResourceID
+            // 
+            this.textBox_CustomResourceID.Location = new System.Drawing.Point(149, 18);
+            this.textBox_CustomResourceID.Name = "textBox_CustomResourceID";
+            this.textBox_CustomResourceID.Size = new System.Drawing.Size(156, 21);
+            this.textBox_CustomResourceID.TabIndex = 11;
+            this.textBox_CustomResourceID.TextChanged += new System.EventHandler(this.textBox_CustomResourceID_TextChanged);
             // 
             // label2
             // 
@@ -541,6 +575,18 @@ namespace ZegoCsharpWinformDemo.Examples
             this.progressBar_Download.Name = "progressBar_Download";
             this.progressBar_Download.Size = new System.Drawing.Size(115, 10);
             this.progressBar_Download.TabIndex = 3;
+            // 
+            // button_GetCacheSize
+            // 
+            this.button_GetCacheSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_GetCacheSize.Location = new System.Drawing.Point(311, 54);
+            this.button_GetCacheSize.Name = "button_GetCacheSize";
+            this.button_GetCacheSize.Size = new System.Drawing.Size(115, 23);
+            this.button_GetCacheSize.TabIndex = 2;
+            this.button_GetCacheSize.Text = "Get Cache Size";
+            this.button_GetCacheSize.UseVisualStyleBackColor = true;
+            this.button_GetCacheSize.Click += new System.EventHandler(this.button_GetCacheSize_Click);
             // 
             // button_ClearCache
             // 
@@ -733,51 +779,6 @@ namespace ZegoCsharpWinformDemo.Examples
             this.textBox_UserJsonRequest.Name = "textBox_UserJsonRequest";
             this.textBox_UserJsonRequest.Size = new System.Drawing.Size(190, 146);
             this.textBox_UserJsonRequest.TabIndex = 2;
-            // 
-            // button_GetCacheSize
-            // 
-            this.button_GetCacheSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_GetCacheSize.Location = new System.Drawing.Point(311, 54);
-            this.button_GetCacheSize.Name = "button_GetCacheSize";
-            this.button_GetCacheSize.Size = new System.Drawing.Size(115, 23);
-            this.button_GetCacheSize.TabIndex = 2;
-            this.button_GetCacheSize.Text = "Get Cache Size";
-            this.button_GetCacheSize.UseVisualStyleBackColor = true;
-            // 
-            // textBox_CustomResourceID
-            // 
-            this.textBox_CustomResourceID.Location = new System.Drawing.Point(149, 18);
-            this.textBox_CustomResourceID.Name = "textBox_CustomResourceID";
-            this.textBox_CustomResourceID.Size = new System.Drawing.Size(156, 21);
-            this.textBox_CustomResourceID.TabIndex = 11;
-            this.textBox_CustomResourceID.TextChanged += new System.EventHandler(this.textBox_CustomResourceID_TextChanged);
-            // 
-            // textBox_CustomSongID
-            // 
-            this.textBox_CustomSongID.Location = new System.Drawing.Point(3, 18);
-            this.textBox_CustomSongID.Name = "textBox_CustomSongID";
-            this.textBox_CustomSongID.Size = new System.Drawing.Size(140, 21);
-            this.textBox_CustomSongID.TabIndex = 11;
-            this.textBox_CustomSongID.TextChanged += new System.EventHandler(this.textBox_CustomSongID_TextChanged);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 3);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(47, 12);
-            this.label9.TabIndex = 12;
-            this.label9.Text = "Song ID";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(149, 3);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(71, 12);
-            this.label10.TabIndex = 12;
-            this.label10.Text = "Resource ID";
             // 
             // CopyrightedMusic
             // 

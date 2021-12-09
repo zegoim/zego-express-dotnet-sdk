@@ -629,5 +629,19 @@ namespace ZegoCsharpWinformDemo.Examples
                 select_song_id = textBox_CustomSongID.Text;
             }
         }
+
+        private void trackBar_PublishVolume_Scroll(object sender, EventArgs e)
+        {
+            PrintLogToView(string.Format("SetPublishVolume:{0}", trackBar_PublishVolume.Value));
+            var media_player = media_players.ElementAt(current_player_index);
+            media_player.SetPublishVolume(trackBar_Volume.Value);
+        }
+
+        private void button_GetCacheSize_Click(object sender, EventArgs e)
+        {
+            PrintLogToView(string.Format("GetCacheSize"));
+            var cache_size = copyrighted_music.GetCacheSize();
+            textBox_CacheSize.Text = string.Format("{0}", cache_size);
+        }
     }
 }

@@ -389,7 +389,7 @@ namespace ZEGO
          * @param channel Publish stream channel.
          */
         public abstract void SetAudioConfig(ZegoAudioConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
-        
+
         /**
          * Gets the current audio configurations.
          *

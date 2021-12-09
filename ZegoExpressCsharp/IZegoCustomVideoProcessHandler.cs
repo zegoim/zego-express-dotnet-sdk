@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 namespace ZEGO
 {
 
     public class IZegoCustomVideoProcessHandler
     {
-#if UNITY_STANDALONE_WIN
+        #if UNITY_STANDALONE_WIN
         /**
          * Call back when the original video data is obtained.
          *
@@ -24,7 +24,7 @@ namespace ZEGO
         public delegate void OnCapturedUnprocessedRawData(ref IntPtr data, ref uint dataLength, ZegoVideoFrameParam param, ulong referenceTimeMillisecond, ZegoPublishChannel channel);
 #endif
 
-#if UNITY_IOS || UNITY_STANDALONE_OSX
+        #if UNITY_IOS || UNITY_STANDALONE_OSX
         /**
          * Call back when the original video data of type [CVPixelBuffer] is obtained.
          *
@@ -42,7 +42,7 @@ namespace ZEGO
         public delegate void OnCapturedUnprocessedCVPixelBuffer(IntPtr buffer, ulong timestamp, ZegoPublishChannel channel);
 #endif
 
-#if UNITY_ANDROID
+        #if UNITY_ANDROID
         /**
          * Call back when the original video data of type [Texture] is obtained.
          *
