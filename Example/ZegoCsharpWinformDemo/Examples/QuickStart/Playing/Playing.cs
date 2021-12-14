@@ -20,7 +20,6 @@ namespace ZegoCsharpWinformDemo.Examples
         private ZegoRoomState room_state = ZegoRoomState.Disconnected;
         private bool start_play = false;
         private SynchronizationContext context;
-        private Common.ZegoEventHandlerWithLog event_handler_with_log = new Common.ZegoEventHandlerWithLog();
         private Common.ZegoEventHandler event_handler = new Common.ZegoEventHandler();
 
         public Playing()
@@ -115,10 +114,9 @@ namespace ZegoCsharpWinformDemo.Examples
                 ZegoUtil.PrintLogToView(string.Format("CreateEngine, appID:{0}, appSign:{1}, scenario:{2}", engine_profile.appID, engine_profile.appSign, engine_profile.scenario));
                 engine = ZegoExpressEngine.CreateEngine(engine_profile, context);
 
-                event_handler_with_log.SetZegoEventHandler(engine, event_handler);
-
                 event_handler.onRoomStateUpdate = OnRoomStateUpdate;
                 event_handler.onPlayerStateUpdate = OnPlayerStateUpdate;
+                event_handler.SetZegoEventHandler(engine);
             }
         }
 

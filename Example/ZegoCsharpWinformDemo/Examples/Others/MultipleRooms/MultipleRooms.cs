@@ -31,7 +31,6 @@ namespace ZegoCsharpWinformDemo.Examples
         private ZegoRoomState room_2_state = ZegoRoomState.Disconnected;
         private ZegoPublisherState publisher_state = ZegoPublisherState.NoPublish;
         private SynchronizationContext context;
-        private Common.ZegoEventHandlerWithLog event_handler_with_log = new Common.ZegoEventHandlerWithLog();
         private Common.ZegoEventHandler event_handler = new Common.ZegoEventHandler();
         private List<RoomStream> room_stream_list = new List<RoomStream>();
         private bool need_update = false;
@@ -48,6 +47,7 @@ namespace ZegoCsharpWinformDemo.Examples
             ZegoUtil.InitLogViewControl(richTextBox_LogView);
             ZegoUtil.InitRoomStateControl(label_RoomState);
 
+            ZegoUtil.PrintLogToView(string.Format("SetRoomMode, mode:{0}", ZegoRoomMode.MultiRoom));
             ZegoExpressEngine.SetRoomMode(ZegoRoomMode.MultiRoom);
 
             CreateEngine();
@@ -186,7 +186,7 @@ namespace ZegoCsharpWinformDemo.Examples
                     room_stream.stream = stream;
                     room_stream_list.Add(room_stream);
                 }
-                else
+                else if(updateType == ZegoUpdateType.Delete)
                 {
                     for(int i=0;i<room_stream_list.Count;i++)
                     {
@@ -219,11 +219,10 @@ namespace ZegoCsharpWinformDemo.Examples
                 ZegoUtil.PrintLogToView(string.Format("CreateEngine, appID:{0}, appSign:{1}, scenario:{2}", engine_profile.appID, engine_profile.appSign, engine_profile.scenario));
                 engine = ZegoExpressEngine.CreateEngine(engine_profile, context);
 
-                event_handler_with_log.SetZegoEventHandler(engine, event_handler);
-
                 event_handler.onRoomStateUpdate = OnRoomStateUpdate;
                 event_handler.onPublisherStateUpdate = OnPublisherStateUpdate;
                 event_handler.onRoomStreamUpdate = OnRoomStreamUpdate;
+                event_handler.SetZegoEventHandler(engine);
             }
         }
 
