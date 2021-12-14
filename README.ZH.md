@@ -7,8 +7,11 @@ ZegoExpressCSharp SDK，运行于 Windows 系统。
 请确保开发环境满足以下技术要求：
 
 * Windows系统：Windows7、Windows8、Windows10。
-* 已安装 Visual Studio 2015 及以上版本，已安装 C# 语言支持框架，已安装 .NET FrameWork 4.5 或以上版本。
-* 麦克风、摄像头等支持音视频功能的外部设备。
+* 已安装 Visual Studio 2019 及以上版本。
+* Visual Studio 已安装 C# 开发环境和 Newtonsoft NuGet 程序包。
+* 已安装 .NET FrameWork 4.5 或以上版本。
+* 已安装 .NET Core3.1 或以上版本。
+* 麦克风、摄像头等支持音视频功能的外部设备正常。
 
 ## 目录结构说明
 
@@ -51,25 +54,23 @@ ZegoExpressCSharp SDK，运行于 Windows 系统。
 
 ## 下载SDK
 
-> **若如上所示的 SDK 存放目录中已经有了对应的 SDK 文件，则请跳过此步**。
-
-* 下载 [ZegoExpressVideo-Win](https://storage.zego.im/express/video/windows/zego-express-video-windows.zip)，并解压到 “/libs/ZegoExpress/win” 目录。
+* 下载 [ZegoExpressVideoCsharp](https://storage.zego.im/express/video/windows-csharp/zego-express-video-windows-csharp.zip)，并解压。
 
 ## 运行
 
 ### 填写 AppID 和 AppSign
 
-示例代码中缺少 SDK 创建引擎必须的 AppID 和 AppSign，请参考 [获取 AppID 和 AppSign 指引 \|_blank](https://doc.zego.im/API/HideDoc/GetExpressAppIDGuide/GetAppIDGuideline.html) 获取，并将 AppID 和 AppSign 填写进 `/ZegoCsharpWinformDemo/KeyCenter.cs` 文件。
+示例代码中缺少 SDK 创建引擎必须的 AppID 和 AppSign，请参考 [获取 AppID 和 AppSign 指引 \|_blank](https://doc.zego.im/API/HideDoc/GetExpressAppIDGuide/GetAppIDGuideline.html) 获取，并将 AppID 和 AppSign 填写进 `Example/ZegoCsharpWinformDemo/KeyCenter.cs` 文件。
 
 ```c#
 public static uint appID()
 {
-    return ;// input AppID here
+    return 1234567890;// input AppID here
 }
 
 public static string appSign()
 {
-    return "";// input AppSign here
+    return "63b******9e483864878bca4e3bc84c531eacf39e5f4ea1858180ee6934adf86";// input AppSign here
 }
 ```
 
