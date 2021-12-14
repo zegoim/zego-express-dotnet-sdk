@@ -7,7 +7,10 @@ ZegoExpressCSharp SDK, running on Windows system.
 Please ensure that the development environment meets the following technical requirements:
 
 * Windows system: Windows7, Windows8, Windows10
-* Visual Studio 2015 and above have been installed, C# language support framework has been installed, .NET FrameWork 4.5 or above has been installed
+* Installed Visual Studio 2019 and above
+* Visual Studio has installed C# development environment and Newtonsoft NuGet package
+* .NET FrameWork 4.5 or above has been installed
+* .NET Core 3.1 or above installed
 * Microphones, cameras and other external devices that support audio and video functions
 
 ## Directory structure description
@@ -51,15 +54,13 @@ Please ensure that the development environment meets the following technical req
 
 ## Download SDK
 
-> **If there is already a corresponding SDK file in the SDK storage directory as shown above, please skip this step**.
-
-* Download [ZegoExpressCsharp](https://storage.zego.im/express/video/windows/zego-express-video-windows.zip), and unzip it to the "/libs/ZegoExpress/win" directory.
+* Download [ZegoExpressVideoCsharp](https://storage.zego.im/express/video/windows-csharp/zego-express-video-windows-csharp.zip), and unzip it to the "/libs/ZegoExpress/win" directory.
 
 ## Run
 
 ### Input AppID and AppSign
 
-The AppID and AppSign required by SDK initialization are missing default, please refer to [ZEGO Admin Console User Manual \| _blank](https://doc-en.zego.im/en/1271.html) to obtain AppID and AppSign, and then fill the `/ZegoExpressExample/KeyCenter.cpp` file.
+The AppID and AppSign required by SDK initialization are missing default, please refer to [Control Panel-Project Management \| _blank](https://doc-en.zego.im/article/1271.html) to obtain AppID and AppSign, and then fill the `Example/ZegoCsharpWinformDemo/KeyCenter.cs` file.
 
 ```c#
 public static uint appID()
@@ -79,7 +80,7 @@ The sample source code comes with the SDK C# version source code and solution fi
 
 #### Open the project with Visual Studio
 
-Click "Menu Bar-->File-->Open-->Project/Solution" to open the `/ZegoExpressCsharp.sln` project file
+Click "Menu Bar > File > Open > Project/Solution" to open the `/ZegoExpressCsharp.sln` project file
 
 ### Start debugging
 

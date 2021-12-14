@@ -60,7 +60,7 @@ ZegoExpressCSharp SDK，运行于 Windows 系统。
 
 ### 填写 AppID 和 AppSign
 
-示例代码中缺少 SDK 创建引擎必须的 AppID 和 AppSign，请参考 [获取 AppID 和 AppSign 指引 \|_blank](https://doc.zego.im/API/HideDoc/GetExpressAppIDGuide/GetAppIDGuideline.html) 获取，并将 AppID 和 AppSign 填写进 `Example/ZegoCsharpWinformDemo/KeyCenter.cs` 文件。
+示例代码中缺少 SDK 创建引擎必须的 AppID 和 AppSign，请参考 [控制台 - 项目管理 \|_blank](https://doc-zh.zego.im/article/12107) 获取，并将 AppID 和 AppSign 填写进 `Example/ZegoCsharpWinformDemo/KeyCenter.cs` 文件。
 
 ```c#
 public static uint appID()
@@ -80,7 +80,7 @@ public static string appSign()
 
 #### 使用 Visual Studio 打开项目
 
-点击 "菜单栏-->文件-->打开-->项目/解决方案"，打开 `/ZegoExpressCsharp.sln` 解决方案文件。
+点击 "菜单栏 > 文件 > 打开 > 项目/解决方案"，打开 `/ZegoExpressCsharp.sln` 解决方案文件。
 
 ### 启动调试
 
