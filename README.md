@@ -54,7 +54,7 @@ Please ensure that the development environment meets the following technical req
 
 ## Download SDK
 
-* Download [ZegoExpressVideoCsharp](https://storage.zego.im/express/video/windows-csharp/zego-express-video-windows-csharp.zip), and unzip it to the "/libs/ZegoExpress/win" directory.
+* Download [ZegoExpressVideoCsharp](https://storage.zego.im/express/video/windows-csharp/zego-express-video-windows-csharp.zip), and unzip.
 
 ## Run
 

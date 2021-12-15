@@ -85,10 +85,6 @@ namespace ZegoCsharpWinformDemo.Examples
                     label_RoomID.Text = room_id;
 
                     tabControl1.SelectedIndex = 1;
-
-                    // Start publish stream
-                    StartPreview();
-                    StartPublishStream();
                 }
                 else if (state == ZegoRoomState.Disconnected)
                 {
@@ -306,6 +302,9 @@ namespace ZegoCsharpWinformDemo.Examples
         {
             CreateEngine();
             LoginRoom();
+            // Start publish stream
+            StartPreview();
+            StartPublishStream();
         }
 
         private void button_Stop_Click(object sender, EventArgs e)
