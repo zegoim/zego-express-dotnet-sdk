@@ -194,8 +194,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(ProjectDir)Resources\CopyrightedMusic.json $(TargetDir)
-xcopy /Y $(SolutionDir)libs\ZegoExpress\win\$(PlatformName)\ZegoExpressEngine.dll $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y "$(ProjectDir)Resources\CopyrightedMusic.json" "$(TargetDir)"
+xcopy /Y "$(SolutionDir)libs\ZegoExpress\win\$(PlatformName)\ZegoExpressEngine.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
