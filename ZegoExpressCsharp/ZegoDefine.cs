@@ -665,6 +665,26 @@ namespace ZEGO
         HighQualityStereo
     }
 
+    /** Range audio mode */
+    public enum ZegoRangeAudioMode
+    {
+        /** World mode, you can communicate with everyone in the room. */
+        World,
+        /** Team mode, only communicate with members of the team. */
+        Team
+    }
+
+    /** Range audio microphone state. */
+    public enum ZegoRangeAudioMicrophoneState
+    {
+        /** The range audio microphone is off. */
+        Off,
+        /** The range audio microphone is turning on. */
+        TurningOn,
+        /** The range audio microphone is on. */
+        On
+    }
+
     /** Player state. */
     public enum ZegoMediaPlayerState
     {
@@ -1011,7 +1031,7 @@ namespace ZEGO
         /** Encode resolution height, control the image height of the encoder when publishing stream. SDK requires this member to be set to an even number. The settings before and after publishing stream can be effective */
         public int encodeHeight;
 
-        /** Frame rate, control the frame rate of the camera and the frame rate of the encoder. Only the camera is not started, the setting is effective */
+        /** Frame rate, control the frame rate of the camera and the frame rate of the encoder. Only the camera is not started, the setting is effective. Publishing stream set to 60 fps, playing stream to take effect need contact technical support */
         public int fps;
 
         /** Bit rate in kbps. The settings before and after publishing stream can be effective */
@@ -1401,7 +1421,7 @@ namespace ZEGO
         /** Whether to enable hardware encoding */
         public bool isHardwareEncode;
 
-        /** Video codec ID */
+        /** Video codec ID (Available since 1.17.0) */
         public ZegoVideoCodecID videoCodecID;
 
         /** Total number of bytes sent, including audio, video, SEI */
@@ -1490,7 +1510,7 @@ namespace ZEGO
         /** Video receiving frame rate. The unit of frame rate is f/s */
         public double videoRecvFPS;
 
-        /** Video dejitter frame rate. The unit of frame rate is f/s */
+        /** Video dejitter frame rate. The unit of frame rate is f/s (Available since 1.17.0) */
         public double videoDejitterFPS;
 
         /** Video decoding frame rate. The unit of frame rate is f/s */
@@ -1502,13 +1522,13 @@ namespace ZEGO
         /** Video bit rate in kbps */
         public double videoKBPS;
 
-        /** Video break rate, the unit is (number of breaks / every 10 seconds) */
+        /** Video break rate, the unit is (number of breaks / every 10 seconds) (Available since 1.17.0) */
         public double videoBreakRate;
 
         /** Audio receiving frame rate. The unit of frame rate is f/s */
         public double audioRecvFPS;
 
-        /** Audio dejitter frame rate. The unit of frame rate is f/s */
+        /** Audio dejitter frame rate. The unit of frame rate is f/s (Available since 1.17.0) */
         public double audioDejitterFPS;
 
         /** Audio decoding frame rate. The unit of frame rate is f/s */
@@ -1520,8 +1540,11 @@ namespace ZEGO
         /** Audio bit rate in kbps */
         public double audioKBPS;
 
-        /** Audio break rate, the unit is (number of breaks / every 10 seconds) */
+        /** Audio break rate, the unit is (number of breaks / every 10 seconds) (Available since 1.17.0) */
         public double audioBreakRate;
+
+        /** The audio quality of the playing stream determined by the audio MOS (Mean Opinion Score) measurement method, value range [-1, 5], where -1 means unknown, [0, 5] means valid score, the higher the score, the better the audio quality. For the subjective perception corresponding to the MOS value, please refer to https://doc-en.zego.im/article/3720#4_4 (Available since 2.16.0) */
+        public double mos;
 
         /** Server to local delay, in milliseconds */
         public int rtt;
@@ -1541,13 +1564,13 @@ namespace ZEGO
         /** Delay after the data is received by the local end, in milliseconds */
         public int delay;
 
-        /** The difference between the video timestamp and the audio timestamp, used to reflect the synchronization of audio and video, in milliseconds. This value is less than 0 means the number of milliseconds that the video leads the audio, greater than 0 means the number of milliseconds that the video lags the audio, and 0 means no difference. When the absolute value is less than 200, it can basically be regarded as synchronized audio and video, when the absolute value is greater than 200 for 10 consecutive seconds, it can be regarded as abnormal */
+        /** The difference between the video timestamp and the audio timestamp, used to reflect the synchronization of audio and video, in milliseconds. This value is less than 0 means the number of milliseconds that the video leads the audio, greater than 0 means the number of milliseconds that the video lags the audio, and 0 means no difference. When the absolute value is less than 200, it can basically be regarded as synchronized audio and video, when the absolute value is greater than 200 for 10 consecutive seconds, it can be regarded as abnormal (Available since 1.19.0) */
         public int avTimestampDiff;
 
         /** Whether to enable hardware decoding */
         public bool isHardwareDecode;
 
-        /** Video codec ID */
+        /** Video codec ID (Available since 1.17.0) */
         public ZegoVideoCodecID videoCodecID;
 
         /** Total number of bytes received, including audio, video, SEI */

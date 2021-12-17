@@ -403,6 +403,9 @@ namespace ZEGO
         /** Audio break rate, the unit is (number of breaks / every 10 seconds) */
         public double audio_break_rate;
 
+        /** The audio quality of the playing stream determined by the audio MOS (Mean Opinion Score) measurement method, value range [-1, 5], where -1 means unknown, [0, 5] means valid score, the higher the score, the better the audio quality. For the subjective perception corresponding to the MOS value, please refer to https://doc-en.zego.im/article/3720#4_4 (Available since 2.16.0) */
+        public double mos;
+
         /** Server to local delay, in milliseconds */
         public int rtt;
 
@@ -996,5 +999,41 @@ namespace ZEGO
 
         /** VOD billing mode. */
         public zego_copyrighted_music_billing_mode mode;
+    };
+
+    /** RangeAudio instance index. */
+    public enum zego_range_audio_instance_index
+    {
+        /** Unknown value */
+        zego_range_audio_instance_index_null = -1,
+
+        /** The first RangeAudio instance index */
+        zego_range_audio_instance_index_first = 0
+
+    };
+    
+    /** Range audio mode */
+    public enum zego_range_audio_mode
+    {
+        /** World mode, you can communicate with everyone in the room. */
+        zego_range_audio_mode_world = 0,
+
+        /** Team mode, only communicate with members of the team. */
+        zego_range_audio_mode_team = 1
+
+    };
+
+    /** Range audio microphone state. */
+    public enum zego_range_audio_microphone_state
+    {
+        /** The range audio microphone is off. */
+        zego_range_audio_microphone_state_off = 0,
+
+        /** The range audio microphone is turning on. */
+        zego_range_audio_microphone_state_turning_on = 1,
+
+        /** The range audio microphone is on. */
+        zego_range_audio_microphone_state_on = 2
+
     };
 }

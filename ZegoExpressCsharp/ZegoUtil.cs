@@ -247,6 +247,7 @@ namespace ZEGO
             playStreamQuality.audioRenderFPS = quality.audio_render_fps;
             playStreamQuality.audioKBPS = quality.audio_kbps;
             playStreamQuality.audioBreakRate = quality.audio_break_rate;
+            playStreamQuality.mos = quality.mos;
             playStreamQuality.rtt = quality.rtt;
             playStreamQuality.packetLostRate = quality.packet_lost_rate;
             playStreamQuality.peerToPeerDelay = quality.peer_to_peer_delay;
@@ -499,12 +500,15 @@ namespace ZEGO
                     advancedConfig += item.Key + "=" + item.Value + ";";
                 }
                 Console.WriteLine(string.Format("SetEngineConfig  advancedConfig:{0}", advancedConfig));
-                if(config.logConfig.logPath != null)
+                if(config.logConfig != null)
                 {
-                    engineConfig.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
-                    var bytes = Encoding.UTF8.GetBytes(config.logConfig.logPath);
-                    int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
-                    Buffer.BlockCopy(bytes, 0, engineConfig.advanced_config, 0, count);
+                    if (config.logConfig.logPath != null)
+                    {
+                        engineConfig.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                        var bytes = Encoding.UTF8.GetBytes(config.logConfig.logPath);
+                        int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                        Buffer.BlockCopy(bytes, 0, engineConfig.advanced_config, 0, count);
+                    }
                 }
             }
             else

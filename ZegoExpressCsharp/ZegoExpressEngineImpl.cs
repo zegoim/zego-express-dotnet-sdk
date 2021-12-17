@@ -151,6 +151,7 @@ namespace ZEGO
 
                         // init framework for log upload
                         ZegoEngineConfig config = new ZegoEngineConfig();
+                        config.advancedConfig = new Dictionary<string, string>();
                         config.advancedConfig.Add("thirdparty_framework_info", "c#(windows)");
                         SetEngineConfig(config);
 
