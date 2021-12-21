@@ -500,16 +500,11 @@ namespace ZEGO
                     advancedConfig += item.Key + "=" + item.Value + ";";
                 }
                 Console.WriteLine(string.Format("SetEngineConfig  advancedConfig:{0}", advancedConfig));
-                if(config.logConfig != null)
-                {
-                    if (config.logConfig.logPath != null)
-                    {
-                        engineConfig.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
-                        var bytes = Encoding.UTF8.GetBytes(config.logConfig.logPath);
-                        int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
-                        Buffer.BlockCopy(bytes, 0, engineConfig.advanced_config, 0, count);
-                    }
-                }
+
+                engineConfig.advanced_config = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN];
+                var bytes = Encoding.UTF8.GetBytes(advancedConfig);
+                int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                Buffer.BlockCopy(bytes, 0, engineConfig.advanced_config, 0, count);
             }
             else
             {
