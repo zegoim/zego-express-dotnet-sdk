@@ -888,7 +888,7 @@ namespace ZEGO
                     result.background_image_url = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN];
                     var bytes = Encoding.UTF8.GetBytes(task.backgroundImageURL);
                     int count = Math.Min(bytes.Length, ZEGO_EXPRESS_MAX_URL_LEN);
-                    Buffer.BlockCopy(bytes, 0, result.background_image_url, 0, ZEGO_EXPRESS_MAX_URL_LEN);
+                    Buffer.BlockCopy(bytes, 0, result.background_image_url, 0, count);
                 }
                 result.enable_sound_level = task.enableSoundLevel;
                 result.stream_alignment_mode = task.streamAlignmentMode;
