@@ -9,10 +9,19 @@ using System.Drawing;
 
 namespace ZegoCsharpWinformDemo
 {
+    public struct UserConfig
+    {
+        public uint app_id_;
+        public string app_sign_;
+        public string user_id_;
+    }
+
     public class ZegoUtil
     {
         private static RichTextBox log_view_control = null;
         private static Label room_state_control = null;
+        private static UserConfig user_config_ = new UserConfig();
+        private static bool update_user_config_by_ui = false;
 
         public static void InitLogViewControl(RichTextBox box)
         {
@@ -38,17 +47,17 @@ namespace ZegoCsharpWinformDemo
 
         public static void SetRoomState(ZEGO.ZegoRoomState room_state)
         {
-            if(room_state_control != null)
+            if (room_state_control != null)
             {
-                if(room_state == ZEGO.ZegoRoomState.Connected)
+                if (room_state == ZEGO.ZegoRoomState.Connected)
                 {
                     room_state_control.Text = "Connected";
                 }
-                else if(room_state == ZEGO.ZegoRoomState.Connecting)
+                else if (room_state == ZEGO.ZegoRoomState.Connecting)
                 {
                     room_state_control.Text = "Connecting";
                 }
-                else if(room_state == ZEGO.ZegoRoomState.Disconnected)
+                else if (room_state == ZEGO.ZegoRoomState.Disconnected)
                 {
                     room_state_control.Text = "Disconnected";
                 }
@@ -65,19 +74,19 @@ namespace ZegoCsharpWinformDemo
         private static Color GetLogFontColor(LogLevel level)
         {
             Color color = Color.White;
-            if(level == LogLevel.LOG_ERROR)
+            if (level == LogLevel.LOG_ERROR)
             {
                 color = Color.IndianRed;
             }
-            else if(level == LogLevel.LOG_INFO)
+            else if (level == LogLevel.LOG_INFO)
             {
                 color = Color.LightGray;
             }
-            else if(level == LogLevel.LOG_SUCCESS)
+            else if (level == LogLevel.LOG_SUCCESS)
             {
                 color = Color.Green;
             }
-            else if(level == LogLevel.LOG_WARN)
+            else if (level == LogLevel.LOG_WARN)
             {
                 color = Color.DarkGoldenrod;
             }
@@ -86,7 +95,7 @@ namespace ZegoCsharpWinformDemo
 
         public static LogLevel GetLogLevel(int errorCode)
         {
-            if(errorCode == 0)
+            if (errorCode == 0)
             {
                 return LogLevel.LOG_SUCCESS;
             }
@@ -96,5 +105,49 @@ namespace ZegoCsharpWinformDemo
             }
         }
 
+        public static void UpdateUserConfigByUi(UserConfig config)
+        {
+            update_user_config_by_ui = true;
+
+            user_config_.app_id_ = config.app_id_;
+            user_config_.app_sign_ = config.app_sign_;
+            user_config_.user_id_ = config.user_id_;
+        }
+
+        public static uint AppID()
+        {
+            if(update_user_config_by_ui)
+            {
+                return user_config_.app_id_;
+            }
+            else
+            {
+                return KeyCenter.appID();
+            }
+        }
+
+        public static string AppSign()
+        {
+            if (update_user_config_by_ui)
+            {
+                return user_config_.app_sign_;
+            }
+            else
+            {
+                return KeyCenter.appSign();
+            }
+        }
+
+        public static string UserID()
+        {
+            if (update_user_config_by_ui)
+            {
+                return user_config_.user_id_;
+            }
+            else
+            {
+                return string.Format("{0}_{1}", DeviceName(), new Random().Next(0, 99999));
+            }
+        }
     }
 }

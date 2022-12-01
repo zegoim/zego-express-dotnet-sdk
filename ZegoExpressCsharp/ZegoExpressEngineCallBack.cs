@@ -84,9 +84,9 @@ namespace ZEGO
 
             }), null);
         }
-        public static void zego_on_mediaplayer_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, zego_media_player_instance_index instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
         {
-            ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
+            ZegoMediaPlayer zegoMediaPlayer = GetObjectFromIndex(mediaPlayerAndIndex, (int)instance_index);
             if (zegoMediaPlayer.onAudioFrame != null)
             {
 
@@ -99,9 +99,14 @@ namespace ZEGO
             }
         }
 
-        public static void zego_on_mediaplayer_video_data(IntPtr[] data, uint[] data_length, zego_video_frame_param param, zego_media_player_instance_index instance_index, System.IntPtr user_context)
+        public static void zego_on_media_player_video_frame([In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] IntPtr[] data,
+            [In][MarshalAs(UnmanagedType.LPArray, SizeConst = 4)] uint[] data_length,
+            zego_video_frame_param param,
+            [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extra_info,
+            zego_media_player_instance_index instance_index,
+            System.IntPtr user_context)
         {
-            ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
+            ZegoMediaPlayer zegoMediaPlayer = GetObjectFromIndex(mediaPlayerAndIndex, (int)instance_index);
             if (zegoMediaPlayer.onVideoFrame != null)
             {
                 ZegoVideoFrameParam zegoVideoFrameParam = ChangeZegoVideoFrameParamStructToClass(param);
@@ -114,9 +119,9 @@ namespace ZEGO
             }
         }
 
-        public static void zego_on_mediaplayer_load_resource_result(int error_code, zego_media_player_instance_index instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_load_resource_result(int error_code, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
         {
-            ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
+            ZegoMediaPlayer zegoMediaPlayer = GetObjectFromIndex(mediaPlayerAndIndex, (int)instance_index);
             if (zegoMediaPlayer.onLoadResourceCallback != null)
             {
 
@@ -667,10 +672,10 @@ namespace ZEGO
 
         }
 
-        public static void zego_on_mediaplayer_state_update(ZegoMediaPlayerState state, int error_code, zego_media_player_instance_index instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_state_update(ZegoMediaPlayerState state, int error_code, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
         {
 
-            ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
+            ZegoMediaPlayer zegoMediaPlayer = GetObjectFromIndex(mediaPlayerAndIndex, (int)instance_index);
             if (zegoMediaPlayer.onMediaPlayerStateUpdate != null)
             {
 
@@ -690,11 +695,11 @@ namespace ZEGO
 
 
         }
-        public static void zego_on_mediaplayer_network_event(ZegoMediaPlayerNetworkEvent net_event, zego_media_player_instance_index instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_network_event(ZegoMediaPlayerNetworkEvent net_event, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
 
         {
 
-            ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
+            ZegoMediaPlayer zegoMediaPlayer = GetObjectFromIndex(mediaPlayerAndIndex, (int)instance_index);
 
             if (zegoMediaPlayer.onMediaPlayerNetworkEvent != null)
             {
@@ -716,10 +721,10 @@ namespace ZEGO
 
 
         }
-        public static void zego_on_mediaplayer_playing_progress(ulong millisecond, zego_media_player_instance_index instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_playing_progress(ulong millisecond, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
         {
 
-            ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
+            ZegoMediaPlayer zegoMediaPlayer = GetObjectFromIndex(mediaPlayerAndIndex, (int)instance_index);
             if (zegoMediaPlayer.onMediaPlayerPlayingProgress != null)
             {
 
@@ -741,10 +746,10 @@ namespace ZEGO
 
         }
 
-        public static void zego_on_mediaplayer_seek_to_time_result(int seq, int error_code, zego_media_player_instance_index instance_index, System.IntPtr user_context)
+        public static void zego_on_mediaplayer_seek_to_time_result(int seq, int error_code, ZegoMediaPlayerInstanceIndex instance_index, System.IntPtr user_context)
         {
 
-            ZegoMediaPlayer zegoMediaPlayer = GetMediaPlayerFromIndex(instance_index);
+            ZegoMediaPlayer zegoMediaPlayer = GetObjectFromIndex(mediaPlayerAndIndex, (int)instance_index);
             if (zegoMediaPlayer.seekToTimeCallbackDic != null)
             {
                 string log = string.Format("zego_on_mediaplayer_seek_to_time_result mediaplayerID:{0} seq:{1} error_code:{2}", instance_index, seq, error_code);
@@ -968,17 +973,14 @@ namespace ZEGO
 
         }
 
-        public static void zego_on_device_error(int error_code, [In()][MarshalAs(UnmanagedType.LPStr)] string device_name, System.IntPtr user_context)
+        public static void zego_on_local_device_exception_occurred(ZegoDeviceExceptionType exception_type, ZegoDeviceType device_type, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string device_id, System.IntPtr user_context)
         {
+            if (enginePtr == null || enginePtr.onLocalDeviceExceptionOccurred == null) return;
 
-            if (enginePtr == null || enginePtr.onDeviceError == null) return;
-            string log = string.Format("zego_on_device_error  error_code:{0} device_name:{1}", error_code, device_name);
-            ZegoUtil.ZegoPrivateLog(0, log, false, 0);
-            //context?.Post(new SendOrPostCallback((o) =>
-            //{
-            enginePtr?.onDeviceError?.Invoke(error_code, device_name);
-
-            //}), null);
+            context?.Post(new SendOrPostCallback((o) =>
+            {
+                enginePtr?.onLocalDeviceExceptionOccurred?.Invoke(exception_type, device_type, device_id);
+            }), null);
         }
 
         public static void zego_on_remote_camera_state_update([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoRemoteDeviceState state, System.IntPtr user_context)

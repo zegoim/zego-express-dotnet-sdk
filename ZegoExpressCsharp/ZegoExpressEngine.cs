@@ -144,16 +144,32 @@ namespace ZEGO
          * Logs in to a room with advanced room configurations. You must log in to a room before publishing or playing streams.
          *
          * Available since: 1.1.0
-         * Description: SDK uses the 'room' to organize users. After users log in to a room, they can use interface such as push stream [startPublishingStream], pull stream [startPlayingStream], send and receive broadcast messages [sendBroadcastMessage], etc. To prevent the app from being impersonated by a malicious user, you can add authentication before logging in to the room, that is, the [token] parameter in the ZegoRoomConfig object passed in by the [config] parameter.
+         * Description: If the room does not exist, [loginRoom] creates and logs in the room. SDK uses the 'room' to organize users. After users log in to a room, they can use interface such as push stream [startPublishingStream], pull stream [startPlayingStream], send and receive broadcast messages [sendBroadcastMessage], etc. To prevent the app from being impersonated by a malicious user, you can add authentication before logging in to the room, that is, the [token] parameter in the ZegoRoomConfig object passed in by the [config] parameter.
          * Use cases: In the same room, users can conduct live broadcast, audio and video calls, etc.
          * When to call /Trigger: This interface is called after [createEngine] initializes the SDK.
-         * Restrictions: For restrictions on the use of this function, please refer to https://doc-en.zego.im/article/7611 or contact ZEGO technical support.
-         * Caution: 1. Apps that use different appIDs cannot intercommunication with each other, and the test/official environment cannot intercommunication with each other ether. 2. SDK supports startPlayingStream audio and video streams from different rooms under the same appID, that is, startPlayingStream audio and video streams across rooms. Since ZegoExpressEngine's room related callback notifications are based on the same room, when developers want to startPlayingStream streams across rooms, developers need to maintain related messages and signaling notifications by themselves. 3. It is strongly recommended that userID corresponds to the user ID of the business APP, that is, a userID and a real user are fixed and unique, and should not be passed to the SDK in a random userID. Because the unique and fixed userID allows ZEGO technicians to quickly locate online problems. 4. After the first login failure due to network reasons or the room is disconnected, the default time of SDK reconnection is 20min. 5. After the user has successfully logged in to the room, if the application exits abnormally, after restarting the application, the developer needs to call the logoutRoom interface to log out of the room, and then call the loginRoom interface to log in to the room again.
+         * Restrictions: For restrictions on the use of this function, please refer to https://docs.zegocloud.com/article/7611 or contact ZEGO technical support.
+         * Caution:
+         *   1. Apps that use different appIDs cannot intercommunication with each other.
+         *   2. SDK supports startPlayingStream audio and video streams from different rooms under the same appID, that is, startPlayingStream audio and video streams across rooms. Since ZegoExpressEngine's room related callback notifications are based on the same room, when developers want to startPlayingStream streams across rooms, developers need to maintain related messages and signaling notifications by themselves.
+         *   3. It is strongly recommended that userID corresponds to the user ID of the business APP, that is, a userID and a real user are fixed and unique, and should not be passed to the SDK in a random userID. Because the unique and fixed userID allows ZEGO technicians to quickly locate online problems.
+         *   4. After the first login failure due to network reasons or the room is disconnected, the default time of SDK reconnection is 20min.
+         *   5. After the user has successfully logged in to the room, if the application exits abnormally, after restarting the application, the developer needs to call the logoutRoom interface to log out of the room, and then call the loginRoom interface to log in to the room again.
          * Privacy reminder: Please do not fill in sensitive user information in this interface, including but not limited to mobile phone number, ID number, passport number, real name, etc.
-         * Related callbacks: 1. When the user starts to log in to the room, the room is successfully logged in, or the room fails to log in, the [onRoomStateUpdate] callback will be triggered to notify the developer of the status of the current user connected to the room. 2. Different users who log in to the same room can get room related notifications in the same room (eg [onRoomUserUpdate], [onRoomStreamUpdate], etc.), and users in one room cannot receive room signaling notifications in another room. 3. If the network is temporarily interrupted due to network quality reasons, the SDK will automatically reconnect internally. You can get the current connection status of the local room by listening to the [onRoomStateUpdate] callback method, and other users in the same room will receive [onRoomUserUpdate] callback notification. 4. Messages sent in one room (e.g. [setStreamExtraInfo], [sendBroadcastMessage], [sendBarrageMessage], [sendCustomCommand], etc.) cannot be received callback ((eg [onRoomStreamExtraInfoUpdate], [onIMRecvBroadcastMessage], [onIMRecvBarrageMessage], [onIMRecvCustomCommand], etc) in other rooms. Currently, SDK does not provide the ability to send messages across rooms. Developers can integrate the SDK of third-party IM to achieve.
-         * Related APIs: 1. Users can call [logoutRoom] to log out. In the case that a user has successfully logged in and has not logged out, if the login interface is called again, the console will report an error and print the error code 1002001. 2. SDK supports multi-room login, please call [setRoomMode] function to select multi-room mode before engine initialization, and then call [loginRoom] to log in to multi-room. 3. Calling [destroyEngine] will also automatically log out.
+         * Related callbacks:
+         *   1. When the user starts to log in to the room, the room is successfully logged in, or the room fails to log in, the [onRoomStateChanged] (Not supported before 2.18.0, please use [onRoomStateUpdate]) callback will be triggered to notify the developer of the status of the current user connected to the room.
+         *   2. Different users who log in to the same room can get room related notifications in the same room (eg [onRoomUserUpdate], [onRoomStreamUpdate], etc.), and users in one room cannot receive room signaling notifications in another room.
+         *   3. If the network is temporarily interrupted due to network quality reasons, the SDK will automatically reconnect internally. You can get the current connection status of the local room by listening to the [onRoomStateChanged] (Not supported before 2.18.0, please use [onRoomStateUpdate]) callback method, and other users in the same room will receive [onRoomUserUpdate] callback notification.
+         *   4. Messages sent in one room (e.g. [setStreamExtraInfo], [sendBroadcastMessage], [sendBarrageMessage], [sendCustomCommand], etc.) cannot be received callback ((eg [onRoomStreamExtraInfoUpdate], [onIMRecvBroadcastMessage], [onIMRecvBarrageMessage], [onIMRecvCustomCommand], etc) in other rooms. Currently, SDK does not provide the ability to send messages across rooms. Developers can integrate the SDK of third-party IM to achieve.
+         * Related APIs:
+         *   1. Users can call [logoutRoom] to log out. In the case that a user has successfully logged in and has not logged out, if the login interface is called again, the console will report an error and print the error code 1002001.
+         *   2. SDK supports multi-room login, please call [setRoomMode] function to select multi-room mode before engine initialization, and then call [loginRoom] to log in to multi-room.
+         *   3. Calling [destroyEngine] will also automatically log out.
          *
-         * @param roomID Room ID, a string of up to 128 bytes in length. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         * @param roomID Room ID, a string of up to 128 bytes in length.
+         *   Caution:
+         *   1. room ID is defined by yourself.
+         *   2. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         *   3. If you need to communicate with the Web SDK, please do not use '%'.
          * @param user User object instance, configure userID, userName. Note that the userID needs to be globally unique with the same appID, otherwise the user who logs in later will kick out the user who logged in first.
          * @param config Advanced room configuration.
          */
@@ -197,9 +213,11 @@ namespace ZEGO
          * Use cases: if you need to quickly switch to the next room, you can call this function.
          * When to call /Trigger: After successfully login room.
          * Restrictions: None.
-         * Caution: 1. When this function is called, all streams currently publishing or playing will stop (but the local preview will not stop). 2. To prevent the app from being impersonated by a malicious user, you can add authentication before logging in to the room, that is, the [token] parameter in the ZegoRoomConfig object passed in by the [config] parameter. This parameter configuration affects the room to be switched over. 3. When the function [setRoomMode] is used to set ZegoRoomMode to ZEGO_ROOM_MODE_MULTI_ROOM, this function is not available.
+         * Caution:
+         *   1. When this function is called, all streams currently publishing or playing will stop (but the local preview will not stop).
+         *   2. To prevent the app from being impersonated by a malicious user, you can add authentication before logging in to the room, that is, the [token] parameter in the ZegoRoomConfig object passed in by the [config] parameter. This parameter configuration affects the room to be switched over. 3. When the function [setRoomMode] is used to set ZegoRoomMode to ZEGO_ROOM_MODE_MULTI_ROOM, this function is not available.
          * Privacy reminder: Please do not fill in sensitive user information in this interface, including but not limited to mobile phone number, ID number, passport number, real name, etc.
-         * Related callbacks: When the user call the [switchRoom] function, the [onRoomStateUpdate] callback will be triggered to notify the developer of the status of the current user connected to the room.
+         * Related callbacks: When the user call the [switchRoom] function, the [onRoomStateChanged] (Not supported before 2.18.0, please use [onRoomStateUpdate]) callback will be triggered to notify the developer of the status of the current user connected to the room.
          * Related APIs: Users can use the [logoutRoom] function to log out of the room.
          *
          * @param fromRoomID Current roomID.
@@ -215,8 +233,8 @@ namespace ZEGO
          * Description: The user can call this function to set the extra info of the room.
          * Use cases: You can set some room-related business attributes, such as whether someone is Co-hosting.
          * When to call /Trigger: After logging in the room successful.
-         * Restrictions: For restrictions on the use of this function, please refer to https://doc-en.zego.im/article/7611 or contact ZEGO technical support.
-         * Caution: 'key' and 'value' are non null. key.length < 128, value.length < 4096. The newly set key and value will overwrite the old setting.
+         * Restrictions: For restrictions on the use of this function, please refer to https://docs.zegocloud.com/article/7611 or contact ZEGO technical support.
+         * Caution: 'key' is non null. The length of key and value is limited, please refer to Restrictions. The newly set key and value will overwrite the old setting.
          * Related callbacks: Other users in the same room will be notified through the [onRoomExtraInfoUpdate] callback function.
          * Related APIs: None.
          *
@@ -247,9 +265,16 @@ namespace ZEGO
          * Use cases: It can be used to publish streams in real-time connecting wheat, live broadcast and other scenarios.
          * When to call: After [loginRoom].
          * Restrictions: None.
-         * Caution: 1. Before start to publish the stream, the user can choose to call [setVideoConfig] to set the relevant video parameters, and call [startPreview] to preview the video. 2. Other users in the same room can get the streamID by monitoring the [onRoomStreamUpdate] event callback after the local user publishing stream successfully. 3. In the case of poor network quality, user publish may be interrupted, and the SDK will attempt to reconnect. You can learn about the current state and error information of the stream published by monitoring the [onPublisherStateUpdate] event.
+         * Caution:
+         *   1. Before start to publish the stream, the user can choose to call [setVideoConfig] to set the relevant video parameters, and call [startPreview] to preview the video.
+         *   2. Other users in the same room can get the streamID by monitoring the [onRoomStreamUpdate] event callback after the local user publishing stream successfully.
+         *   3. In the case of poor network quality, user publish may be interrupted, and the SDK will attempt to reconnect. You can learn about the current state and error information of the stream published by monitoring the [onPublisherStateUpdate] event.
          *
-         * @param streamID Stream ID, a string of up to 256 characters, needs to be globally unique within the entire AppID. If in the same AppID, different users publish each stream and the stream ID is the same, which will cause the user to publish the stream failure. You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '~', '!', '@', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         * @param streamID Stream ID, a string of up to 256 characters.
+         *   Caution:
+         *   1. Stream ID is defined by you.
+         *   2. needs to be globally unique within the entire AppID. If in the same AppID, different users publish each stream and the stream ID is the same, which will cause the user to publish the stream failure. You cannot include URL keywords, otherwise publishing stream and playing stream will fails.
+         *   3. Only support numbers, English characters and '-', ' '.
          * @param channel Publish stream channel.
          */
         public abstract void StartPublishingStream(string streamID, ZegoPublishChannel channel = ZegoPublishChannel.Main);
@@ -262,9 +287,17 @@ namespace ZEGO
          * Use cases: It can be used to publish streams in real-time connecting wheat, live broadcast and other scenarios.
          * When to call: After [loginRoom].
          * Restrictions: None.
-         * Caution: 1. Before start to publish the stream, the user can choose to call [setVideoConfig] to set the relevant video parameters, and call [startPreview] to preview the video. 2. Other users in the same room can get the streamID by monitoring the [onRoomStreamUpdate] event callback after the local user publishing stream successfully. 3. In the case of poor network quality, user publish may be interrupted, and the SDK will attempt to reconnect. You can learn about the current state and error information of the stream published by monitoring the [onPublisherStateUpdate] event. 4. To call [SetRoomMode] function to select multiple rooms, the room ID must be specified explicitly.
+         * Caution:
+         *   1. Before start to publish the stream, the user can choose to call [setVideoConfig] to set the relevant video parameters, and call [startPreview] to preview the video.
+         *   2. Other users in the same room can get the streamID by monitoring the [onRoomStreamUpdate] event callback after the local user publishing stream successfully.
+         *   3. In the case of poor network quality, user publish may be interrupted, and the SDK will attempt to reconnect. You can learn about the current state and error information of the stream published by monitoring the [onPublisherStateUpdate] event.
+         *   4. To call [SetRoomMode] function to select multiple rooms, the room ID must be specified explicitly.
          *
-         * @param streamID Stream ID, a string of up to 256 characters, needs to be globally unique within the entire AppID. If in the same AppID, different users publish each stream and the stream ID is the same, which will cause the user to publish the stream failure. You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '~', '!', '@', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         * @param streamID Stream ID, a string of up to 256 characters.
+         *   Caution:
+         *   1. Stream ID is defined by you.
+         *   2. needs to be globally unique within the entire AppID. If in the same AppID, different users publish each stream and the stream ID is the same, which will cause the user to publish the stream failure. You cannot include URL keywords, otherwise publishing stream and playing stream will fails.
+         *   3. Only support numbers, English characters and '-', ' '.
          * @param config Advanced publish configuration.
          * @param channel Publish stream channel.
          */
@@ -278,7 +311,10 @@ namespace ZEGO
          * Use cases: It can be used to stop publish streams in real-time connecting wheat, live broadcast and other scenarios.
          * When to call: After [startPublishingStream].
          * Restrictions: None.
-         * Caution: 1. After stopping the streaming, other users in the same room can receive the delete notification of the stream by listening to the [onRoomStreamUpdate] callback. 2. If the user has initiated publish flow, this function must be called to stop the publish of the current stream before publishing the new stream (new streamID), otherwise the new stream publish will return a failure. 3. After stopping streaming, the developer should stop the local preview based on whether the business situation requires it.
+         * Caution:
+         *   1. After stopping the streaming, other users in the same room can receive the delete notification of the stream by listening to the [onRoomStreamUpdate] callback.
+         *   2. If the user has initiated publish flow, this function must be called to stop the publish of the current stream before publishing the new stream (new streamID), otherwise the new stream publish will return a failure.
+         *   3. After stopping streaming, the developer should stop the local preview based on whether the business situation requires it.
          *
          * @param channel Publish stream channel.
          */
@@ -308,15 +344,19 @@ namespace ZEGO
          * When to call: After [createEngine].
          * Restrictions: None.
          * Caution: 1. The preview function does not require you to log in to the room or publish the stream first. But after exiting the room, SDK internally actively stops previewing by default. 2. Local view and preview modes can be updated by calling this function again. The user can only preview on one view. If you call [startPreview] again to pass in a new view, the preview screen will only be displayed in the new view. 3. You can set the mirror mode of the preview by calling the [setVideoMirrorMode] function. The default preview setting is image mirrored. 4. When this function is called, the audio and video engine module inside SDK will start really, and it will start to try to collect audio and video..
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param channel Publish stream channel
          */
         public abstract void StartPreview(ZegoCanvas canvas, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
         /**
-         * Stops the local video preview (for the specified channel).
+         * Stops the local preview (for the specified channel).
          *
-         * This function can be called to stop previewing when there is no need to see the preview locally.
+         * Available since: 1.1.0
+         * Description: This function can be called to stop the preview when the preview is not needed locally.
+         * Caution: Stopping the preview will not affect the publish stream and playing stream functions.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param channel Publish stream channel
          */
@@ -332,6 +372,7 @@ namespace ZEGO
          * When to call: After [createEngine].
          * Restrictions: It is necessary to set the relevant video configuration before publishing the stream or startPreview, and only support the modification of the encoding resolution and the bit rate after publishing the stream.
          * Caution: Developers should note that the wide and high resolution of the mobile end is opposite to the wide and high resolution of the PC. For example, in the case of 360p, the resolution of the mobile end is 360x640, and the resolution of the PC end is 640x360.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param config Video configuration, the SDK provides a common setting combination of resolution, frame rate and bit rate, they also can be customized.
          * @param channel Publish stream channel.
@@ -342,6 +383,7 @@ namespace ZEGO
          * Gets the current video configurations (for the specified channel).
          *
          * This function can be used to get the specified publish channel's current video frame rate, bit rate, video capture resolution, and video encoding output resolution.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param channel Publish stream channel
          * @return Video configuration object
@@ -352,9 +394,10 @@ namespace ZEGO
          * Sets the video mirroring mode (for the specified channel).
          *
          * Available since: 1.1.0
-         * Description: Set whether the local preview video and the published video have mirror mode enabled. For specific mirroring mode, please refer to: https://doc-zh.zego.im/article/10365.
+         * Description: Set whether the local preview video and the published video have mirror mode enabled. For specific mirroring mode.
          * When to call: After [createEngine].
-         * Restrictions: None.
+         * Restrictions: This setting only works if the SDK is responsible for rendering.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param mirrorMode Mirror mode for previewing or publishing the stream.
          * @param channel Publish stream channel.
@@ -365,10 +408,11 @@ namespace ZEGO
          * Sets the video orientation (for the specified channel).
          *
          * Available since: 1.1.0
-         * Description: Set the video orientation, please refer to: https://doc-zh.zego.im/article/10365.
-         * Use cases: When users use mobile devices to conduct live broadcasts or video calls, they can set different video directions according to the scene
+         * Description: Set the video orientation.
+         * Use cases: When users use mobile devices to conduct live broadcasts or video calls, they can set different video directions according to the scene.
          * When to call: After [createEngine].
          * Restrictions: None.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param orientation Video orientation.
          * @param channel Publish stream channel.
@@ -408,7 +452,7 @@ namespace ZEGO
          * Stops or resumes sending the audio part of a stream for the specified channel.
          *
          * Available since: 1.1.0
-         * Description: This function can be called when publishing the stream to realize not publishing the audio data stream. The SDK still collects and processes the audio, but does not send the audio data to the network.
+         * Description: This function can be called when publishing the stream to realize not publishing the audio data stream. The SDK still collects and processes the audio, but send muted audio frame packets to the network.
          * When to call: Called after the engine is created [createEngine] can take effect.
          * Restrictions: None.
          * Related callbacks: If you stop sending audio streams, the remote user that play stream of local user publishing stream can receive `Mute` status change notification by monitoring [onRemoteMicStateUpdate] callbacks.
@@ -428,6 +472,7 @@ namespace ZEGO
          * Restrictions: None.
          * Related callbacks: If you stop sending video streams locally, the remote user that play stream of local user publishing stream can receive `Mute` status change notification by monitoring [onRemoteCameraStateUpdate] callbacks.
          * Related APIs: [mutePublishStreamAudio].
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param mute Whether to stop sending video streams, true means not to send video stream, and false means sending video stream. The default is false.
          * @param channel Publish stream channel.
@@ -445,7 +490,7 @@ namespace ZEGO
          * Caution: Act on the main publish channel ZegoPublishChannel.Main.
          *
          * @param enable Whether to enable traffic control. The default is ture.
-         * @param property Adjustable property of traffic control, bitmask format. Should be one or the combinations of [ZegoTrafficControlProperty] enumeration. [AdaptiveFPS] as default.
+         * @param property Adjustable property of traffic control, bitmask OR format. Should be one or the combinations of [ZegoTrafficControlProperty] enumeration. [AdaptiveFPS] as default.
          */
         public abstract void EnableTrafficControl(bool enable, int property);
 
@@ -459,6 +504,7 @@ namespace ZEGO
          * Restrictions: The traffic control must be turned on [enableTrafficControl].
          * Caution: Act on the main publish channel ZegoPublishChannel.Main.
          * Related APIs: [enableTrafficControl].
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param bitrate Minimum video bitrate threshold for traffic control(kbps).
          * @param mode Video sending mode below the minimum bitrate.
@@ -482,13 +528,13 @@ namespace ZEGO
         /**
          * Set audio capture stereo mode.
          *
-         * Available since: 1.15.0
-         * Description: This function is used to set the audio capture channel mode. When the developer turns on the two-channel capture, using a special two-channel capture device, the two-channel audio data can be collected and streamed.
-         * Use cases: In some professional scenes, users are particularly sensitive to sound effects, such as voice radio and musical instrument performance. At this time, support for dual-channel and high-quality sound is required.
+         * Available since: 1.15.0 (iOS/Android/Windows); support macOS since 2.16.0
+         * Description: This function is used to set the audio capture channel mode. When the developer turns on the stereo capture, using a special stereo capture device, the stereo audio data can be captured and streamed.
+         * Use cases: In some professional scenes, users are particularly sensitive to sound effects, such as voice radio and musical instrument performance. At this time, support for stereo and high-quality sound is required.
          * Default value: The default is None, which means mono capture.
-         * When to call: It needs to be called after [createEngine]， before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer] and [createAudioEffectPlayer].
-         * Restrictions: None.
-         * Related APIs: When streaming, you need to enable the dual-channel audio encoding function through the [setAudioConfig] interface at the same time.
+         * When to call: It needs to be called after [createEngine]， before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer] and [createRealTimeSequentialDataManager].
+         * Restrictions: If you need to enable stereo capture, you also need to meet the following conditions: For iOS/Android, you need to connect an external audio device that supports stereo capture and be at the media volume. For macOS, it needs to be at the media volume. For Windows, an external audio device that supports stereo capture is required.
+         * Related APIs: When streaming, you need to enable the stereo audio encoding function through the [setAudioConfig] interface at the same time.
          *
          * @param mode Audio stereo capture mode.
          */
@@ -502,10 +548,11 @@ namespace ZEGO
          * Use cases: 1. It is often used in large-scale live broadcast scenes that do not have particularly high requirements for delay. 2. Since ZEGO RTC server itself can be configured to support CDN(content distribution networks), this function is mainly used by developers who have CDN content distribution services themselves. 3. This function supports dynamic relay to the CDN content distribution network, so developers can use this function as a disaster recovery solution for CDN content distribution services.
          * When to call: After calling the [createEngine] function to create the engine.
          * Restrictions: When the [enablePublishDirectToCDN] function is set to true to publish the stream straight to the CDN, then calling this function will have no effect.
+         * Caution: Removing URLs retweeted to CDN requires calling [removePublishCdnUrl], calling [stopPublishingStream] will not remove URLs publish to CDN.
          * Related APIs: Remove URLs that are re-pushed to the CDN [removePublishCdnUrl].
          *
          * @param streamID Stream ID.
-         * @param targetURL CDN relay address, supported address format is rtmp.
+         * @param targetURL CDN relay address, supported address format is rtmp, rtmps.
          * @param onPublisherUpdateCdnUrlResult The execution result of update the relay CDN operation.
          */
         public abstract void AddPublishCdnUrl(string streamID, string targetURL, OnPublisherUpdateCdnUrlResult onPublisherUpdateCdnUrlResult);
@@ -515,7 +562,7 @@ namespace ZEGO
          *
          * Available since: 1.1.0
          * Description: When a CDN forwarding address has been added via [addPublishCdnUrl], this function is called when the stream needs to be stopped.
-         * When to call: After calling the [createEngine] function to create the engine.
+         * When to call: After calling the [createEngine] function to create the engine, When you don't need to continue publish to the CDN.
          * Restrictions: When the [enablePublishDirectToCDN] function is set to true to publish the stream straight to the CDN, then calling this function will have no effect.
          * Caution: This function does not stop publishing audio and video stream to the ZEGO ZEGO RTC server.
          * Related APIs: Add URLs that are re-pushed to the CDN [addPublishCdnUrl].
@@ -602,9 +649,12 @@ namespace ZEGO
          * Use cases: In real-time or live broadcast scenarios, developers can listen to the [onRoomStreamUpdate] event callback to obtain the new stream information in the room where they are located, and call this interface to pass in streamID for play streams.
          * When to call: After [loginRoom].
          * Restrictions: None.
-         * Caution: 1. The developer can update the player canvas by calling this function again (the streamID must be the same). 2. After the first play stream failure due to network reasons or the play stream is interrupted, the default time for SDK reconnection is 20min. 3. In the case of poor network quality, user play may be interrupted, the SDK will try to reconnect, and the current play status and error information can be obtained by listening to the [onPlayerStateUpdate] event. please refer to: https://doc-en.zego.im/faq/reconnect. 4. Playing the stream ID that does not exist, the SDK continues to try to play after calling this function. After the stream ID is successfully published, the audio and video stream can be actually played.
+         * Caution: 1. The developer can update the player canvas by calling this function again (the streamID must be the same). 2. After the first play stream failure due to network reasons or the play stream is interrupted, the default time for SDK reconnection is 20min. 3. In the case of poor network quality, user play may be interrupted, the SDK will try to reconnect, and the current play status and error information can be obtained by listening to the [onPlayerStateUpdate] event. please refer to https://docs.zegocloud.com/faq/reconnect. 4. Playing the stream ID that does not exist, the SDK continues to try to play after calling this function. After the stream ID is successfully published, the audio and video stream can be actually played.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
-         * @param streamID Stream ID, a string of up to 256 characters. You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '~', '!', '@', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         * @param streamID Stream ID, a string of up to 256 characters.
+         *   Caution:
+         *   1. Only support numbers, English characters and '-', ' '.
          * @param config Advanced player configuration.
          */
         public abstract void StartPlayingStream(string streamId, ZegoCanvas canvas, ZegoPlayerConfig config = null);
@@ -660,8 +710,9 @@ namespace ZEGO
          * Description: In the process of real-time video and video interaction, local users can use this function to control whether to receive video data from designated remote users when pulling streams as needed. When the developer does not receive the audio receipt, the hardware and network overhead can be reduced.
          * Use cases: This function can be called when developers need to quickly close and resume watching remote video. Compared to re-flow, it can greatly reduce the time and improve the interactive experience.
          * When to call: This function can be called after calling [createEngine].
-         * Caution: This function is valid only when the [muteAllPlayStreamVideo] function is set to `false`.
+         * Caution: This function is valid only when the [muteAllPlayStreamVideo] function is set to `false`. When you mute the video stream, the view remains at the last frame by default, if you need to clear the last frame, please contact ZEGO technical support.
          * Related APIs: You can call the [muteAllPlayStreamVideo] function to control whether to receive all video data. When the two functions [muteAllPlayStreamVideo] and [mutePlayStreamVideo] are set to `false` at the same time, the local user can receive the video data of the remote user when the stream is pulled: 1. When the [muteAllPlayStreamVideo(true)] function is called, it will take effect globally, that is, local users will be prohibited from receiving all remote users' video data. At this time, the [mutePlayStreamVideo] function will not take effect whether it is called before or after [muteAllPlayStreamVideo]. 2. When the [muteAllPlayStreamVideo(false)] function is called, the local user can receive the video data of all remote users. At this time, the [mutePlayStreamVideo] function can be used to control whether to receive a single video data. Call the [mutePlayStreamVideo(true, streamID)] function, the local user can receive other video data other than the `streamID`; call the [mutePlayStreamVideo(false, streamID)] function, the local user can receive all the video data.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param streamID Stream ID.
          * @param mute Whether it is possible to receive the video data of the specified remote user when streaming, "true" means prohibition, "false" means receiving, the default value is "false".
@@ -687,14 +738,15 @@ namespace ZEGO
          * Enables or disables frame order detection.
          *
          * Available since: 1.1.0
-         * Description: Control whether to turn on frame order detection, on to not support B frames, off to support B frames.
+         * Description: Control whether to turn on frame order detection.
          * Use cases: Turning on frame order detection when pulling cdn's stream will prevent splash screens.
          * Default value: Turn on frame order detection by default when this interface is not called.
          * When to call: This function needs to be called after [createEngine] creates an instance.
          * Restrictions: None.
          * Caution: Turn off frame order detection during playing stream may result in a brief splash screen.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
-         * @param enable Whether to turn on frame order detection, true: enable check poc,not support B frames, false: disable check poc, support B frames.
+         * @param enable Whether to turn on frame order detection, true: enable check poc, false: disable check poc.
          */
         public abstract void EnableCheckPoc(bool enable);
 
@@ -722,7 +774,7 @@ namespace ZEGO
          * Use cases: It is often used when multiple video images are required to synthesize a video using mixed streaming, such as education, live broadcast of teacher and student images.
          * When to call: After calling [loginRoom] to log in to the room.
          * Restrictions: None.
-         * Caution: Due to the performance considerations of the client device, the SDK muxing is to start the mixing task on the ZEGO RTC server for mixing. If an exception occurs when the mixing task is requested to start, for example, the most common mixing input stream does not exist, the error code will be given from the callback callback. For specific error codes, please refer to the common error code document https://doc-zh.zego.im/zh/4378.html. If a certain input stream does not exist in the middle, the muxing task will automatically retry to pull this input stream for 90 seconds, and will not retry after 90 seconds. If all input streams no longer exist, the server will automatically stop the mixing task after 90 seconds.
+         * Caution: Due to the performance considerations of the client device, the SDK muxing is to start the mixing task on the ZEGO RTC server for mixing. If an exception occurs when the mixing task is requested to start, for example, the most common mixing input stream does not exist, the error code will be given from the callback callback. If a certain input stream does not exist in the middle, the muxing task will automatically retry to pull this input stream for 90 seconds, and will not retry after 90 seconds. If all input streams no longer exist, the server will automatically stop the mixing task after 90 seconds.
          * Related callbacks: [OnMixerRelayCDNStateUpdate] can be used to obtain the CDN status update notification of the mixed stream repost, and the sound update notification of each single stream in the mixed stream can be obtained through [onMixerSoundLevelUpdate].
          * Related APIs: the mixing task can be stopped by the [stopMixerTask] function.
          *
@@ -807,7 +859,7 @@ namespace ZEGO
         /**
          * Gets a list of audio devices.
          *
-         * Only supports desktop.
+         * Only for Windows / macOS / Linux
          *
          * @param deviceType Audio device type
          * @return Audo device List
@@ -817,7 +869,10 @@ namespace ZEGO
         /**
          * Chooses to use the specified audio device.
          *
-         * Only supports desktop.
+         * Available since: 1.0.0
+         * Description: Chooses to use the specified audio device.
+         * When to call: After creating the engine [createEngine] and before call [startPublishingStream] or [startPlayingStream].
+         * Restrictions: Only supports Windows / macOS / Linux
          *
          * @param deviceType Audio device type
          * @param deviceID ID of a device obtained by [getAudioDeviceList]
@@ -828,14 +883,14 @@ namespace ZEGO
          * Enables or disables the audio capture device.
          *
          * Available since: 1.1.0
-         * Description: This function is used to control whether to release the audio collection device. When the audio collection device is turned off, the SDK will no longer occupy the audio device. Of course, if the stream is being published at this time, there is no audio data.
+         * Description: This function is used to control whether to use the audio collection device. When the audio collection device is turned off, the SDK will no longer occupy the audio device. Of course, if the stream is being published at this time, there is no audio data.
          * Use cases: When the user never needs to use the audio, you can call this function to close the audio collection.
-         * Default value: The default is `false`.
+         * Default value: The default is `true`.
          * When to call: After creating the engine [createEngine].
          * Restrictions: None.
          * Related APIs: Turning off or turning on the microphone on the hardware is a time-consuming operation, and there is a certain performance overhead when the user performs frequent operations. [muteMicrophone] is generally recommended.
          *
-         * @param enable Whether to enable the audio capture device, `true`: disable audio capture device, `false`: enable audio capture device.
+         * @param enable Whether to enable the audio capture device, `true`: enable audio capture device, `false`: disable audio capture device.
          */
         public abstract void EnableAudioCaptureDevice(bool enable);
 
@@ -843,11 +898,12 @@ namespace ZEGO
          * Turns on/off the camera (for the specified channel).
          *
          * Available since: 1.1.0
-         * Description: This function is used to control whether to start the camera acquisition. After the camera is turned off, video capture will not be performed. At this time, the publish stream will also have no video data.
+         * Description: This function is used to control whether to start the capture of the camera. After the camera is turned off, the video capture will not be performed. At this time, there will be no video data for local preview and push streaming.
          * Default value: The default is `true` which means the camera is turned on.
          * When to call: After creating the engine [createEngine].
          * Restrictions: None.
          * Caution: In the case of using the custom video capture function [enableCustomVideoCapture], since the developer has taken over the video data capture, the SDK is no longer responsible for the video data capture, but this function still affects whether to encode or not. Therefore, when developers use custom video capture, please ensure that the value of this function is `true`.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param enable Whether to turn on the camera, `true`: turn on camera, `false`: turn off camera
          * @param channel Publishing stream channel
@@ -863,6 +919,7 @@ namespace ZEGO
          * When to call: After creating the engine [createEngine].
          * Restrictions: None.
          * Caution: When the custom video capture function [enableCustomVideoCapture] is turned on, since the developer has taken over the video data capture, the SDK is no longer responsible for the video data capture, and this function is no longer valid.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param enable Whether to use the front camera, `true`: use the front camera, `false`: use the the rear camera.
          * @param channel Publishing stream channel
@@ -872,13 +929,19 @@ namespace ZEGO
         /**
          * Chooses to use the specified video device (for the specified channel).
          *
-         * @param deviceID ID of a device obtained by getVideoDeviceList
+         * Only for Windows / macOS / Linux
+         * Note: This function is only available in ZegoExpressVideo SDK!
+         *
+         * @param deviceID ID of a device obtained by [getVideoDeviceList]
          * @param channel Publishing stream channel
          */
         public abstract void UseVideoDevice(string deviceID, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
         /**
          * Gets a list of video devices.
+         *
+         * Only for Windows / macOS / Linux
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @return Video device List
          */
@@ -891,7 +954,9 @@ namespace ZEGO
          * Description: After starting monitoring, you can receive local audio sound level via [onCapturedSoundLevelUpdate] callback, and receive remote audio sound level via [onRemoteSoundLevelUpdate] callback. Before entering the room, you can call [startPreview] with this function and combine it with [onCapturedSoundLevelUpdate] callback to determine whether the audio device is working properly.
          * Use cases: During the publishing and playing process, determine who is talking on the wheat and do a UI presentation.
          * When to call: After the engine is created [createEngine].
-         * Caution: [onCapturedSoundLevelUpdate] and [onRemoteSoundLevelUpdate] callback notification period is the value set by the parameter. If you want to use advanced feature of sound level, please use the function of the same name (the parameter type is ZegoSoundLevelConfig) instead.
+         * Caution:
+         *   1. [onCapturedSoundLevelUpdate] and [onRemoteSoundLevelUpdate] callback notification period is the value set by the parameter. If you want to use advanced feature of sound level, please use the function of the same name (the parameter type is ZegoSoundLevelConfig) instead.
+         *   2. After the sound monitoring is started, even if the local audio capture is not started, [onCapturedSoundLevelUpdate] will have a callback, and the sound level is 0.
          *
          * @param millisecond Monitoring time period of the sound level, in milliseconds, has a value range of [100, 3000]. Default is 100 ms.
          */
@@ -904,7 +969,9 @@ namespace ZEGO
          * Description: After starting monitoring, you can receive local audio sound level via [onCapturedSoundLevelUpdate] callback, and receive remote audio sound level via [onRemoteSoundLevelUpdate] callback. Before entering the room, you can call [startPreview] with this function and combine it with [onCapturedSoundLevelUpdate] callback to determine whether the audio device is working properly.
          * Use cases: During the publishing and playing process, determine who is talking on the wheat and do a UI presentation.
          * When to call: After the engine is created [createEngine].
-         * Caution: [onCapturedSoundLevelUpdate] and [onRemoteSoundLevelUpdate] callback notification period is the value set by the parameter.
+         * Caution:
+         *   1. [onCapturedSoundLevelUpdate] and [onRemoteSoundLevelUpdate] callback notification period is the value set by the parameter.
+         *   2. After the sound monitoring is started, even if the local audio capture is not started, [onCapturedSoundLevelUpdate] will have a callback, and the sound level is 0.
          *
          * @param config Configuration for starts the sound level monitor.
          */
@@ -950,7 +1017,9 @@ namespace ZEGO
          * Description: Enable/Disable headphone monitor, and users hear their own voices as they use the microphone to capture sounds.
          * When to call: After the engine is created [createEngine].
          * Default value: Disable.
-         * Caution: This setting does not actually take effect until both the headset and microphone are connected.
+         * Caution:
+         *   1. This setting does not actually take effect until both the headset and microphone are connected.
+         *   2. The default is to return after acquisition and before pre-processing. If you need to return after pre-processing, please contact ZEGO technical support.
          *
          * @param enable Whether to use headphone monitor, true: enable, false: disable
          */
@@ -965,7 +1034,7 @@ namespace ZEGO
          * Caution: This setting does not actually take effect until both the headset and microphone are connected.
          * Related APIs: Enables or disables headphone monitoring via [enableHeadphoneMonitor].
          *
-         * @param volume headphone monitor volume, range from 0 to 200, 100 as default.
+         * @param volume headphone monitor volume, range from 0 to 200, 60 as default.
          */
         public abstract void SetHeadphoneMonitorVolume(int volume);
 
@@ -977,7 +1046,7 @@ namespace ZEGO
 
         public OnRemoteAudioSpectrumUpdate onRemoteAudioSpectrumUpdate;
 
-        public OnDeviceError onDeviceError;
+        public OnLocalDeviceExceptionOccurred onLocalDeviceExceptionOccurred;
 
         public OnRemoteCameraStateUpdate onRemoteCameraStateUpdate;
 
@@ -989,9 +1058,8 @@ namespace ZEGO
          * Available since: 1.1.0
          * Description: Turning on echo cancellation, the SDK filters the collected audio data to reduce the echo component in the audio.
          * Use case: When you need to reduce the echo to improve the call quality and user experience, you can turn on this feature.
-         * Default value: When this function is not called, echo cancellation is enabled by default.
-         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer].
-         * Caution: The AEC function only supports the processing of sounds playbacked through the SDK, such as sounds played by the playing stream, media player, audio effect player, etc.
+         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer] and [createRealTimeSequentialDataManager].
+         * Caution: The AEC function only supports the processing of sounds playbacked through the SDK, such as sounds played by the playing stream, media player, audio effect player, etc. Before this function is called, the SDK automatically determines whether to use AEC. Once this function is called, the SDK does not automatically determine whether to use AEC.
          * Restrictions: None.
          * Related APIs: Developers can use [enableHeadphoneAEC] to set whether to enable AEC when using headphones, and use [setAECMode] to set the echo cancellation mode.
          *
@@ -1006,7 +1074,7 @@ namespace ZEGO
          * Description: When [enableAEC] is used to enable echo cancellation, this function can be used to switch between different echo cancellation modes to control the degree of echo cancellation.
          * Use case: When the default echo cancellation effect does not meet expectations, this function can be used to adjust the echo cancellation mode.
          * Default value: When this function is not called, the default echo cancellation mode is [Aggressive].
-         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer].
+         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer] and [createRealTimeSequentialDataManager].
          * Restrictions: The value set by this function is valid only after the echo cancellation function is turned on.
          *
          * @param mode Echo cancellation mode
@@ -1019,8 +1087,8 @@ namespace ZEGO
          * Available since: 1.1.0
          * Description: After turning on this function, the SDK can automatically adjust the microphone volume to adapt to near and far sound pickups and keep the volume stable.
          * Use case: When you need to ensure volume stability to improve call quality and user experience, you can turn on this feature.
-         * Default value: When this function is not called, AGC is enabled by default.
-         * When to call: It needs to be called after [createEngine] and before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer] and [createAudioEffectPlayer]. Note that the Mac needs to be called after [startPreview] and before [startPublishingStream].
+         * When to call: It needs to be called after [createEngine] and before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer] and [createRealTimeSequentialDataManager]. Note that the Mac needs to be called after [startPreview] and before [startPublishingStream].
+         * Caution: Before this function is called, the SDK automatically determines whether to use AGC. Once this function is called, the SDK does not automatically determine whether to use AGC.
          * Restrictions: None.
          *
          * @param enable Whether to enable automatic gain control, true: enable, false: disable
@@ -1033,9 +1101,9 @@ namespace ZEGO
          * Available since: 1.1.0
          * Description: Enable the noise suppression can reduce the noise in the audio data and make the human voice clearer.
          * Use case: When you need to suppress noise to improve call quality and user experience, you can turn on this feature.
-         * Default value: When this function is not called, ANS is enabled by default.
-         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer].
+         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer] and [createRealTimeSequentialDataManager].
          * Related APIs: This function has a better suppression effect on continuous noise (such as the sound of rain, white noise). If you need to turn on transient noise suppression, please use [enableTransientANS]. And the noise suppression mode can be set by [setANSMode].
+         * Caution: Before this function is called, the SDK automatically determines whether to use ANS. Once this function is called, the SDK does not automatically determine whether to use ANS.
          * Restrictions: None.
          *
          * @param enable Whether to enable noise suppression, true: enable, false: disable
@@ -1049,7 +1117,7 @@ namespace ZEGO
          * Description: Enable the transient noise suppression can suppress the noises such as keyboard and desk knocks.
          * Use case: When you need to suppress transient noise to improve call quality and user experience, you can turn on this feature.
          * Default value: When this function is not called, this is disabled by default.
-         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer].
+         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer] and [createRealTimeSequentialDataManager].
          * Related APIs: This function will not suppress normal noise after it is turned on. If you need to turn on normal noise suppression, please use [enableANS].
          * Restrictions: None.
          *
@@ -1064,7 +1132,7 @@ namespace ZEGO
          * Description: When [enableANS] is used to enable noise suppression, this function can be used to switch between different noise suppression modes to control the degree of noise suppression.
          * Use case: When the default noise suppression effect does not meet expectations, this function can be used to adjust the noise suppression mode.
          * Default value: When this function is not called, the default echo cancellation mode is [Medium].
-         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer].
+         * When to call: It needs to be called after [createEngine], before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer] and [createRealTimeSequentialDataManager].
          * Restrictions: The value set by this function is valid only after the noise suppression function is turned on.
          *
          * @param mode Audio Noise Suppression mode
@@ -1109,11 +1177,15 @@ namespace ZEGO
          * Description: Send a broadcast message to the room, users who have entered the same room can receive the message, and the message is reliable.
          * Use cases: Generally used when the number of people in the live room does not exceed 500.
          * When to call: After calling [loginRoom] to log in to the room.
-         * Restrictions: It is not supported when the number of people online in the room exceeds 500. If you need to increase the limit, please contact ZEGO technical support to apply for evaluation. The frequency of sending broadcast messages in the same room cannot be higher than 10 messages/s. The maximum QPS for a single user calling this interface from the client side is 2. For restrictions on the use of this function, please refer to https://doc-zh.zego.im/article/7581 or contact ZEGO technical support.
+         * Restrictions: It is not supported when the number of people online in the room exceeds 500. If you need to increase the limit, please contact ZEGO technical support to apply for evaluation. The frequency of sending broadcast messages in the same room cannot be higher than 10 messages/s. The maximum QPS for a single user calling this interface from the client side is 2. For restrictions on the use of this function, please contact ZEGO technical support.
          * Related callbacks: The room broadcast message can be received through [onIMRecvBroadcastMessage].
          * Related APIs: Barrage messages can be sent through the [sendBarrageMessage] function, and custom command can be sent through the [sendCustomCommand] function.
          *
-         * @param roomID Room ID. Required: Yes. Value range: The maximum length is 128 bytes. Caution: The room ID is in string format and only supports numbers, English characters and'~','!','@','#','$','%','^','&', ' *','(',')','_','+','=','-','`',';',''',',','.','<' ,'>','/','\'.
+         * @param roomID Room ID, a string of up to 128 bytes in length.
+         *   Caution:
+         *   1. room ID is defined by yourself.
+         *   2. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         *   3. If you need to communicate with the Web SDK, please do not use '%'.
          * @param message The content of the message. Required: Yes. Value range: The length does not exceed 1024 bytes.
          * @param onIMSendBroadcastMessageResult Send a notification of the result of a broadcast message. Required: No. Caution: Passing [null] means not receiving callback notifications.
          */
@@ -1126,11 +1198,15 @@ namespace ZEGO
          * Description: Send a barrage message to the room, users who have logged in to the same room can receive the message, the message is unreliable.
          * Use cases: Generally used in scenarios where there is a large number of messages sent and received in the room and the reliability of the messages is not required, such as live barrage.
          * When to call: After calling [loginRoom] to log in to the room.
-         * Restrictions: The frequency of sending barrage messages in the same room cannot be higher than 20 messages/s. For restrictions on the use of this function, please refer to https://doc-zh.zego.im/article/7581 or contact ZEGO technical support.
+         * Restrictions: The frequency of sending barrage messages in the same room cannot be higher than 20 messages/s. For restrictions on the use of this function, please contact ZEGO technical support.
          * Related callbacks: The room barrage message can be received through [onIMRecvBarrageMessage].
          * Related APIs: Broadcast messages can be sent through the [sendBroadcastMessage] function, and custom command can be sent through the [sendCustomCommand] function.
          *
-         * @param roomID Room ID. Required: Yes. Value range: The maximum length is 128 bytes. Caution: The room ID is in string format and only supports numbers, English characters and'~','!','@','#','$','%','^','&', ' *','(',')','_','+','=','-','`',';',''',',','.','<' ,'>','/','\'.
+         * @param roomID Room ID, a string of up to 128 bytes in length.
+         *   Caution:
+         *   1. room ID is defined by yourself.
+         *   2. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         *   3. If you need to communicate with the Web SDK, please do not use '%'.
          * @param message The content of the message. Required: Yes. Value range: The length does not exceed 1024 bytes.
          * @param onIMSendBarrageMessageResult Send barrage message result callback.Required: No. Caution: Passing [null] means not receiving callback notifications.
          */
@@ -1143,12 +1219,16 @@ namespace ZEGO
          * Description: After calling this function, users in the same room who have entered the room can receive the message, the message is unreliable.
          * Use cases: Generally used in scenarios where there is a large number of messages sent and received in the room and the reliability of the messages is not required, such as live barrage.
          * When to call: After calling [loginRoom] to log in to the room.
-         * Restrictions: Generally used when the number of people in the live room does not exceed 500.The frequency of sending barrage messages in the same room cannot be higher than 20 messages/s. For restrictions on the use of this function, please refer to https://doc-zh.zego.im/article/7581 or contact ZEGO technical support.
+         * Restrictions: Generally used when the number of people in the live room does not exceed 500.The frequency of sending barrage messages in the same room cannot be higher than 20 messages/s. For restrictions on the use of this function, please contact ZEGO technical support.
          * Related callbacks: The room custom command can be received through [onIMRecvCustomCommand].
          * Related APIs: Broadcast messages can be sent through the [sendBroadcastMessage] function, and barrage messages can be sent through the [sendBarrageMessage] function.
          * Privacy reminder: Please do not fill in sensitive user information in this interface, including but not limited to mobile phone number, ID number, passport number, real name, etc.
          *
-         * @param roomID Room ID. Required: Yes. Value range: The maximum length is 128 bytes. Caution: The room ID is in string format and only supports numbers, English characters and'~','!','@','#','$','%','^','&', ' *','(',')','_','+','=','-','`',';',''',',','.','<' ,'>','/','\'.
+         * @param roomID Room ID, a string of up to 128 bytes in length.
+         *   Caution:
+         *   1. room ID is defined by yourself.
+         *   2. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         *   3. If you need to communicate with the Web SDK, please do not use '%'.
          * @param command Custom command content. Required: Yes. Value range: The maximum length is 1024 bytes. Caution: To protect privacy, please do not fill in sensitive user information in this interface, including but not limited to mobile phone number, ID number, passport number, real name, etc.
          * @param toUserList List of recipients of signaling. Required: Yes. Value range: user list or [null]. Caution: When it is [null], the SDK will send custom signaling back to all users in the room
          * @param onIMSendCustomCommandResult Send a notification of the signaling result. Required: No. Caution: Passing [null] means not receiving callback notifications.
@@ -1241,9 +1321,10 @@ namespace ZEGO
          * Description: If the value of enable is true, the video collection function is enabled. If the value of enable is false, the video collection function is disabled.
          * Use case: The App developed by the developer uses the beauty SDK of a third-party beauty manufacturer to broadcast non-camera collected data.
          * Default value: When this function is not called, custom video collection is disabled by default.
-         * When to call: After [createEngine], call [startPreview], [startPublishingStream], and call [logoutRoom] to modify the configuration.
+         * When to call: After [createEngine], call [startPreview], [startPublishingStream], [createRealTimeSequentialDataManager], and call [logoutRoom] to modify the configuration.
          * Caution: Custom video rendering can be used in conjunction with custom video capture, but when both are enabled, the local capture frame callback for custom video rendering will no longer be triggered, and the developer should directly capture the captured video frame from the custom video capture source.
          * Related callbacks: When developers to open a custom collection, by calling [setCustomVideoCaptureHandler] can be set up to receive a custom collection start-stop event notification.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param enable enable or disable
          * @param config custom video capture config
@@ -1259,6 +1340,7 @@ namespace ZEGO
          * When to call: After receiving the [onStart] notification, the developer starts the call after the collection logic starts and ends the call after the [onStop] notification.
          * Caution: This interface must be called with [enableCustomVideoCapture] passing the parameter type RAW_DATA.
          * Related APIs: [enableCustomVideoCapture], [setCustomVideoCaptureHandler].
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param data video frame data
          * @param dataLength video frame data length
@@ -1276,6 +1358,7 @@ namespace ZEGO
          * When to call: After receiving the [onStart] notification, the developer starts the call after the collection logic starts and ends the call after the [onStop] notification.
          * Caution: This interface must be called with [enableCustomVideoCapture] passing the parameter type RAW_DATA.
          * Related APIs: [enableCustomVideoCapture], [setCustomVideoCaptureHandler].
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param data video frame data
          * @param dataLength video frame data length
@@ -1300,9 +1383,10 @@ namespace ZEGO
          * Description: When the developer opens custom pre-processing, by calling [setCustomVideoProcessHandler] you can set the custom video pre-processing callback.
          * Use cases: After the developer collects the video data by himself or obtains the video data collected by the SDK, if the basic beauty and watermark functions of the SDK cannot meet the needs of the developer (for example, the beauty effect cannot meet the expectations), the ZegoEffects SDK can be used to perform the video Some special processing, such as beautifying, adding pendants, etc., this process is the pre-processing of custom video.
          * Default value: Off by default
-         * When to call: Must be set before calling [startPreview], [startPublishingStream]. If you need to modify the configuration, please call [logoutRoom] to log out of the room first, otherwise it will not take effect.
+         * When to call: Must be set before calling [startPreview], [startPublishingStream], [createRealTimeSequentialDataManager]. If you need to modify the configuration, please call [logoutRoom] to log out of the room first, otherwise it will not take effect.
          * Restrictions: None.
          * Related APIs: Call the [setCustomVideoProcessHandler] function to set the callback before custom video processing.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param enable enable or disable. Required: Yes.
          * @param config custom video processing configuration. Required: Yes.Caution: If NULL is passed, the platform default value is used.
@@ -1320,6 +1404,7 @@ namespace ZEGO
          * When to call: Must be called in the [onCapturedUnprocessedCVPixelbuffer] callback.
          * Restrictions: None.
          * Platform differences: Only valid on Windows platform.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param data Raw video data. RGB format data storage location is data[0], YUV format data storage location is Y component：data[0], U component：data[1], V component：data[2].
          * @param dataLength Raw video data length. RGB format data length storage location is dataLength[0], YUV format data storage location respectively Y component length：dataLength[0], U component length：dataLength[1], V component length：dataLength[2].
@@ -1375,12 +1460,37 @@ namespace ZEGO
 #endif
 
         /**
+         * Enable audio data observering.
+         *
+         * Available since: 1.1.0 
+         * Description: When custom audio processing is turned on, use this function to turn on audio data callback monitoring.
+         * Use cases: When develop need to monitor the original audio.
+         * When to call: After creating the engine.
+         * Restrictions: None.
+         * Caution: This api will start the media engine and occupy the microphone device.
+         *
+         * @param observerBitMask The callback function bitmask marker for receive audio data, refer to enum [ZegoAudioDataCallbackBitMask], when this param converted to binary, 0b01 that means 1 << 0 for triggering [onCapturedAudioData], 0x10 that means 1 << 1 for triggering [onPlaybackAudioData], 0x100 that means 1 << 2 for triggering [onMixedAudioData], 0x1000 that means 1 << 3 for triggering [onPlayerAudioData]. The masks can be combined to allow different callbacks to be triggered simultaneously.
+         * @param param param of audio frame.
+         */
+        public abstract void StartAudioDataObserver(uint observerBitMask, ZegoAudioFrameParam param);
+
+        /**
+         * Disable audio data observering.
+         *
+         * Available since: 1.1.0 
+         * Description: Disable audio data observering.
+         * Use cases: When develop need to monitor the original audio.
+         * When to call: After calling [startAudioDataObserver] to start audio data monitoring.
+         */
+        public abstract void StopAudioDataObserver();
+
+        /**
          * Enables the custom audio I/O function (for the specified channel), support PCM, AAC format data.
          *
          * Available since: 1.10.0
          * Description: Enable custom audio IO function, support PCM, AAC format data.
          * Use cases: If the developer wants to implement special functions (such as voice change, bel canto, etc.) through custom processing after the audio data is collected or before the remote audio data is drawn for rendering.
-         * When to call: It needs to be called before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer] and [createAudioEffectPlayer] to be effective.
+         * When to call: It needs to be called before [startPublishingStream], [startPlayingStream], [startPreview], [createMediaPlayer], [createAudioEffectPlayer] and [createRealTimeSequentialDataManager] to be effective.
          * Restrictions: None.
          *
          * @param enable Whether to enable custom audio IO, default is false.
@@ -1467,6 +1577,7 @@ namespace ZEGO
          *
          * Available since: 2.13.0
          * Description: Destroys a copyrighted music instance.
+         * When to call: It can be called before the engine by [destroyEngine]
          *
          * @param copyrightedMusic The copyrighted music instance object to be destroyed.
          */
@@ -1484,44 +1595,17 @@ namespace ZEGO
          * Caution: The SDK only supports the creation of one instance of ZegoExpressEngine. Multiple calls to this function return the same object.
          *
          * @deprecated Deprecated since 2.14.0, please use the method with the same name without [isTestEnv] parameter instead.
-         * @param appID Application ID issued by ZEGO for developers, please apply from the ZEGO Admin Console https://console-express.zego.im The value ranges from 0 to 4294967295.
-         * @param appSign Application signature for each AppID, please apply from the ZEGO Admin Console. Application signature is a 64 character string. Each character has a range of '0' ~ '9', 'a' ~ 'z'.
-         * @param isTestEnv Choose to use a test environment or a formal commercial environment, the formal environment needs to submit work order configuration in the ZEGO management console. The test environment is for test development, with a limit of 10 rooms and 50 users. Official environment App is officially launched. ZEGO will provide corresponding server resources according to the configuration records submitted by the developer in the management console. The test environment and the official environment are two sets of environments and cannot be interconnected.
-         * @param scenario The application scenario. Developers can choose one of ZegoScenario based on the scenario of the app they are developing, and the engine will preset a more general setting for specific scenarios based on the set scenario. After setting specific scenarios, developers can still call specific functions to set specific parameters if they have customized parameter settings.The recommended configuration for different application scenarios can be referred to: https://doc-zh.zego.im/faq/profile_difference.
+         * @param appID Application ID issued by ZEGO for developers, please apply from the ZEGO Admin Console https://console.zegocloud.com The value ranges from 0 to 4294967295.
+         * @param appSign Application signature for each AppID, please apply from the ZEGO Admin Console. Application signature is a 64 character string. Each character has a range of '0' ~ '9', 'a' ~ 'z'. AppSign 2.17.0 and later allows null or no transmission. If the token is passed empty or not passed, the token must be entered in the [ZegoRoomConfig] parameter for authentication when the [loginRoom] interface is called to login to the room.
+         * @param isTestEnv [Deprecated] For providing better and more standardized services, starting from 2021-11-16, ZEGO no longer classifies environments into production environments and testing environments. f you create your project in ZEGO Admin Console on/before 2021-11-16, refer to [Testing environment deprecation](https://docs.zegocloud.com/article/13315) to upgrade the SDK and adjust related codes.
+         * @param scenario The room scenario. the SDK will optimize the audio and video configuration for the specified scenario to achieve the best effect in this scenario. After specifying the scenario, you can call other APIs to adjusting the audio and video configuration. Differences between scenarios and how to choose a suitable scenario, please refer to https://docs.zegocloud.com/article/14940
          * @return Engine singleton instance.
          */
         [Obsolete("Deprecated since 2.14.0, please use the method with the same name without [isTestEnv] parameter instead.",false)]
         public static ZegoExpressEngine CreateEngine(uint appID, string appSign, bool isTestEnv, ZegoScenario scenario)
         {
             return ZegoExpressEngineImpl.CreateEngine(appID, appSign, isTestEnv, scenario);
-        } 
-
-        /**
-         * [Deprecated] Turns on/off verbose debugging and sets up the log language.
-         *
-         * This function has been deprecated after version 2.3.0, please use the [setEngineConfig] function to set the advanced configuration property advancedConfig to achieve the original function.
-         * The debug switch is set to on and the language is English by default.
-         *
-         * @deprecated This function has been deprecated after version 2.3.0, please use the [setEngineConfig] function to set the advanced configuration property advancedConfig to achieve the original function.
-         * @param enable Detailed debugging information switch
-         * @param language Debugging information language
-         */
-        [Obsolete("This function has been deprecated after version 2.3.0, please use the [setEngineConfig] function to set the advanced configuration property advancedConfig to achieve the original function.",false)]
-        public abstract void SetDebugVerbose(bool enable, ZegoLanguage language);
-
-        /**
-         * [Deprecated] Enables the callback for receiving audio data.
-         *
-         * This function has been deprecated since version 2.7.0, please use [startAudioDataObserver] instead.
-         * The callback to the corresponding setting of [setAudioDataHandler] is triggered when this function is called and at publishing stream state or playing stream state. If you want to enable the [onPlayerAudioData] callback, the sample rate passed in by calling the [enableAudioDataCallback] function does not support 8000Hz, 22050Hz and 24000Hz.
-         *
-         * @deprecated This function has been deprecated since version 2.7.0, please use [startAudioDataObserver] instead.
-         * @param enable Whether to enable audio data callback
-         * @param callbackBitMask The callback function bitmask marker for receive audio data, refer to enum [ZegoAudioDataCallbackBitMask], when this param converted to binary, 0b01 that means 1 << 0 for triggering [onCapturedAudioData], 0x10 that means 1 << 1 for triggering [onPlaybackAudioData], 0x100 that means 1 << 2 for triggering [onMixedAudioData], 0x1000 that means 1 << 3 for triggering [onPlayerAudioData]. The masks can be combined to allow different callbacks to be triggered simultaneously.
-         * @param param param of audio frame
-         */
-        [Obsolete("This function has been deprecated since version 2.7.0, please use [startAudioDataObserver] instead.",false)]
-        public abstract void EnableAudioDataCallback(bool enable, uint callbackBitMask, ZegoAudioFrameParam param);
+        }
 
     }
 

@@ -61,6 +61,7 @@ namespace ZegoCsharpWinformDemo.Examples
                 media_player.EnableAux(checkBox_EnableAux.Checked);
                 media_player.EnableRepeat(checkBox_Repeat.Checked);
             }
+            LoginRoom(textBox_RoomID.Text);
 
             // Init copyrighted music
             InitCopyrightedMusic();
@@ -70,7 +71,7 @@ namespace ZegoCsharpWinformDemo.Examples
 
         public void InitConfig()
         {
-            user.userID = ZegoUtil.DeviceName() + new Random().Next(0,99999);
+            user.userID = ZegoUtil.UserID();
             user.userName = user.userID;
             room_id = "Room_Copyrighted";
             publish_stream_id = "Stream_Copyrighted";
@@ -234,8 +235,8 @@ namespace ZegoCsharpWinformDemo.Examples
             if (engine == null)
             {
                 ZegoEngineProfile engine_profile = new ZegoEngineProfile();
-                engine_profile.appID = KeyCenter.appID();
-                engine_profile.appSign = KeyCenter.appSign();
+                engine_profile.appID = ZegoUtil.AppID();
+                engine_profile.appSign = ZegoUtil.AppSign();
                 engine_profile.scenario = ZegoScenario.General;
 
                 ZegoUtil.PrintLogToView(string.Format("CreateEngine, appID:{0}, appSign:{1}, scenario:{2}", engine_profile.appID, engine_profile.appSign, engine_profile.scenario));

@@ -105,7 +105,7 @@ namespace ZEGO
          *
          * Available since: 1.16.0
          * Description: Set volume for a single audio effect. Both the local play volume and the publish volume are set.
-         * When to call: It can be called after [createAudioEffectPlayer].
+         * When to call: The specified [audioEffectID] is [start].
          * Restrictions: None.
          *
          * @param audioEffectID ID for the audio effect.

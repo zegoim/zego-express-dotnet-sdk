@@ -18,8 +18,8 @@ namespace ZEGO
         public override void LoadCopyrightedMusicResourceWithPosition(string resourceID, ulong startPosition, OnLoadResourceCallback callback)
         {
             this.onLoadResourceCallback = callback;
-            zego_media_player_instance_index curIndex = ZegoExpressEngineImpl.GetIndexFromZegoMediaPlayer(this);
-            int result = IExpressMediaPlayerInternal.zego_express_media_player_load_copyrighted_music_resource_with_position(resourceID, (long)startPosition, curIndex);
+            ZegoMediaPlayerInstanceIndex curIndex = ZegoExpressEngineImpl.GetIndexFromZegoMediaPlayer(this);
+            int result = IExpressMediaPlayerInternal.zego_express_media_player_load_copyrighted_music_resource_with_position(resourceID, (IntPtr)startPosition, curIndex);
             string log = string.Format("loadCopyrightedMusicResourceWithPosition, resourceID:{0}  startPosition:{1} ", resourceID, startPosition);
             ZegoUtil.ZegoPrivateLog(0, log, false, 0);
         }

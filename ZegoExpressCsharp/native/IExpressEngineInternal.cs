@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using static ZEGO.ZegoConstans;
+using System;
 
 namespace ZEGO
 {
@@ -98,7 +99,7 @@ namespace ZEGO
          * @return (zego_error), 错误码
          */
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_init", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-        public static extern int zego_express_engine_init(uint app_id, [In()] [MarshalAs(UnmanagedType.LPStr)] string app_sign, bool is_test_env, ZegoScenario scenario);
+        public static extern int zego_express_engine_init(uint app_id, [In()] [MarshalAs(UnmanagedType.LPStr)] string app_sign, [MarshalAs(UnmanagedType.I1)]bool is_test_env, ZegoScenario scenario);
         /**
          * 同步销毁引擎实例对象
          * 用于释放 SDK 使用的资源。同步销毁会阻塞当前线程，若开发者不希望在这途中阻塞UI线程，可在其他线程调用。
@@ -114,14 +115,7 @@ namespace ZEGO
          */
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_upload_log", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_express_upload_log();
-        /**
-         * 设置调试详细信息开关以及语言
-         * 默认开启且调试信息的语言为英文。
-         * @param enable 详细调试信息开关
-         * @param language 调试信息语种，默认为英文
-         */
-        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_debug_verbose", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-        public static extern void zego_express_set_debug_verbose(bool enable, ZegoLanguage language);
+
         /**
          * 注册调试错误回调
          * 
@@ -148,6 +142,52 @@ namespace ZEGO
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_log_config", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_express_set_log_config(zego_log_config log_config);
+
+
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_call_experimental_api", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern System.IntPtr zego_express_call_experimental_api([In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string param);
+
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_recv_experimental_api([In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content, System.IntPtr user_context);
+
+
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_recv_experimental_api_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_recv_experimental_api_callback(zego_on_recv_experimental_api callback_func, System.IntPtr user_context);
+
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_api_called_result(int error_code, [In()] [MarshalAs(UnmanagedType.LPStr)] string func_name, [In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string info, System.IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_api_called_result_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_api_called_result_callback(zego_on_api_called_result callback_func, IntPtr user_context);
+
+
+        [UnmanagedFunctionPointer(ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_network_quality([In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))]string userid, ZegoStreamQualityLevel upstream_quality, ZegoStreamQualityLevel downstream_quality, IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_network_quality_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_network_quality_callback(zego_on_network_quality callback_func, IntPtr user_context);
+
+        [UnmanagedFunctionPointer(ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_network_time_synchronized(IntPtr user_context);
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_network_time_synchronized_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_network_time_synchronized_callback(zego_on_network_time_synchronized callback_func, IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_is_feature_supported", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_express_is_feature_supported(zego_feature_type feature_type, out bool is_supported);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_room_scenario", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_express_set_room_scenario(zego_scenario scenario);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_debug_assistant", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_express_enable_debug_assistant(bool enable);
     }
 }
 

@@ -12,7 +12,6 @@ using static ZEGO.ZegoCallBackChangeUtil;
 using static ZEGO.ZegoAudioEffectPlayerImpl;
 using static ZEGO.ZegoExpressEngineCallBack;
 using static ZEGO.ZegoCopyrightedMusicImpl;
-using static ZEGO.IExpressCopyrightedMusic;
 
 namespace ZEGO
 {
@@ -32,7 +31,7 @@ namespace ZEGO
         public static ConcurrentDictionary<int, OnRoomSetRoomExtraInfoResult> onRoomSetRoomExtraInfoResultDics = new ConcurrentDictionary<int, OnRoomSetRoomExtraInfoResult>();
         // private static bool setEngineConfigFlag = false;
         public static SynchronizationContext context;
-        private static ConcurrentDictionary<zego_media_player_instance_index, ZegoMediaPlayer> mediaPlayerAndIndex = new ConcurrentDictionary<zego_media_player_instance_index, ZegoMediaPlayer>();
+        public static ConcurrentDictionary<int, ZegoMediaPlayer> mediaPlayerAndIndex = new ConcurrentDictionary<int, ZegoMediaPlayer>();
         public static ConcurrentDictionary<int, OnMixerStartResult> onMixerStartResultDics = new ConcurrentDictionary<int, OnMixerStartResult>();
         public static ConcurrentDictionary<int, OnMixerStopResult> onMixerStopResultDics = new ConcurrentDictionary<int, OnMixerStopResult>();
         public static ConcurrentDictionary<int, ZegoAudioEffectPlayer> audioEffectPlayerAndIndex = new ConcurrentDictionary<int, ZegoAudioEffectPlayer>();
@@ -98,24 +97,23 @@ namespace ZEGO
         private static IExpressRecordInternal.zego_on_captured_data_record_progress_update zegoOnCapturedDataRecordProgressUpdate;
         private static IExpressCustomAudioIOInternal.zego_on_playback_audio_data zegoOnPlaybackAudioData;
         private static IExpressCustomAudioIOInternal.zego_on_player_audio_data zegoOnPlayerAudioData;
-        private static IExpressDeviceInternal.zego_on_device_error zegoOnDeviceError;
+        private static IExpressDeviceInternal.zego_on_local_device_exception_occurred zegoOnLocalDeviceExceptionOccurred;
         private static IExpressDeviceInternal.zego_on_remote_camera_state_update zegoOnRemoteCameraStateUpdate;
         private static IExpressDeviceInternal.zego_on_remote_mic_state_update zegoOnRemoteMicStateUpdate;
         private static IExpressAudioEffectPlayerInternal.zego_on_audio_effect_player_seek_to zegoOnAudioEffectPlayerSeekTo;
         private static IExpressAudioEffectPlayerInternal.zego_on_audio_effect_player_load_resource zegoOnAudioEffectPlayerLoadResource;
         private static IExpressAudioEffectPlayerInternal.zego_on_audio_effect_play_state_update zegoOnAudioEffectPlayerStateUpdate;
         // Copyrighted music
-        private static IExpressCopyrightedMusic.zego_on_copyrighted_music_send_extended_request zegoOnCopyrightedMusicSendExtendedRequest;
-        private static IExpressCopyrightedMusic.zego_on_copyrighted_music_init zegoOnCopyrightedMusicInit;
-        private static IExpressCopyrightedMusic.zego_on_copyrighted_music_request_accompaniment zegoOnCopyrightedMusciRequestAccompaniment;
-        private static IExpressCopyrightedMusic.zego_on_copyrighted_music_request_song zegoOnCopyreghtedMusicRequestSong;
-        private static zego_on_copyrighted_music_get_lrc_lyric zegoOnCopyreghtedMusicGetLrcLyric;
-        private static zego_on_copyrighted_music_get_krc_lyric_by_token zegoOnCopyrightedMusicGetKrcLyricByToken;
-        private static zego_on_copyrighted_music_download zegoOnCopyrightedMusicDownoad;
-        private static zego_on_copyrighted_music_download_progress_update zegoOnCopyrightedMusicDownloadProgressUpdate;
-        private static zego_on_copyrighted_music_get_music_by_token zegoOnCopyrightedMusicGetMusicByToken;
+        private static IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_send_extended_request zegoOnCopyrightedMusicSendExtendedRequest;
+        private static IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_init zegoOnCopyrightedMusicInit;
+        private static IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_request_accompaniment zegoOnCopyrightedMusciRequestAccompaniment;
+        private static IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_request_song zegoOnCopyreghtedMusicRequestSong;
+        private static IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_get_lrc_lyric zegoOnCopyreghtedMusicGetLrcLyric;
+        private static IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_get_krc_lyric_by_token zegoOnCopyrightedMusicGetKrcLyricByToken;
+        private static IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_download zegoOnCopyrightedMusicDownoad;
+        private static IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_download_progress_update zegoOnCopyrightedMusicDownloadProgressUpdate;
+        private static IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_get_music_by_token zegoOnCopyrightedMusicGetMusicByToken;
 
-        private ArrayList arrayList;
         public static new void SetEngineConfig(ZegoEngineConfig config)
         {
             engineConfig = ChangeZegoEngineConfigClassToStruct(config);
@@ -176,7 +174,7 @@ namespace ZEGO
 
         }
 
-        public static new ZegoExpressEngine CreateEngine(uint appId, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string appSign, bool isTestEnv, ZegoScenario scenario, SynchronizationContext uiThreadContext)
+        public static ZegoExpressEngine CreateEngine(uint appId, [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string appSign, bool isTestEnv, ZegoScenario scenario, SynchronizationContext uiThreadContext)
         {
             if (enginePtr == null) //双if +lock
             {
@@ -266,7 +264,7 @@ namespace ZEGO
             zegoOnMediaplayerNetworkEvent = new IExpressMediaPlayerInternal.zego_on_media_player_network_event(zego_on_mediaplayer_network_event);
             zegoOnMediaplayerSeekToTimeResult = new IExpressMediaPlayerInternal.zego_on_media_player_seek_to(zego_on_mediaplayer_seek_to_time_result);
             zegoOnMediaplayerAudioData = new IExpressMediaPlayerInternal.zego_on_media_player_audio_frame(zego_on_mediaplayer_audio_data);
-            zegoOnMediaplayerVideoData = new IExpressMediaPlayerInternal.zego_on_media_player_video_frame(zego_on_mediaplayer_video_data);
+            zegoOnMediaplayerVideoData = new IExpressMediaPlayerInternal.zego_on_media_player_video_frame(zego_on_media_player_video_frame);
             zegoOnMixerStartResult = new IExpressMixerInternal.zego_on_mixer_start_result(zego_on_mixer_start_result);
             zegoOnMixerStopResult = new IExpressMixerInternal.zego_on_mixer_stop_result(zego_on_mixer_stop_result);
             zegoOnMixerRelayCdnStateUpdate = new IExpressMixerInternal.zego_on_mixer_relay_cdn_state_update(zego_on_mixer_relay_cdn_state_update);
@@ -280,7 +278,7 @@ namespace ZEGO
             zegoOnCapturedDataRecordProgressUpdate = new IExpressRecordInternal.zego_on_captured_data_record_progress_update(zego_on_captured_data_record_progress_update);
             zegoOnPlaybackAudioData = new IExpressCustomAudioIOInternal.zego_on_playback_audio_data(zego_on_playback_audio_data);
             zegoOnPlayerAudioData = new IExpressCustomAudioIOInternal.zego_on_player_audio_data(zego_on_player_audio_data);
-            zegoOnDeviceError = new IExpressDeviceInternal.zego_on_device_error(zego_on_device_error);
+            zegoOnLocalDeviceExceptionOccurred = new IExpressDeviceInternal.zego_on_local_device_exception_occurred(zego_on_local_device_exception_occurred);
             zegoOnRemoteCameraStateUpdate = new IExpressDeviceInternal.zego_on_remote_camera_state_update(zego_on_remote_camera_state_update);
             zegoOnRemoteMicStateUpdate = new IExpressDeviceInternal.zego_on_remote_mic_state_update(zego_on_remote_mic_state_update);
             zegoOnAudioEffectPlayerSeekTo = new IExpressAudioEffectPlayerInternal.zego_on_audio_effect_player_seek_to(zego_on_audio_effect_player_seek_to);
@@ -288,15 +286,15 @@ namespace ZEGO
             zegoOnAudioEffectPlayerStateUpdate = new IExpressAudioEffectPlayerInternal.zego_on_audio_effect_play_state_update(zego_on_audio_effect_play_state_update);
 
             // Copyrighted music
-            zegoOnCopyrightedMusicSendExtendedRequest = new IExpressCopyrightedMusic.zego_on_copyrighted_music_send_extended_request(zego_on_copyrighted_music_send_extended_request);
-            zegoOnCopyrightedMusicInit = new IExpressCopyrightedMusic.zego_on_copyrighted_music_init(zego_on_copyrighted_music_init);
-            zegoOnCopyrightedMusciRequestAccompaniment = new IExpressCopyrightedMusic.zego_on_copyrighted_music_request_accompaniment(zego_on_copyrighted_music_request_accompaniment);
-            zegoOnCopyreghtedMusicRequestSong = new IExpressCopyrightedMusic.zego_on_copyrighted_music_request_song(zego_on_copyrighted_music_request_song);
-            zegoOnCopyreghtedMusicGetLrcLyric = new zego_on_copyrighted_music_get_lrc_lyric(zego_on_copyrighted_music_get_lrc_lyric);
-            zegoOnCopyrightedMusicGetKrcLyricByToken = new zego_on_copyrighted_music_get_krc_lyric_by_token(zego_on_copyrighted_music_get_krc_lyric_by_token);
-            zegoOnCopyrightedMusicDownoad = new zego_on_copyrighted_music_download(zego_on_copyrighted_music_download);
-            zegoOnCopyrightedMusicDownloadProgressUpdate = new zego_on_copyrighted_music_download_progress_update(zego_on_copyrighted_music_download_progress_update);
-            zegoOnCopyrightedMusicGetMusicByToken = new zego_on_copyrighted_music_get_music_by_token(zego_on_copyrighted_music_get_music_by_token);
+            zegoOnCopyrightedMusicSendExtendedRequest = new IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_send_extended_request(zego_on_copyrighted_music_send_extended_request);
+            zegoOnCopyrightedMusicInit = new IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_init(zego_on_copyrighted_music_init);
+            zegoOnCopyrightedMusciRequestAccompaniment = new IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_request_accompaniment(zego_on_copyrighted_music_request_accompaniment);
+            zegoOnCopyreghtedMusicRequestSong = new IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_request_song(zego_on_copyrighted_music_request_song);
+            zegoOnCopyreghtedMusicGetLrcLyric = new IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_get_lrc_lyric(zego_on_copyrighted_music_get_lrc_lyric);
+            zegoOnCopyrightedMusicGetKrcLyricByToken = new IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_get_krc_lyric_by_token(zego_on_copyrighted_music_get_krc_lyric_by_token);
+            zegoOnCopyrightedMusicDownoad = new IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_download(zego_on_copyrighted_music_download);
+            zegoOnCopyrightedMusicDownloadProgressUpdate = new IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_download_progress_update(zego_on_copyrighted_music_download_progress_update);
+            zegoOnCopyrightedMusicGetMusicByToken = new IExpressCopyrightedMusicInternal.zego_on_copyrighted_music_get_music_by_token(zego_on_copyrighted_music_get_music_by_token);
 
             IExpressEngineInternal.zego_register_engine_uninit_callback(zegoOnEngineUninit, IntPtr.Zero);
             IExpressRoomInternal.zego_register_room_state_update_callback(zegoOnRoomStateUpdate, IntPtr.Zero);
@@ -349,7 +347,7 @@ namespace ZEGO
             IExpressMixerInternal.zego_register_mixer_stop_result_callback(zegoOnMixerStopResult, IntPtr.Zero);
             IExpressMixerInternal.zego_register_mixer_relay_cdn_state_update_callback(zegoOnMixerRelayCdnStateUpdate, IntPtr.Zero);
             IExpressMixerInternal.zego_register_mixer_sound_level_update_callback(zegoOnMixerSoundLevelUpdate, IntPtr.Zero);
-            IExpressDeviceInternal.zego_register_device_error_callback(zegoOnDeviceError, IntPtr.Zero);
+            IExpressDeviceInternal.zego_register_local_device_exception_occurred_callback(zegoOnLocalDeviceExceptionOccurred, IntPtr.Zero);
             IExpressDeviceInternal.zego_register_remote_camera_state_update_callback(zegoOnRemoteCameraStateUpdate, IntPtr.Zero);
             IExpressDeviceInternal.zego_register_remote_mic_state_update_callback(zegoOnRemoteMicStateUpdate, IntPtr.Zero);
             IExpressAudioEffectPlayerInternal.zego_register_audio_effect_player_seek_to_callback(zegoOnAudioEffectPlayerSeekTo, IntPtr.Zero);
@@ -362,15 +360,15 @@ namespace ZEGO
             IExpressRecordInternal.zego_register_captured_data_record_state_update_callback(zegoOnCapturedDataRecordStateUpdate, IntPtr.Zero);
             IExpressRecordInternal.zego_register_captured_data_record_progress_update_callback(zegoOnCapturedDataRecordProgressUpdate, IntPtr.Zero);
             //CopyrightedMusic
-            IExpressCopyrightedMusic.zego_register_copyrighted_music_send_extended_request_callback(zegoOnCopyrightedMusicSendExtendedRequest, IntPtr.Zero);
-            IExpressCopyrightedMusic.zego_register_copyrighted_music_init_callback(zegoOnCopyrightedMusicInit, IntPtr.Zero);
-            IExpressCopyrightedMusic.zego_register_copyrighted_music_request_accompaniment_callback(zegoOnCopyrightedMusciRequestAccompaniment, IntPtr.Zero);
-            zego_register_copyrighted_music_request_song_callback(zegoOnCopyreghtedMusicRequestSong, IntPtr.Zero);
-            zego_register_copyrighted_music_get_lrc_lyric_callback(zegoOnCopyreghtedMusicGetLrcLyric, IntPtr.Zero);
-            zego_register_copyrighted_music_get_krc_lyric_by_token_callback(zegoOnCopyrightedMusicGetKrcLyricByToken, IntPtr.Zero);
-            zego_register_copyrighted_music_download_callback(zegoOnCopyrightedMusicDownoad, IntPtr.Zero);
-            zego_register_copyrighted_music_download_progress_update_callback(zegoOnCopyrightedMusicDownloadProgressUpdate, IntPtr.Zero);
-            zego_register_copyrighted_music_get_music_by_token_callback(zegoOnCopyrightedMusicGetMusicByToken, IntPtr.Zero);
+            IExpressCopyrightedMusicInternal.zego_register_copyrighted_music_send_extended_request_callback(zegoOnCopyrightedMusicSendExtendedRequest, IntPtr.Zero);
+            IExpressCopyrightedMusicInternal.zego_register_copyrighted_music_init_callback(zegoOnCopyrightedMusicInit, IntPtr.Zero);
+            IExpressCopyrightedMusicInternal.zego_register_copyrighted_music_request_accompaniment_callback(zegoOnCopyrightedMusciRequestAccompaniment, IntPtr.Zero);
+            IExpressCopyrightedMusicInternal.zego_register_copyrighted_music_request_song_callback(zegoOnCopyreghtedMusicRequestSong, IntPtr.Zero);
+            IExpressCopyrightedMusicInternal.zego_register_copyrighted_music_get_lrc_lyric_callback(zegoOnCopyreghtedMusicGetLrcLyric, IntPtr.Zero);
+            IExpressCopyrightedMusicInternal.zego_register_copyrighted_music_get_krc_lyric_by_token_callback(zegoOnCopyrightedMusicGetKrcLyricByToken, IntPtr.Zero);
+            IExpressCopyrightedMusicInternal.zego_register_copyrighted_music_download_callback(zegoOnCopyrightedMusicDownoad, IntPtr.Zero);
+            IExpressCopyrightedMusicInternal.zego_register_copyrighted_music_download_progress_update_callback(zegoOnCopyrightedMusicDownloadProgressUpdate, IntPtr.Zero);
+            IExpressCopyrightedMusicInternal.zego_register_copyrighted_music_get_music_by_token_callback(zegoOnCopyrightedMusicGetMusicByToken, IntPtr.Zero);
         }
         
         private static void DefaultOpenCustomRender()//结构体是栈区分配，值类型，传递的时候是值拷贝，通过ref引用传递值类型解决
@@ -428,7 +426,7 @@ namespace ZEGO
             string log;
             foreach (var item in mediaPlayerAndIndex)
             {
-                result = IExpressMediaPlayerInternal.zego_express_destroy_media_player(item.Key);
+                result = IExpressMediaPlayerInternal.zego_express_destroy_media_player((ZegoMediaPlayerInstanceIndex)item.Key);
                 item.Value.seekToTimeCallbackDic.Clear();
                 log = string.Format("MediaPlayer Destroy index:{0} result:{1} ", item.Key, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -623,17 +621,17 @@ namespace ZEGO
             }
         }
 
-        [Obsolete]
-        public override void  EnableAudioDataCallback(bool enable, uint callbackBitMask, ZegoAudioFrameParam param)
+        public override void StartAudioDataObserver(uint observerBitMask, ZegoAudioFrameParam param)
         {
-            if (enginePtr != null)
-            {
-                zego_audio_frame_param audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
-                int result = IExpressCustomAudioIOInternal.zego_express_enable_audio_data_callback(enable, (uint)callbackBitMask, audio_Frame_Param);
-                string log = string.Format("EnableAudioDataCallback  enable:{0} callbackBitMask:{1} channel:{2} sampleRate:{3} result:{4}", enable, callbackBitMask, param.channel, param.sampleRate, result);
-                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO);
-            }
+            zego_audio_frame_param audioFrameParam = ChangeZegoAudioFrameParamClassToStruct(param);
+            IExpressCustomAudioIOInternal.zego_express_start_audio_data_observer(observerBitMask, audioFrameParam);
         }
+
+        public override void StopAudioDataObserver()
+        {
+            IExpressCustomAudioIOInternal.zego_express_stop_audio_data_observer();
+        }
+
         public override void EnableCustomAudioIO(bool enable, ZegoCustomAudioConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main)
         {
             if (enginePtr != null)
@@ -709,7 +707,7 @@ namespace ZEGO
             {
                 int result = 0;
                 bool enable = false;
-                zego_media_player_instance_index curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 if (onAudioFrame == null)
                 {
                     enable = false;
@@ -731,7 +729,7 @@ namespace ZEGO
             {
                 int result = 0;
                 bool enable = false;
-                zego_media_player_instance_index curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 if (onVideoFrame == null)
                 {
                     enable = false;
@@ -910,7 +908,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_stop(index);
                 string log = string.Format("MediaPlayer Stop index:{0}  result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -922,7 +920,7 @@ namespace ZEGO
             ZegoMediaPlayerState state = ZegoMediaPlayerState.NoPlay;
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 state = IExpressMediaPlayerInternal.zego_express_media_player_get_current_state(index);
                 string log = string.Format("MediaPlayer GetCurrentState index:{0}  result:{1} ", index, state);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -934,7 +932,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_resume(index);
                 string log = string.Format("MediaPlayer Resume index:{0}  result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -945,7 +943,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int seq = IExpressMediaPlayerInternal.zego_express_media_player_seek_to(millisecond, index);
                 string log = string.Format("MediaPlayer SeekTo index:{0} millisecond:{1} result:{2} ", index, millisecond, seq);
                 zegoMediaPlayer.seekToTimeCallbackDic.AddOrUpdate(seq, onSeekToTimeCallback, (key, oldValue) => onSeekToTimeCallback);
@@ -956,11 +954,11 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(mediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(mediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_destroy_media_player(index);
                 string log = string.Format("MediaPlayer Destroy index:{0} result:{1} ", index, result);
                 mediaPlayer.seekToTimeCallbackDic.Clear();
-                mediaPlayerAndIndex.TryRemove(index, out _);
+                mediaPlayerAndIndex.TryRemove((int)index, out _);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
             }
         }
@@ -969,7 +967,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_mute_local_audio(mute, index);
                 string log = string.Format("MediaPlayer MuteLocal index:{0} mute:{1} result:{2} ", index, mute, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -980,7 +978,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 zego_canvas zegoCanvas = ChangeZegoCanvasClassToStruct(canvas);
                 IntPtr ptr = ZegoUtil.GetStructPointer(zegoCanvas);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_player_canvas(ptr, index);
@@ -994,7 +992,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_volume(volume, index);
                 string log = string.Format("MediaPlayer SetVolume index:{0} volume:{1} result:{2} ", index, volume, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1005,7 +1003,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_progress_interval(millisecond, index);
                 string log = string.Format("MediaPlayer SetProgressInterval index:{0} millisecond:{1} result:{2} ", index, millisecond, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1017,7 +1015,7 @@ namespace ZEGO
             ulong result = 0;
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_total_duration(index);
                 string log = string.Format("MediaPlayer GetTotalDuration index:{0} result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -1031,7 +1029,7 @@ namespace ZEGO
             ulong result = 0;
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_current_progress(index);
                 string log = string.Format("MediaPlayer GetCurrentProgress index:{0} result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -1041,7 +1039,7 @@ namespace ZEGO
 
         public static int GetIndex(ZegoMediaPlayer zegoMediaPlayer)
         {
-            zego_media_player_instance_index index = zego_media_player_instance_index.zego_media_player_instance_index_null;
+            ZegoMediaPlayerInstanceIndex index = ZegoMediaPlayerInstanceIndex.Null;
             if (enginePtr != null)
             {
                 index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
@@ -1057,7 +1055,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_enable_aux(enable, index);
                 string log = string.Format("MediaPlayer EnableAux index:{0} result:{1} enable{2}", index, result, enable);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1068,7 +1066,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_pause(index);
                 string log = string.Format("MediaPlayer Pause index:{0} result:{1}", index, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1079,7 +1077,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_start(index);
                 string log = string.Format("MediaPlayer Start index:{0} result:{1}", index, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1090,7 +1088,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_enable_repeat(enable, index);
                 string log = string.Format("EnableRepeat enable:{0} result:{1}", enable, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1101,23 +1099,23 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex curIndex = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_load_resource(path, curIndex);
                 string log = string.Format("LoadResource result:{0}  path:{1} ", result, path);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
-        public static zego_media_player_instance_index GetIndexFromZegoMediaPlayer(ZegoMediaPlayer zegoMediaPlayer)
+        public static ZegoMediaPlayerInstanceIndex GetIndexFromZegoMediaPlayer(ZegoMediaPlayer zegoMediaPlayer)
         {
-            zego_media_player_instance_index result = zego_media_player_instance_index.zego_media_player_instance_index_null;
-            foreach (KeyValuePair<zego_media_player_instance_index, ZegoMediaPlayer> kvp in mediaPlayerAndIndex)
+            ZegoMediaPlayerInstanceIndex result = ZegoMediaPlayerInstanceIndex.Null;
+            foreach (KeyValuePair<int, ZegoMediaPlayer> kvp in mediaPlayerAndIndex)
             {
                 if (kvp.Value == zegoMediaPlayer)
                 {
-                    result = kvp.Key;
+                    result = (ZegoMediaPlayerInstanceIndex)kvp.Key;
                 }
             }
-            if (result == zego_media_player_instance_index.zego_media_player_instance_index_null)
+            if (result == ZegoMediaPlayerInstanceIndex.Null)
             {
                 throw new Exception("GetIndexFromZegoMediaPlayer found null，Maybe you have already release the mediaplayer");
             }
@@ -1390,16 +1388,6 @@ namespace ZEGO
             }
         }
 
-        [Obsolete]
-        public override void SetDebugVerbose(bool enable, ZegoLanguage language)
-        {
-            if (enginePtr != null)
-            {
-                IExpressEngineInternal.zego_express_set_debug_verbose(enable, language);
-                string log = string.Format("SetDebugVerbose enable:{0} language:{1}", enable, language);
-                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
-            }
-        }
         public override void SetPlayVolume(string streamId, int volume)
         {
             if (enginePtr != null)
@@ -1475,10 +1463,10 @@ namespace ZEGO
         }
 
         
-        public static ZegoMediaPlayer GetMediaPlayerFromIndex(zego_media_player_instance_index index)
+        public static ZegoMediaPlayer GetMediaPlayerFromIndex(ZegoMediaPlayerInstanceIndex index)
         {
             ZegoMediaPlayer zegoMediaPlayer = null;
-            mediaPlayerAndIndex.TryGetValue(index, out zegoMediaPlayer);
+            mediaPlayerAndIndex.TryGetValue((int)index, out zegoMediaPlayer);
             if (zegoMediaPlayer == null)
             {
                 throw new Exception("GetMediaPlayerFromIndex null");
@@ -1565,13 +1553,13 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index result = IExpressMediaPlayerInternal.zego_express_create_media_player();
+                ZegoMediaPlayerInstanceIndex result = IExpressMediaPlayerInternal.zego_express_create_media_player();
                 string log = string.Format("CreateMediaPlayer  result:{0}", result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
                 if (result >= 0)
                 {
                     ZegoMediaPlayer zegoMediaPlayer = new ZegoMediaPlayerImpl();
-                    mediaPlayerAndIndex.AddOrUpdate(result, zegoMediaPlayer, (key, oldValue) => zegoMediaPlayer);
+                    mediaPlayerAndIndex.AddOrUpdate((int)result, zegoMediaPlayer, (key, oldValue) => zegoMediaPlayer);
                     return zegoMediaPlayer;
                 }
                 else
@@ -1611,7 +1599,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_play_volume(volume, index);
                 string log = string.Format("MediaPlayer SetMediaPlayerPlayVolume index:{0} volume:{1} result:{2} ", index, volume, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1621,7 +1609,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_publish_volume(volume, index);
                 string log = string.Format("MediaPlayer SetMediaPlayerPublishVolume index:{0} volume:{1} result:{2} ", index, volume, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1632,7 +1620,7 @@ namespace ZEGO
             int result = -1;
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_play_volume(index);
                 string log = string.Format("MediaPlayer GetMediaPlayerPlayVolume index:{0} result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -1644,7 +1632,7 @@ namespace ZEGO
             int result = -1;
             if (enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 result = IExpressMediaPlayerInternal.zego_express_media_player_get_publish_volume(index);
                 string log = string.Format("MediaPlayer GetMediaPlayerPublishVolume index:{0} result:{1} ", index, result);
                 ZegoUtil.ZegoPrivateLog(0, log, false, 0);
@@ -1657,7 +1645,7 @@ namespace ZEGO
             uint audio_track_count = 0;
             if(enginePtr != null)
             {
-                zego_media_player_instance_index index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 audio_track_count = IExpressMediaPlayerInternal.zego_express_media_player_get_audio_track_count(index);
             }
 
@@ -1668,7 +1656,7 @@ namespace ZEGO
         {
             if (enginePtr != null)
             {
-                zego_media_player_instance_index player_index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
+                ZegoMediaPlayerInstanceIndex player_index = GetIndexFromZegoMediaPlayer(zegoMediaPlayer);
                 int result = IExpressMediaPlayerInternal.zego_express_media_player_set_audio_track_index(index, player_index);
                 string log = string.Format("MediaPlayer SetAudioTrackIndex, index:{0}, track index:{1}, result:{2}", player_index, index, result);
                 ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_MEDIAPLAYER);
@@ -1734,7 +1722,7 @@ namespace ZEGO
             {
                 if (copyrighted_music_instance == null)
                 {
-                    IExpressCopyrightedMusic.zego_express_create_copyrighted_music();
+                    IExpressCopyrightedMusicInternal.zego_express_create_copyrighted_music();
                     ZegoUtil.ZegoPrivateLog(0, string.Format("CreateCopyrightedMusic"), false, 0);
 
                     copyrighted_music_instance = new ZegoCopyrightedMusicImpl();
@@ -1748,7 +1736,7 @@ namespace ZEGO
         {
             lock (zegoCopyMusicLock)
             {
-                IExpressCopyrightedMusic.zego_express_destroy_copyrighted_music();
+                IExpressCopyrightedMusicInternal.zego_express_destroy_copyrighted_music();
                 ZegoUtil.ZegoPrivateLog(0, string.Format("DestroyCopyrightedMusic"), false, 0);
                 copyrighted_music_instance.ClearAllAfterDestroy();
                 if (copyrighted_music_instance != null)

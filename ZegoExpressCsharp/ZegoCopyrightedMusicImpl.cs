@@ -26,7 +26,7 @@ namespace ZEGO
         public override void InitCopyrightedMusic(ZegoCopyrightedMusicConfig config, OnCopyrightedMusicInit callback)
         {
             zego_copyrighted_music_config music_config = ChangeZegoCopyrightedMusicConfigClassToStruct(config);
-            int req = IExpressCopyrightedMusic.zego_express_copyrighted_music_init(music_config);
+            int req = IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_init(music_config);
 
             string log = string.Format("InitCopyrightedMusic, userID:{0}, userName:{1}, result:{2}", config.user.userID, config.user.userName, 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
@@ -37,12 +37,12 @@ namespace ZEGO
         {
             string log = string.Format("GetCacheSize, result:{0}", 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
-            return IExpressCopyrightedMusic.zego_express_copyrighted_music_get_cache_size();
+            return IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_get_cache_size();
         }
 
         public override void ClearCache()
         {
-            int result = IExpressCopyrightedMusic.zego_express_copyrighted_music_clear_cache();
+            int result = IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_clear_cache();
 
             string log = string.Format("ClearCache, result:{0}", result);
             ZegoPrivateLog(result, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
@@ -50,7 +50,7 @@ namespace ZEGO
 
         public override void SendExtendedRequest(string command, string param, OnCopyrightedMusicSendExtendedRequest callback)
         {
-            int seq = IExpressCopyrightedMusic.zego_express_copyrighted_music_send_extended_request(command, param);
+            int seq = IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_send_extended_request(command, param);
             string log = string.Format("SendExtendedRequest, result:{0}", 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
             onCopyrightedMusicSendExtendedRequestDics.AddOrUpdate(seq, callback, (key, old_value)=> callback);
@@ -58,7 +58,7 @@ namespace ZEGO
 
         public override void GetLrcLyric(string songID, OnCopyrightedMusicGetLrcLyric callback)
         {
-            int seq = IExpressCopyrightedMusic.zego_express_copyrighted_music_get_lrc_lyric(songID);
+            int seq = IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_get_lrc_lyric(songID);
             string log = string.Format("GetLrcLyric, songID:{0}, result:{1}", songID, 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
             onCopyrightedMusicGetLrcLyricDics.AddOrUpdate(seq, callback, (key,old_value)=>callback);
@@ -66,7 +66,7 @@ namespace ZEGO
 
         public override void GetKrcLyricByToken(string krcToken, OnCopyrightedMusicGetKrcLyricByToken callback)
         {
-            int seq = IExpressCopyrightedMusic.zego_express_copyrighted_music_get_krc_lyric_by_token(krcToken);
+            int seq = IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_get_krc_lyric_by_token(krcToken);
             string log = string.Format("GetKrcLyricByToken, krcToken:{0}, result:{1}", krcToken, 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
             onCopyrightedMusicGetKrcLyricByTokenDics.AddOrUpdate(seq, callback, (key, old_value) => callback);
@@ -75,7 +75,7 @@ namespace ZEGO
         public override void RequestSong(ZegoCopyrightedMusicRequestConfig config, OnCopyrightedMusicRequestSong callback)
         {
             zego_copyrighted_music_request_config request_config = ChangeZegoCopyrightedMusicRequestConfigClassToStruct(config);
-            int seq = IExpressCopyrightedMusic.zego_express_copyrighted_music_request_song(request_config);
+            int seq = IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_request_song(request_config);
             string log = string.Format("RequestSong, songID:{0},mode:{1}, result:{1}", config.songID, config.mode, 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
             onCopyrightedMusicRequestSongDics.AddOrUpdate(seq, callback, (key, old_value) => callback);
@@ -84,7 +84,7 @@ namespace ZEGO
         public override void RequestAccompaniment(ZegoCopyrightedMusicRequestConfig config, OnCopyrightedMusicRequestAccompaniment callback)
         {
             zego_copyrighted_music_request_config request_config = ChangeZegoCopyrightedMusicRequestConfigClassToStruct(config);
-            int seq = IExpressCopyrightedMusic.zego_express_copyrighted_music_request_accompaniment(request_config);
+            int seq = IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_request_accompaniment(request_config);
             string log = string.Format("RequestAccompaniment, songID:{0},mode:{1}, result:{1}", config.songID, config.mode, 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
             onCopyrightedMusicRequestAccompanimentDics.AddOrUpdate(seq, callback, (key, old_value) => callback);
@@ -92,7 +92,7 @@ namespace ZEGO
 
         public override void GetMusicByToken(string shareToken, OnCopyrightedMusicGetMusicByToken callback)
         {
-            int seq = IExpressCopyrightedMusic.zego_express_copyrighted_music_get_music_by_token(shareToken);
+            int seq = IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_get_music_by_token(shareToken);
             string log = string.Format("GetMusicByToken, shareToken:{0},result:{1}", shareToken, 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
             onCopyrightedMusicGetMusicByTokenDics.AddOrUpdate(seq, callback, (key, old_value) => callback);
@@ -100,7 +100,7 @@ namespace ZEGO
 
         public override void Download(string resourceID, OnCopyrightedMusicDownload callback)
         {
-            int seq = IExpressCopyrightedMusic.zego_express_copyrighted_music_download(resourceID);
+            int seq = IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_download(resourceID);
             string log = string.Format("Download, resourceID:{0},result:{1}", resourceID, 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
             onCopyrightedMusicDownloadDics.AddOrUpdate(seq, callback, (key, old_value) => callback);
@@ -110,7 +110,7 @@ namespace ZEGO
         {
             string log = string.Format("GetDuration, resourceID:{0}, result:{1}", resourceID, 0);
             ZegoPrivateLog(0, log, true, ZEGO_EXPRESS_MODULE_COPYRIGHTEDMUSIC);
-            return IExpressCopyrightedMusic.zego_express_copyrighted_music_get_duration(resourceID);
+            return IExpressCopyrightedMusicInternal.zego_express_copyrighted_music_get_duration(resourceID);
         }
 
         public void ClearAllAfterDestroy()

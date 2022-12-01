@@ -171,7 +171,7 @@ namespace ZEGO
         [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_capture_pipeline_scale_mode", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern int zego_express_set_capture_pipeline_scale_mode(ZegoCapturePipelineScaleMode mode);
         [System.Runtime.InteropServices.DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_publish_direct_to_cdn", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-        public static extern int zego_express_enable_publish_direct_to_cdn(bool enable, IntPtr config, ZegoPublishChannel channel);
+        public static extern int zego_express_enable_publish_direct_to_cdn([MarshalAs(UnmanagedType.I1)]bool enable, IntPtr config, ZegoPublishChannel channel);
 
 
         /// Return Type: int
@@ -238,5 +238,61 @@ namespace ZEGO
         [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_video_config", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern zego_video_config zego_express_get_video_config(ZegoPublishChannel channel);
 
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_publisher_render_video_first_frame(ZegoPublishChannel channel, System.IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_publisher_render_video_first_frame_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_publisher_render_video_first_frame_callback(zego_on_publisher_render_video_first_frame callback_func, System.IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_take_publish_stream_snapshot", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_take_publish_stream_snapshot(ZegoPublishChannel channel);
+
+
+        
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_publisher_take_snapshot_result(int error_code, ZegoPublishChannel channel, System.IntPtr image, System.IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_publisher_take_snapshot_result_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_publisher_take_snapshot_result_callback(zego_on_publisher_take_snapshot_result callback_func, System.IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_virtual_stereo", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_enable_virtual_stereo([MarshalAs(UnmanagedType.I1)]bool enable, int angle);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_play_stream_virtual_stereo", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_enable_play_stream_virtual_stereo([MarshalAs(UnmanagedType.I1)]bool enable, int angle, [In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_voice_changer_preset", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_voice_changer_preset(ZegoVoiceChangerPreset preset);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_voice_changer_param", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_voice_changer_param(float _param);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_reverb_preset", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_reverb_preset(ZegoReverbPreset preset);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_reverb_advanced_param", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_reverb_advanced_param(zego_reverb_advanced_param _param);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_reverb_echo_param", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_reverb_echo_param(zego_reverb_echo_param _param);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_stream_alignment_property", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_stream_alignment_property(int alignment, ZegoPublishChannel channel);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_traffic_control_focus_on_by_channel", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_traffic_control_focus_on_by_channel(ZegoTrafficControlFocusOnMode mode, ZegoPublishChannel channel);
     }
 }

@@ -17,7 +17,7 @@ namespace ZEGO
          * Restrictions: None.
          * Caution: None.
          *
-         * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+         * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
          * @param funcName Function name.
          * @param info Detailed error information.
          */
@@ -28,9 +28,11 @@ namespace ZEGO
          *
          * Available since: 1.1.0
          * Description: Callback notification of audio/video engine status update. When audio/video functions are enabled, such as preview, push streaming, local media player, audio data observering, etc., the audio/video engine will enter the start state. When you exit the room or disable all audio/video functions , The audio/video engine will enter the stop state.
-         * Trigger: The developer called the relevant function to change the state of the audio and video engine. For example: 1. Called ZegoExpressEngine's [startPreview], [stopPreview], [startPublishingStream], [stopPublishingStream], [startPlayingStream], [stopPlayingStream], [startAudioDataObserver], [stopAudioDataObserver] and other functions. 2. The related functions of MediaPlayer are called. 3. The [LogoutRoom] function was called.
+         * Trigger: The developer called the relevant function to change the state of the audio and video engine. For example: 1. Called ZegoExpressEngine's [startPreview], [stopPreview], [startPublishingStream], [stopPublishingStream], [startPlayingStream], [stopPlayingStream], [startAudioDataObserver], [stopAudioDataObserver] and other functions. 2. The related functions of MediaPlayer are called. 3. The [LogoutRoom] function was called. 4. The related functions of RealTimeSequentialDataManager are called.
          * Restrictions: None.
-         * Caution: 1. When the developer calls [destroyEngine], this notification will not be triggered because the resources of the SDK are completely released. 2. If there is no special need, the developer does not need to pay attention to this callback.
+         * Caution:
+         *   1. When the developer calls [destroyEngine], this notification will not be triggered because the resources of the SDK are completely released.
+         *   2. If there is no special need, the developer does not need to pay attention to this callback.
          *
          * @param state The audio/video engine state.
          */
@@ -40,9 +42,11 @@ namespace ZEGO
          * The callback triggered when the room connection state changes.
          *
          * Available since: 1.1.0
-         * Description: This callback is triggered when the connection status of the room changes, and the reason for the change is notified.
+         * Description: This callback is triggered when the connection status of the room changes, and the reason for the change is notified.For versions 2.18.0 and above, it is recommended to use the onRoomStateChanged callback instead of the onRoomStateUpdate callback to monitor room state changes.
          * Use cases: Developers can use this callback to determine the status of the current user in the room.
-         * When to trigger: Users will receive this notification when they call [loginRoom], [logoutRoom], [switchRoom] functions. 2. This notification may also be received when the user device's network conditions change (SDK will automatically log in to the room again when the connection is disconnected, refer to https://doc-zh.zego.im/faq/reconnect ).
+         * When to trigger:
+         *  1. The developer will receive this notification when calling the [loginRoom], [logoutRoom], [switchRoom] functions.
+         *  2. This notification may also be received when the network condition of the user's device changes (SDK will automatically log in to the room when disconnected, please refer to [Does ZEGO SDK support a fast reconnection for temporary disconnection] for details](https://docs.zegocloud.com/faq/reconnect?product=ExpressVideo&platform=all).
          * Restrictions: None.
          * Caution: If the connection is being requested for a long time, the general probability is that the user's network is unstable.
          * Related APIs: [loginRoom]、[logoutRoom]、[switchRoom]
@@ -60,7 +64,11 @@ namespace ZEGO
          * Available since: 1.1.0
          * Description: When other users in the room are online or offline, which causes the user list in the room to change, the developer will be notified through this callback.
          * Use cases: Developers can use this callback to update the user list display in the room in real time.
-         * When to trigger: 1. When the user logs in to the room for the first time, if there are other users in the room, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeAdd], and `userList` is the other users in the room at this time. 2. The user is already in the room. If another user logs in to the room through the [loginRoom] or [switchRoom] functions, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeAdd]. 3. If other users log out of this room through the [logoutRoom] or [switchRoom] functions, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeDelete]. 4. The user is already in the room. If another user is kicked out of the room from the server, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeDelete].
+         * When to trigger:
+         *   1. When the user logs in to the room for the first time, if there are other users in the room, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeAdd], and `userList` is the other users in the room at this time.
+         *   2. The user is already in the room. If another user logs in to the room through the [loginRoom] or [switchRoom] functions, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeAdd].
+         *   3. If other users log out of this room through the [logoutRoom] or [switchRoom] functions, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeDelete].
+         *   4. The user is already in the room. If another user is kicked out of the room from the server, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeDelete].
          * Restrictions: If developers need to use ZEGO room users notifications, please ensure that the [ZegoRoomConfig] sent by each user when logging in to the room has the [isUserStatusNotify] property set to true, otherwise the callback notification will not be received.
          * Related APIs: [loginRoom]、[logoutRoom]、[switchRoom]
          *
@@ -91,7 +99,11 @@ namespace ZEGO
          * Available since: 1.1.0
          * Description: When other users in the room start streaming or stop streaming, the streaming list in the room changes, and the developer will be notified through this callback.
          * Use cases: This callback is used to monitor stream addition or stream deletion notifications of other users in the room. Developers can use this callback to determine whether other users in the same room start or stop publishing stream, so as to achieve active playing stream [startPlayingStream] or take the initiative to stop the playing stream [stopPlayingStream], and use it to change the UI controls at the same time.
-         * When to trigger: 1. When the user logs in to the room for the first time, if there are other users publishing streams in the room, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeAdd], and `streamList` is an existing stream list. 2. The user is already in the room. if another user adds a new push, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeAdd]. 3. The user is already in the room. If other users stop streaming, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeDelete]. 4. The user is already in the room. If other users leave the room, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeDelete].
+         * When to trigger:
+         *   1. When the user logs in to the room for the first time, if there are other users publishing streams in the room, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeAdd], and `streamList` is an existing stream list.
+         *   2. The user is already in the room. if another user adds a new push, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeAdd].
+         *   3. The user is already in the room. If other users stop streaming, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeDelete].
+         *   4. The user is already in the room. If other users leave the room, the SDK will trigger a callback notification with `updateType` being [ZegoUpdateTypeDelete].
          * Restrictions: None.
          *
          * @param roomID Room ID where the user is logged in, a string of up to 128 bytes in length.
@@ -142,8 +154,8 @@ namespace ZEGO
          *
          * @param streamID Stream ID.
          * @param state State of publishing stream.
-         * @param errorCode The error code corresponding to the status change of the publish stream, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-         * @param extendedData Extended information with state updates.
+         * @param errorCode The error code corresponding to the status change of the publish stream, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
+         * @param extendedData Extended information with state updates, include playing stream CDN address.
          */
         public delegate void OnPublisherStateUpdate(string streamID, ZegoPublisherState state, int errorCode, string extendedData);
 
@@ -177,6 +189,7 @@ namespace ZEGO
          * Description: After the [startPublishingStream] function is called successfully, this callback will be called when SDK received the first frame of video data. Developers can use this callback to determine whether SDK has actually collected video data. If the callback is not received, the video capture device is occupied or abnormal.
          * Trigger: In the case of no startPublishingStream video stream or preview, the first startPublishingStream video stream or first preview, that is, when the engine of the audio and video module inside SDK starts, it will collect video data of the local device and receive this callback.
          * Related callbacks: After the [startPublishingStream] function is called successfully, determine if the SDK actually collected audio data by the callback function [onPublisherCapturedAudioFirstFrame], determine if the SDK has rendered the first frame of video data collected by calling back [onPublisherRenderVideoFirstFrame].
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param channel Publishing stream channel.If you only publish one audio and video stream, you can ignore this parameter.
          */
@@ -190,6 +203,7 @@ namespace ZEGO
          * Trigger: After the successful publish [startPublishingStream], the callback will be received if there is a change in the video capture resolution in the process of publishing the stream.
          * Use cases: You can use this callback to remove the cover of the local preview UI and similar operations.You can also dynamically adjust the scale of the preview view based on the resolution of the callback.
          * Caution: What is notified during external collection is the change in encoding resolution, which will be affected by flow control.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param width Video capture resolution width.
          * @param height Video capture resolution height.
@@ -220,7 +234,7 @@ namespace ZEGO
          *
          * @param streamID stream ID.
          * @param state State of playing stream.
-         * @param errorCode The error code corresponding to the status change of the playing stream, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+         * @param errorCode The error code corresponding to the status change of the playing stream, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
          * @param extendedData Extended Information with state updates. As the standby, only an empty json table is currently returned.
          */
         public delegate void OnPlayerStateUpdate(string streamID, ZegoPlayerState state, int errorCode, string extendedData);
@@ -273,6 +287,7 @@ namespace ZEGO
          * Use cases: Developer can use this callback to count time consuming that take the first frame time or update the UI for playing stream.
          * Trigger: This callback is triggered when SDK receives the first frame of video data from the network.
          * Related callbacks: After a successful call to [startPlayingStream], the callback function [onPlayerRecvAudioFirstFrame] determines whether the SDK has received the audio data, and the callback [onPlayerRenderVideoFirstFrame] determines whether the SDK has rendered the first frame of the received video data.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param streamID Stream ID.
          */
@@ -286,6 +301,7 @@ namespace ZEGO
          * Use cases: Developer can use this callback to count time consuming that take the first frame time or update the UI for playing stream.
          * Trigger: This callback is triggered when SDK rendered the first frame of video data from the network.
          * Related callbacks: After a successful call to [startPlayingStream], the callback function [onPlayerRecvAudioFirstFrame] determines whether the SDK has received the audio data, and the callback [onPlayerRecvVideoFirstFrame] determines whether the SDK has received the video data.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param streamID Stream ID.
          */
@@ -299,6 +315,7 @@ namespace ZEGO
          * Use cases: Developers can update or switch the UI components that actually play the stream based on the final resolution of the stream.
          * Trigger: After the [startPlayingStream] function is called successfully, this callback is triggered when the video resolution changes while playing the stream.
          * Caution: If the stream is only audio data, the callback will not be triggered.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param streamID Stream ID.
          * @param width Video decoding resolution width.
@@ -312,7 +329,7 @@ namespace ZEGO
          * Available since: 1.1.0
          * Description: After the [startPlayingStream] function is called successfully, when the remote stream sends SEI (such as directly calling [sendSEI], audio mixing with SEI data, and sending custom video capture encoded data with SEI, etc.), the local end will receive this callback.
          * Trigger: After the [startPlayingStream] function is called successfully, when the remote stream sends SEI, the local end will receive this callback.
-         * Caution: Since the video encoder itself generates an SEI with a payload type of 5, or when a video file is used for publishing, such SEI may also exist in the video file. Therefore, if the developer needs to filter out this type of SEI, it can be before [createEngine] Call [ZegoEngineConfig.advancedConfig("unregister_sei_filter", "XXXXX")]. Among them, unregister_sei_filter is the key, and XXXXX is the uuid filter string to be set.
+         * Caution: 1. Since the video encoder itself generates an SEI with a payload type of 5, or when a video file is used for publishing, such SEI may also exist in the video file. Therefore, if the developer needs to filter out this type of SEI, it can be before [createEngine] Call [ZegoEngineConfig.advancedConfig("unregister_sei_filter", "XXXXX")]. Among them, unregister_sei_filter is the key, and XXXXX is the uuid filter string to be set. 2. When [mutePlayStreamVideo] or [muteAllPlayStreamVideo] is called to set only the audio stream to be pulled, the SEI will not be received.
          *
          * @param streamID Stream ID.
          * @param data SEI content.
@@ -341,8 +358,8 @@ namespace ZEGO
          * Available since: 1.2.1
          * Description: Developers can use this callback to display the effect of which stream’s anchor is talking on the UI interface of the mixed stream of the audience.
          * Use cases: It is often used when multiple video images are required to synthesize a video using mixed streaming, such as education, live teacher and student images.
-         * When to trigger: After the developer calls the [startPlayingStream] function to start playing the mixed stream.
-         * Restrictions: Due to the high frequency of this callback, please do not perform time-consuming tasks or UI operations in this callback to avoid stalling.
+         * When to trigger: After the developer calls the [startPlayingStream] function to start playing the mixed stream. Callback notification period is 100 ms.
+         * Restrictions: The callback is triggered every 100 ms, and the trigger frequency cannot be set.Due to the high frequency of this callback, please do not perform time-consuming tasks or UI operations in this callback to avoid stalling.
          * Related callbacks: [OnMixerRelayCDNStateUpdate] can be used to get update notification of mixing stream repost CDN status.
          * Related APIs: Develop can start a mixed flow task through [startMixerTask].
          *
@@ -356,7 +373,9 @@ namespace ZEGO
          * Available since: 1.1.0
          * Description: The local captured audio sound level callback.
          * Trigger: After you start the sound level monitor by calling [startSoundLevelMonitor].
-         * Caution: The callback notification period is the parameter value set when the [startSoundLevelMonitor] is called. The callback value is the default value of 0 When you have not called the interface [startPublishingStream] or [startPreview].
+         * Caution:
+         *   1. The callback notification period is the parameter value set when the [startSoundLevelMonitor] is called. The callback value is the default value of 0 When you have not called the interface [startPublishingStream] and [startPreview].
+         *   2. This callback is a high-frequency callback, and it is recommended not to do complex logic processing inside the callback.
          * Related APIs: Start sound level monitoring via [startSoundLevelMonitor]. Monitoring remote played audio sound level by callback [onRemoteSoundLevelUpdate]
          *
          * @param soundLevel Locally captured sound level value, ranging from 0.0 to 100.0.
@@ -382,7 +401,7 @@ namespace ZEGO
          * Available since: 1.1.0
          * Description: The local captured audio spectrum callback.
          * Trigger: After you start the audio spectrum monitor by calling [startAudioSpectrumMonitor].
-         * Caution: The callback notification period is the parameter value set when the [startAudioSpectrumMonitor] is called. The callback value is the default value of 0 When you have not called the interface [startPublishingStream] or [startPreview].
+         * Caution: The callback notification period is the parameter value set when the [startAudioSpectrumMonitor] is called. The callback value is the default value of 0 When you have not called the interface [startPublishingStream] and [startPreview].
          * Related APIs: Start audio spectrum monitoring via [startAudioSpectrumMonitor]. Monitoring remote played audio spectrum by callback [onRemoteAudioSpectrumUpdate]
          *
          * @param audioSpectrum Locally captured audio spectrum value list. Spectrum value range is [0-2^30].
@@ -403,16 +422,17 @@ namespace ZEGO
         public delegate void OnRemoteAudioSpectrumUpdate(Dictionary<string, float[]> audioSpectrums);
 
         /**
-         * The callback triggered when a device exception occurs.
+         * The callback triggered when a local device exception occurred.
          *
-         * Available since: 1.1.0
-         * Description: The callback triggered when a device exception occurs.
-         * Trigger: This callback is triggered when an exception occurs when reading or writing the audio and video device.
+         * Available since: 2.15.0
+         * Description: The callback triggered when a local device exception occurs.
+         * Trigger: This callback is triggered when the function of the local audio or video device is abnormal.
          *
-         * @param errorCode The error code corresponding to the status change of the playing stream, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-         * @param deviceName device name
+         * @param exceptionType The type of the device exception.
+         * @param deviceType The type of device where the exception occurred.
+         * @param deviceID Device ID. Currently, only desktop devices are supported to distinguish different devices; for mobile devices, this parameter will return an empty string.
          */
-        public delegate void OnDeviceError(int errorCode, string deviceName);
+        public delegate void OnLocalDeviceExceptionOccurred(ZegoDeviceExceptionType exceptionType, ZegoDeviceType deviceType, string deviceID);
 
         /**
          * The callback triggered when the state of the remote camera changes.
@@ -422,6 +442,7 @@ namespace ZEGO
          * Use cases: Developers of 1v1 education scenarios or education small class scenarios and similar scenarios can use this callback notification to determine whether the camera device of the remote publishing stream device is working normally, and preliminary understand the cause of the device problem according to the corresponding state.
          * Trigger: When the state of the remote camera device changes, such as switching the camera, by monitoring this callback, it is possible to obtain an event related to the far-end camera, which can be used to prompt the user that the video may be abnormal.
          * Caution: This callback will not be called back when the remote stream is play from the CDN, or when custom video acquisition is used at the peer.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param streamID Stream ID.
          * @param state Remote camera status.
@@ -453,7 +474,7 @@ namespace ZEGO
          * Caution: The broadcast message sent by the user will not be notified through this callback.
          * Related callbacks: You can receive room barrage messages through [onIMRecvBarrageMessage], and you can receive room custom signaling through [onIMRecvCustomCommand].
          *
-         * @param roomID Room ID. Value range: The maximum length is 128 bytes. Caution: The room ID is in string format and only supports numbers, English characters and'~','!','@','#','$','%','^','&', ' *','(',')','_','+','=','-','`',';',''',',','.','<' ,'>','/','\'.
+         * @param roomID Room ID. Value range: The maximum length is 128 bytes.
          * @param messageList List of received messages. Value range: Up to 50 messages can be received each time.
          */
         public delegate void OnIMRecvBroadcastMessage(string roomID, List<ZegoBroadcastMessageInfo> messageList);
@@ -469,7 +490,7 @@ namespace ZEGO
          * Caution: Barrage messages sent by users themselves will not be notified through this callback. When there are a large number of barrage messages in the room, the notification may be delayed, and some barrage messages may be lost.
          * Related callbacks: Develop can receive room broadcast messages through [onIMRecvBroadcastMessage], and can receive room custom signaling through [onIMRecvCustomCommand].
          *
-         * @param roomID Room ID. Value range: The maximum length is 128 bytes. Caution: The room ID is in string format and only supports numbers, English characters and'~','!','@','#','$','%','^','&', ' *','(',')','_','+','=','-','`',';',''',',','.','<' ,'>','/','\'.
+         * @param roomID Room ID. Value range: The maximum length is 128 bytes.
          * @param messageList List of received messages. Value range: Up to 50 messages can be received each time.
          */
         public delegate void OnIMRecvBarrageMessage(string roomID, List<ZegoBarrageMessageInfo> messageList);
@@ -485,7 +506,7 @@ namespace ZEGO
          * Caution: The custom command sent by the user himself will not be notified through this callback.
          * Related callbacks: You can receive room broadcast messages through [onIMRecvBroadcastMessage], and you can receive room barrage message through [onIMRecvBarrageMessage].
          *
-         * @param roomID Room ID. Value range: The maximum length is 128 bytes. Caution: The room ID is in string format and only supports numbers, English characters and'~','!','@','#','$','%','^','&', ' *','(',')','_','+','=','-','`',';',''',',','.','<' ,'>','/','\'.
+         * @param roomID Room ID. Value range: The maximum length is 128 bytes.
          * @param fromUser Sender of the command.
          * @param command Command content received.Value range: The maximum length is 1024 bytes.
          */
@@ -501,7 +522,7 @@ namespace ZEGO
          * Restrictions: None.
          *
          * @param state File recording status.
-         * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+         * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
          * @param config Record config.
          * @param channel Publishing stream channel.
          */
@@ -605,7 +626,7 @@ namespace ZEGO
          *
          * Available: Since 1.1.0
          * Description: This function will callback all the mixed audio data to be playback. This callback can be used for that you needs to fetch all the mixed audio data to be playback to proccess.
-         * When to trigger: On the premise of calling [setAudioDataHandler] to set the listener callback, after calling [startAudioDataObserver] to set the mask 0b100 that means 1 << 2, this callback will be triggered only when it is in the SDK inner audio and video engine started(called the [startPreivew] or [startPlayingStream] or [startPublishingStream]).
+         * When to trigger: On the premise of calling [setAudioDataHandler] to set the listener callback, after calling [startAudioDataObserver] to set the mask 0b10 that means 1 << 1, this callback will be triggered only when it is in the SDK inner audio and video engine started(called the [startPreivew] or [startPlayingStream] or [startPublishingStream]).
          * Restrictions: None.
          * Caution: This callback is a high-frequency callback, please do not perform time-consuming operations in this callback. When the engine is started in the non-playing stream state or the media player is not used to play the media file, the audio data to be called back is muted audio data.
          *
@@ -667,28 +688,28 @@ namespace ZEGO
     /**
      * Callback for setting room extra information.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
     public delegate void OnRoomSetRoomExtraInfoResult(int errorCode);
 
     /**
      * Callback for setting stream extra information.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
     public delegate void OnPublisherSetStreamExtraInfoResult(int errorCode);
 
     /**
      * Callback for add/remove CDN URL.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
     public delegate void OnPublisherUpdateCdnUrlResult(int errorCode);
 
     /**
      * Results of starting a mixer task.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      * @param extendedData Extended Information
      */
     public delegate void OnMixerStartResult(int errorCode, string extendedData);
@@ -696,14 +717,14 @@ namespace ZEGO
     /**
      * Results of stoping a mixer task.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
     public delegate void OnMixerStopResult(int errorCode);
 
     /**
      * Callback for sending broadcast messages.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      * @param messageID ID of this message
      */
     public delegate void OnIMSendBroadcastMessageResult(int errorCode, ulong messageID);
@@ -711,7 +732,7 @@ namespace ZEGO
     /**
      * Callback for sending barrage message.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      * @param messageID ID of this message
      */
     public delegate void OnIMSendBarrageMessageResult(int errorCode, string messageID);
@@ -719,7 +740,7 @@ namespace ZEGO
     /**
      * Callback for sending custom command.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
     public delegate void OnIMSendCustomCommandResult(int errorCode);
 

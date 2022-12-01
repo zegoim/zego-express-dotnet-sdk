@@ -5,9 +5,6 @@ namespace ZEGO
 {
     public class IExpressCustomAudioIOInternal
     {
-        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_audio_data_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-        public static extern int zego_express_enable_audio_data_callback([MarshalAs(UnmanagedType.I1)]bool enable, uint callback_bit_mask, zego_audio_frame_param param);
-
         /// Return Type: void
         ///data: char*
         ///data_length: unsigned int
@@ -73,5 +70,13 @@ namespace ZEGO
 
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_playback_audio_data_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_register_playback_audio_data_callback(zego_on_playback_audio_data callback_func, IntPtr user_context);
+
+
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_audio_data_observer", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_start_audio_data_observer(uint observer_bit_mask, zego_audio_frame_param param);
+
+
+        [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_stop_audio_data_observer", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_stop_audio_data_observer();
     }
 }

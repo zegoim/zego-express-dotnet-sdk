@@ -37,13 +37,13 @@ namespace ZEGO
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_play_volume", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern int zego_express_set_play_volume([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, int volume);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_mute_play_stream_audio", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-        public static extern int zego_express_mute_play_stream_audio([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, bool mute);
+        public static extern int zego_express_mute_play_stream_audio([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, [MarshalAs(UnmanagedType.I1)]bool mute);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_mute_play_stream_video", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-        public static extern int zego_express_mute_play_stream_video([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, bool mute);
+        public static extern int zego_express_mute_play_stream_video([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id, [MarshalAs(UnmanagedType.I1)]bool mute);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_hardware_decoder", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-        public static extern int zego_express_enable_hardware_decoder(bool enable);
+        public static extern int zego_express_enable_hardware_decoder([MarshalAs(UnmanagedType.I1)]bool enable);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_check_poc", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-        public static extern int zego_express_enable_check_poc(bool enable);
+        public static extern int zego_express_enable_check_poc([MarshalAs(UnmanagedType.I1)]bool enable);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_player_quality_update_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_register_player_quality_update_callback(zego_on_player_quality_update callback_func, System.IntPtr user_context);
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_player_media_event_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
@@ -63,11 +63,48 @@ namespace ZEGO
         public static extern void zego_register_player_recv_sei_callback(zego_on_player_recv_sei callback_func, System.IntPtr user_context);
 
 
-        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_play_stream_video_layer", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-        public static extern int zego_express_set_play_stream_video_layer([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoPlayerVideoLayer video_layer);
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_take_play_stream_snapshot", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_take_play_stream_snapshot([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id);
 
 
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_player_take_snapshot_result(int error_code, [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, System.IntPtr image, System.IntPtr user_context);
 
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_player_take_snapshot_result_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_player_take_snapshot_result_callback(zego_on_player_take_snapshot_result callback_func, System.IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_all_play_stream_volume", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_all_play_stream_volume(int volume);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_play_stream_buffer_interval_range", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_play_stream_buffer_interval_range([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, uint min_buffer_interval, uint max_buffer_interval);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_play_stream_focus_on", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_play_stream_focus_on([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_mute_all_play_stream_audio", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_mute_all_play_stream_audio([MarshalAs(UnmanagedType.I1)]bool mute);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_mute_all_play_stream_video", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_mute_all_play_stream_video([MarshalAs(UnmanagedType.I1)]bool mute);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_play_stream_video_type", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_set_play_stream_video_type([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, ZegoVideoStreamType video_type);
+
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_player_render_camera_video_first_frame([In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, System.IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_player_render_camera_video_first_frame_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_player_render_camera_video_first_frame_callback(zego_on_player_render_camera_video_first_frame callback_func, System.IntPtr user_context);
     }
 }
 

@@ -15,7 +15,7 @@ namespace ZEGO
          * @param audioEffectPlayer Audio effect player instance that triggers this callback.
          * @param audioEffectID The ID of the audio effect resource that triggered this callback.
          * @param state The playback state of the audio effect.
-         * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+         * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
          */
         public delegate void OnAudioEffectPlayStateUpdate(ZegoAudioEffectPlayer audioEffectPlayer, uint audioEffectID, ZegoAudioEffectPlayState state, int errorCode);
 
@@ -24,14 +24,14 @@ namespace ZEGO
     /**
      * Callback for audio effect player loads resources.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
     public delegate void OnAudioEffectPlayerLoadResourceCallback(int errorCode);
 
     /**
      * Callback for audio effect player seek to playback progress.
      *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+     * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
     public delegate void OnAudioEffectPlayerSeekToCallback(int errorCode);
 

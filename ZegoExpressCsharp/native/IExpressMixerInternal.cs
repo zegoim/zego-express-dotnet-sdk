@@ -56,5 +56,37 @@ namespace ZEGO
         [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_mixer_sound_level_update_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_register_mixer_sound_level_update_callback(zego_on_mixer_sound_level_update callback_func, System.IntPtr user_context);
 
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_auto_mixer_task", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_start_auto_mixer_task(zego_auto_mixer_task task);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_stop_auto_mixer_task", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_stop_auto_mixer_task(zego_auto_mixer_task task);
+
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_auto_mixer_sound_level_update(IntPtr sound_levels, uint info_count, IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_auto_mixer_sound_level_update_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_auto_mixer_sound_level_update_callback(zego_on_auto_mixer_sound_level_update callback_func, IntPtr user_context);
+
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_auto_mixer_start_result(int error_code, int seq, [In()] [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extended_data, IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_auto_mixer_start_result_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_auto_mixer_start_result_callback(zego_on_auto_mixer_start_result callback_func, IntPtr user_context);
+
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_auto_mixer_stop_result(int error_code, int seq, IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_auto_mixer_stop_result_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_auto_mixer_stop_result_callback(zego_on_auto_mixer_stop_result callback_func, IntPtr user_context);
+
     }
 }

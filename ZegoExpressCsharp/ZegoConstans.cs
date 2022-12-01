@@ -36,11 +36,13 @@ namespace ZEGO
         public const int ZEGO_EXPRESS_MAX_URL_COUNT = 10;
         public const int ZEGO_EXPRESS_MAX_URL_LEN = 1024;
         public const int ZEGO_EXPRESS_MAX_IMAGE_PATH = 512;
-        public const int ZEGO_EXPRESS_MAX_MESSAGE_LEN = 1024;
+        public const int ZEGO_EXPRESS_MAX_MESSAGE_LEN = 10240;
         public const int ZEGO_EXPRESS_MAX_CUSTOM_CMD_LEN = 1024;
         public const int ZEGO_EXPRESS_MAX_MEDIAPLAYER_INSTANCE_COUNT = 4;
         public const int ZEGO_EXPRESS_MAX_ROOM_EXTRA_INFO_KEY_LEN = 128;
         public const int ZEGO_EXPRESS_MAX_ROOM_EXTRA_INFO_VALUE_LEN = 4096;
+        public const int ZEGO_EXPRESS_MAX_ROOM_TOKEN_VALUE_LEN = 2048;
+        public const int ZEGO_EXPRESS_MAX_SET_CONFIG_VALUE_LEN = 2048;
 
         public const string MOUDLE_U3D = "u3d";
         public const string MODULE_DOT_NET = "dotnet";

@@ -41,7 +41,7 @@ namespace ZegoCsharpWinformDemo.Examples
 
         public void InitConfig()
         {
-            user.userID = ZegoUtil.DeviceName() + new Random().Next(0, 99999); ;
+            user.userID = ZegoUtil.UserID();
             user.userName = user.userID;
             room_id = "0003";
             play_stream_id = "0003";
@@ -107,8 +107,8 @@ namespace ZegoCsharpWinformDemo.Examples
             if (engine == null)
             {
                 ZegoEngineProfile engine_profile = new ZegoEngineProfile();
-                engine_profile.appID = KeyCenter.appID();
-                engine_profile.appSign = KeyCenter.appSign();
+                engine_profile.appID = ZegoUtil.AppID();
+                engine_profile.appSign = ZegoUtil.AppSign();
                 engine_profile.scenario = ZegoScenario.General;
 
                 ZegoUtil.PrintLogToView(string.Format("CreateEngine, appID:{0}, appSign:{1}, scenario:{2}", engine_profile.appID, engine_profile.appSign, engine_profile.scenario));

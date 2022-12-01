@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 //using UnityEngine;
@@ -123,6 +123,50 @@ namespace ZEGO
         ///user_context: void*
         [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_im_recv_barrage_message_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_register_im_recv_barrage_message_callback(zego_on_im_recv_barrage_message callback_func, System.IntPtr user_context);
+
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_real_time_sequential_data_sent(int error_code, int instance_index, int seq, IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_real_time_sequential_data_sent_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_real_time_sequential_data_sent_callback(zego_on_real_time_sequential_data_sent callback_func, IntPtr user_context);
+
+
+        [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public delegate void zego_on_receive_real_time_sequential_data(int manager, IntPtr data, uint data_length, [In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_receive_real_time_sequential_data_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern void zego_register_receive_real_time_sequential_data_callback(zego_on_receive_real_time_sequential_data callback_func, IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_create_real_time_sequential_data_manager", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_create_real_time_sequential_data_manager([In()] [MarshalAs(UnmanagedType.LPStr)] string room_id);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_destroy_real_time_sequential_data_manager", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_destroy_real_time_sequential_data_manager(int instance_index);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_real_time_sequential_data_start_broadcasting", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_real_time_sequential_data_start_broadcasting([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, int instance_index);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_real_time_sequential_data_stop_broadcasting", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_real_time_sequential_data_stop_broadcasting([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, int instance_index);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_real_time_sequential_data", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_send_real_time_sequential_data(IntPtr data, uint data_length, [In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, int instance_index);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_real_time_sequential_data_start_subscribing", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_real_time_sequential_data_start_subscribing([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, int instance_index);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_real_time_sequential_data_stop_subscribing", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_real_time_sequential_data_stop_subscribing([In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id, int instance_index);
 
     }
 
