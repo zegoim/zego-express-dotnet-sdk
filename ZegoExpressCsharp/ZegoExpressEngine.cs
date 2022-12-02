@@ -136,6 +136,21 @@ namespace ZEGO
          */
         public abstract void UploadLog();
 
+        /**
+         * Enable the debug assistant. Note, do not enable this feature in the online version! Use only during development phase!
+         *
+         * Available since: 2.17.0
+         * Description: After enabled, the SDK will print logs to the console, and will pop-up an alert (toast) UI message when there is a problem with calling other SDK functions.
+         * Default value: This function is disabled by default.
+         * When to call: This function can be called right after [createEngine].
+         * Platform differences: The pop-up alert function only supports Android / iOS / macOS / Windows, and the console log function supports all platforms.
+         * Caution: Be sure to confirm that this feature is turned off before the app is released to avoid pop-up UI alert when an error occurs in your release version's app. It is recommended to associate the [enable] parameter of this function with the DEBUG variable of the app, that is, only enable the debug assistant in the DEBUG environment.
+         * Restrictions: None.
+         *
+         * @param enable Whether to enable the debug assistant.
+         */
+        public abstract void EnableDebugAssistant(bool enable);
+
         public OnDebugError onDebugError;
 
         public OnEngineStateUpdate onEngineStateUpdate;

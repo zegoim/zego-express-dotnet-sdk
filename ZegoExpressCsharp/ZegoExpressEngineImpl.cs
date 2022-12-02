@@ -1746,5 +1746,10 @@ namespace ZEGO
             }
         }
 
+        public override void EnableDebugAssistant(bool enable)
+        {
+            IExpressEngineInternal.zego_express_enable_debug_assistant(enable);
+        }
+
     }
 }
