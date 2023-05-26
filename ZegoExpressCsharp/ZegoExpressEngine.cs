@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,11 +24,10 @@ namespace ZEGO
          * @param profile The basic configuration information is used to create the engine.
          * @return engine singleton instance.
          */
-        
         public static ZegoExpressEngine CreateEngine(ZegoEngineProfile profile, SynchronizationContext uiThreadContext)
         {
             return ZegoExpressEngineImpl.CreateEngine(profile, uiThreadContext);
-        }
+        } 
 
         /**
          * Destroy the ZegoExpressEngine singleton object and deinitialize the SDK.
@@ -130,7 +129,7 @@ namespace ZEGO
          * Available since: 1.1.0
          * Description: By default, SDK creates and prints log files in the App's default directory. Each log file defaults to a maximum of 5MB. Three log files are written over and over in a circular fashion. When calling this function, SDK will auto package and upload the log files to the ZEGO server.
          * Use cases: Developers can provide a business “feedback” channel in the App. When users feedback problems, they can call this function to upload the local log information of SDK to help locate user problems.
-         * When to call: After [createEngine].
+         * When to call: After [loginRoom] or [loginScene].
          * Restrictions: If you call this interface repeatedly within 10 minutes, only the last call will take effect.
          * Caution: After calling this interface to upload logs, if you call [destroyEngine] or exit the App too quickly, there may be a failure.It is recommended to wait a few seconds, and then call [destroyEngine] or exit the App after receiving the upload success callback.
          */
@@ -199,7 +198,7 @@ namespace ZEGO
          * When to call /Trigger: After successfully logging in to the room, if the room is no longer used, the user can call the function [logoutRoom].
          * Restrictions: None.
          * Caution: 1. Exiting the room will stop all publishing and playing streams for user, and inner audio and video engine will stop, and then SDK will auto stop local preview UI. If you want to keep the preview ability when switching rooms, please use the [switchRoom] method. 2. If the user is not logged in to the room, calling this function will also return success.
-         * Related callbacks: After calling this function, you will receive [onRoomStateUpdate] callback notification successfully exits the room, while other users in the same room will receive the [onRoomUserUpdate] callback notification(On the premise of enabling isUserStatusNotify configuration).
+         * Related callbacks: After calling this function, you will receive [onRoomStateChanged] (Not supported before 2.18.0, please use [onRoomStateUpdate]) callback notification successfully exits the room, while other users in the same room will receive the [onRoomUserUpdate] callback notification(On the premise of enabling isUserStatusNotify configuration).
          * Related APIs: Users can use [loginRoom], [switchRoom] functions to log in or switch rooms.
          */
         public abstract void LogoutRoom();
@@ -213,10 +212,13 @@ namespace ZEGO
          * When to call /Trigger: After successfully logging in to the room, if the room is no longer used, the user can call the function [logoutRoom].
          * Restrictions: None.
          * Caution: 1. Exiting the room will stop all publishing and playing streams for user, and inner audio and video engine will stop, and then SDK will auto stop local preview UI. If you want to keep the preview ability when switching rooms, please use the [switchRoom] method. 2. If the user logs in to the room, but the incoming 'roomID' is different from the logged-in room name, SDK will return failure.
-         * Related callbacks: After calling this function, you will receive [onRoomStateUpdate] callback notification successfully exits the room, while other users in the same room will receive the [onRoomUserUpdate] callback notification(On the premise of enabling isUserStatusNotify configuration).
+         * Related callbacks: After calling this function, you will receive [onRoomStateChanged] (Not supported before 2.18.0, please use [onRoomStateUpdate]) callback notification successfully exits the room, while other users in the same room will receive the [onRoomUserUpdate] callback notification(On the premise of enabling isUserStatusNotify configuration).
          * Related APIs: Users can use [loginRoom], [switchRoom] functions to log in or switch rooms.
          *
-         * @param roomID Room ID, a string of up to 128 bytes in length. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         * @param roomID Room ID, a string of up to 128 bytes in length.
+         *   Caution:
+         *   1. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
+         *   2. If you need to communicate with the Web SDK, please do not use '%'.
          */
         public abstract void LogoutRoom(string roomID);
 
@@ -230,7 +232,9 @@ namespace ZEGO
          * Restrictions: None.
          * Caution:
          *   1. When this function is called, all streams currently publishing or playing will stop (but the local preview will not stop).
-         *   2. To prevent the app from being impersonated by a malicious user, you can add authentication before logging in to the room, that is, the [token] parameter in the ZegoRoomConfig object passed in by the [config] parameter. This parameter configuration affects the room to be switched over. 3. When the function [setRoomMode] is used to set ZegoRoomMode to ZEGO_ROOM_MODE_MULTI_ROOM, this function is not available.
+         *   2. To prevent the app from being impersonated by a malicious user, you can add authentication before logging in to the room, that is, the [token] parameter in the ZegoRoomConfig object passed in by the [config] parameter. This parameter configuration affects the room to be switched over.
+         *   3. Multi-room mode is supported in version 3.5.0 (use the function [setRoomMode] to set ZegoRoomMode to ZEGO_ROOM_MODE_MULTI_ROOM).
+         *   4. If a Token is passed in for login when logging into the room [loginRoom], the [switchroom] interface must be used with the config parameter and the corresponding Token value passed in when switching rooms.
          * Privacy reminder: Please do not fill in sensitive user information in this interface, including but not limited to mobile phone number, ID number, passport number, real name, etc.
          * Related callbacks: When the user call the [switchRoom] function, the [onRoomStateChanged] (Not supported before 2.18.0, please use [onRoomStateUpdate]) callback will be triggered to notify the developer of the status of the current user connected to the room.
          * Related APIs: Users can use the [logoutRoom] function to log out of the room.
@@ -289,7 +293,7 @@ namespace ZEGO
          *   Caution:
          *   1. Stream ID is defined by you.
          *   2. needs to be globally unique within the entire AppID. If in the same AppID, different users publish each stream and the stream ID is the same, which will cause the user to publish the stream failure. You cannot include URL keywords, otherwise publishing stream and playing stream will fails.
-         *   3. Only support numbers, English characters and '-', ' '.
+         *   3. Only support numbers, English characters and '-', '_'.
          * @param channel Publish stream channel.
          */
         public abstract void StartPublishingStream(string streamID, ZegoPublishChannel channel = ZegoPublishChannel.Main);
@@ -312,7 +316,7 @@ namespace ZEGO
          *   Caution:
          *   1. Stream ID is defined by you.
          *   2. needs to be globally unique within the entire AppID. If in the same AppID, different users publish each stream and the stream ID is the same, which will cause the user to publish the stream failure. You cannot include URL keywords, otherwise publishing stream and playing stream will fails.
-         *   3. Only support numbers, English characters and '-', ' '.
+         *   3. Only support numbers, English characters and '-', '_'.
          * @param config Advanced publish configuration.
          * @param channel Publish stream channel.
          */
@@ -358,9 +362,10 @@ namespace ZEGO
          * Use cases: It can be used for local preview in real-time connecting wheat, live broadcast and other scenarios.
          * When to call: After [createEngine].
          * Restrictions: None.
-         * Caution: 1. The preview function does not require you to log in to the room or publish the stream first. But after exiting the room, SDK internally actively stops previewing by default. 2. Local view and preview modes can be updated by calling this function again. The user can only preview on one view. If you call [startPreview] again to pass in a new view, the preview screen will only be displayed in the new view. 3. You can set the mirror mode of the preview by calling the [setVideoMirrorMode] function. The default preview setting is image mirrored. 4. When this function is called, the audio and video engine module inside SDK will start really, and it will start to try to collect audio and video..
+         * Caution: 1. The preview function does not require you to log in to the room or publish the stream first. But after exiting the room, SDK internally actively stops previewing by default. 2. Local view and preview modes can be updated by calling this function again. The user can only preview on one view. If you call [startPreview] again to pass in a new view, the preview screen will only be displayed in the new view. 3. You can set the mirror mode of the preview by calling the [setVideoMirrorMode] function. The default preview setting is image mirrored. 4. When this function is called, the audio and video engine module inside SDK will start really, and it will start to try to collect audio and video.
          * Note: This function is only available in ZegoExpressVideo SDK!
          *
+         * @param canvas The view used to display the preview image. If the view is set to null, no preview will be made.
          * @param channel Publish stream channel
          */
         public abstract void StartPreview(ZegoCanvas canvas, ZegoPublishChannel channel = ZegoPublishChannel.Main);
@@ -382,10 +387,9 @@ namespace ZEGO
          *
          * Available since: 1.1.0
          * Description: Set the video frame rate, bit rate, video capture resolution, and video encoding output resolution.
-         * Use cases: Recommended configuration in different business scenarios: https://doc-zh.zego.im/article/10365.
          * Default value: The default video capture resolution is 360p, the video encoding output resolution is 360p, the bit rate is 600 kbps, and the frame rate is 15 fps.
          * When to call: After [createEngine].
-         * Restrictions: It is necessary to set the relevant video configuration before publishing the stream or startPreview, and only support the modification of the encoding resolution and the bit rate after publishing the stream.
+         * Restrictions: It is necessary to set the relevant video configuration before [startPreview], and only support the modification of the encoding resolution and the bit rate after [startPreview].
          * Caution: Developers should note that the wide and high resolution of the mobile end is opposite to the wide and high resolution of the PC. For example, in the case of 360p, the resolution of the mobile end is 360x640, and the resolution of the PC end is 640x360.
          * Note: This function is only available in ZegoExpressVideo SDK!
          *
@@ -639,6 +643,7 @@ namespace ZEGO
          * Available since: 1.1.0
          * When to call: This function needs to be set before call [startPreview] or [startPublishingStream].
          * Caution: The main effect is Whether the local preview is affected when the acquisition resolution is different from the encoding resolution.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param mode The capture scale timing mode.
          */
@@ -669,10 +674,11 @@ namespace ZEGO
          *
          * @param streamID Stream ID, a string of up to 256 characters.
          *   Caution:
-         *   1. Only support numbers, English characters and '-', ' '.
+         *   Only support numbers, English characters and '-', '_'.
+         * @param canvas The view used to display the play audio and video stream's image. When the view is set to [null], no video is displayed, only audio is played.
          * @param config Advanced player configuration.
          */
-        public abstract void StartPlayingStream(string streamId, ZegoCanvas canvas, ZegoPlayerConfig config = null);
+        public abstract void StartPlayingStream(string streamID, ZegoCanvas canvas, ZegoPlayerConfig config = null);
 
         /**
          * Stops playing a stream.
@@ -722,7 +728,7 @@ namespace ZEGO
          * Whether the pull stream can receive the specified video data.
          *
          * Available since: 1.1.0
-         * Description: In the process of real-time video and video interaction, local users can use this function to control whether to receive video data from designated remote users when pulling streams as needed. When the developer does not receive the audio receipt, the hardware and network overhead can be reduced.
+         * Description: In the process of real-time video and video interaction, local users can use this function to control whether to receive video data from designated remote users when pulling streams as needed. When the developer does not receive the video data, the hardware and network overhead can be reduced.
          * Use cases: This function can be called when developers need to quickly close and resume watching remote video. Compared to re-flow, it can greatly reduce the time and improve the interactive experience.
          * When to call: This function can be called after calling [createEngine].
          * Caution: This function is valid only when the [muteAllPlayStreamVideo] function is set to `false`. When you mute the video stream, the view remains at the last frame by default, if you need to clear the last frame, please contact ZEGO technical support.
@@ -730,7 +736,7 @@ namespace ZEGO
          * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param streamID Stream ID.
-         * @param mute Whether it is possible to receive the video data of the specified remote user when streaming, "true" means prohibition, "false" means receiving, the default value is "false".
+         * @param mute Whether it is possible to receive the video data of the specified remote user when streaming, "true" means prohibition, "false" means receiving, the default value is "false". The default value for automatically played streams within the SDK is false.
          */
         public abstract void MutePlayStreamVideo(string streamID, bool mute);
 
@@ -779,6 +785,7 @@ namespace ZEGO
 
         public OnPlayerVideoSizeChanged onPlayerVideoSizeChanged;
 
+        [Obsolete("This function will switch the ui thread callback data, which may cause sei data exceptions. It will be deprecated in version 3.4.0 and above. Please use the [onPlayerSyncRecvSEI] function instead.",false)]
         public OnPlayerRecvSEI onPlayerRecvSEI;
 
         /**
@@ -849,7 +856,7 @@ namespace ZEGO
          * Mutes or unmutes the audio output speaker.
          *
          * Available since: 1.1.0
-         * Description: After mute speaker, all the SDK sounds will not play, including playing stream, mediaplayer, etc. But the SDK will still occupy the output device.
+         * Description: After mute speaker, all the SDK sounds will not play, including playing stream, mediaplayer, etc.
          * Default value: The default is `false`, which means no muting.
          * When to call: After creating the engine [createEngine].
          * Restrictions: None.
@@ -1155,37 +1162,6 @@ namespace ZEGO
         public abstract void SetANSMode(ZegoANSMode mode);
 
         /**
-         * Enables or disables the beauty features for the specified publish channel.
-         *
-         * Available since: 1.1.0
-         * Description: When developers do not have much need for beauty features, they can use this function to set some very simple beauty effects.
-         * When to call: It needs to be called after [createEngine].
-         * Default value: When this function is not called, the beauty feature is not enabled by default.
-         * Related APIs: After turning on the beauty features, you can call the [setBeautifyOption] function to adjust the beauty parameters.
-         * Caution: This beauty feature is very simple and may not meet the developer’s expectations. It is recommended to use the custom video processing function [enableCustomVideoProcessing] or the custom video capture function [enableCustomVideoCapture] to connect the [ZegoEffects] AI SDK https://doc-en.zego.im/article/9896 for best results.
-         * Restrictions: In the case of using the custom video capture function, since the developer has handle the video data capturing, the SDK is no longer responsible for the video data capturing, so this function is no longer valid. It is also invalid when using the custom video processing function.
-         *
-         * @param featureBitmask Beauty features, bitmask format, you can choose to enable several features in [ZegoBeautifyFeature] at the same time
-         * @param channel Publishing stream channel
-         */
-        public abstract void EnableBeautify(int featureBitmask, ZegoPublishChannel channel = ZegoPublishChannel.Main);
-
-        /**
-         * Set beautify option.
-         *
-         * Available since: 1.1.0
-         * Description: set beautify option for specified stream publish channel.
-         * Use cases: Often used in video call, live broadcasting.
-         * When to call: It needs to be called after [createEngine].
-         * Restrictions: None.
-         * Caution: In the case of using a custom video capture function, because the developer has taken over the video data capturing, the SDK is no longer responsible for the video data capturing, call this function will not take effect. When using custom video processing, the video data collected by the SDK will be handed over to the business for further processing, call this function will not take effect either.
-         *
-         * @param option Beautify option.
-         * @param channel stream publish channel.
-         */
-        public abstract void SetBeautifyOption(ZegoBeautifyOption option, ZegoPublishChannel channel = ZegoPublishChannel.Main);
-
-        /**
          * Sends a Broadcast Message.
          *
          * Available since: 1.2.1
@@ -1287,7 +1263,6 @@ namespace ZEGO
          *
          * Available since: 1.10.0
          * Description: Starts to record locally captured audio or video and directly save the data to a file, The recorded data will be the same as the data publishing through the specified channel.
-         * When to call: This function needs to be called after the success of [startPreview] or [startPublishingStream] to be effective.
          * Restrictions: None.
          * Caution: Developers should not [stopPreview] or [stopPublishingStream] during recording, otherwise the SDK will end the current recording task. The data of the media player needs to be mixed into the publishing stream to be recorded.
          * Related callbacks: Developers will receive the [onCapturedDataRecordStateUpdate] and the [onCapturedDataRecordProgressUpdate] callback after start recording.
@@ -1318,11 +1293,12 @@ namespace ZEGO
          *
          * Available since: 1.9.0
          * Description: When enable is `true`,video custom rendering is enabled; if the value of `false`, video custom rendering is disabled.
-         * Use case: Use beauty features or apps that use a cross-platform interface framework (for example, Qt requires a complex hierarchical interface to achieve high-experience interaction) or game engines (for example, Unity3D, Cocos2d-x), etc.
+         * Use case: Use beauty features or apps that use a cross-platform UI framework (for example, Qt requires a complex hierarchical UI to achieve high-experience interaction) or game engine (e.g. Unity, Unreal Engine, Cocos)
          * Default value: Custom video rendering is turned off by default when this function is not called.
-         * When to call: Must be set after [createEngine] before the engine starts, before calling [startPreview], [startPublishingStream],[startPlayingStream].The configuration can only be modified after the engine is stopped, that is, after [logoutRoom] is called.
-         * Caution: Custom video rendering can be used in conjunction with custom video capture, but when both are enabled, the local capture frame callback for custom video rendering will no longer be triggered, and the developer should directly capture the captured video frame from the custom video capture source.
-         * Related callbacks: When developers to open a custom rendering, by calling [setCustomVideoRenderHandler] can be set up to receive local and remote video data to be used for custom rendering. [onCapturedVideoFrameRawData] local bare preview video frame data correction, distal pull flow [onRemoteVideoFrameRawData] naked video frame data correction.
+         * When to call: After [createEngine], and before calling [startPreview], [startPublishingStream], [startPlayingStream], [createRealTimeSequentialDataManager]. The configuration can only be modified after the engine is stopped, that is, after [logoutRoom] is called.
+         * Caution: Custom video rendering can be used in conjunction with custom video capture, but when both are enabled, the local capture frame callback for custom video rendering will no longer be called back, you should directly use the captured video frame from the custom video capture source.
+         * Related callbacks: Call [setCustomVideoRenderHandler] to set the callback to get video frame data. [onCapturedVideoFrameRawData] local preview video frame data callback, [onRemoteVideoFrameRawData] remote playing stream video frame data callback.
+         * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param enable enable or disable
          * @param config custom video render config
@@ -1409,71 +1385,6 @@ namespace ZEGO
          */
         public abstract void EnableCustomVideoProcessing(bool enable, ZegoCustomVideoProcessConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        #if UNITY_STANDALONE_WIN
-        /**
-         * Send the original video data after the pre-processing of the custom video to the SDK, and support other channels to push the stream.
-         *
-         * Available since: 2.4.0
-         * Description: When the developer opens the custom pre-processing, by calling [setCustomVideoProcessHandler], you can set the custom video pre-processing callback to obtain the original video data.
-         * Use cases: After the developer collects the video data by himself or obtains the video data collected by the SDK, if the basic beauty and watermark functions of the SDK cannot meet the needs of the developer (for example, the beauty effect cannot meet the expectations), the ZegoEffects SDK can be used to perform the video Some special processing, such as beautifying, adding pendants, etc., this process is the pre-processing of custom video.
-         * When to call: Must be called in the [onCapturedUnprocessedCVPixelbuffer] callback.
-         * Restrictions: None.
-         * Platform differences: Only valid on Windows platform.
-         * Note: This function is only available in ZegoExpressVideo SDK!
-         *
-         * @param data Raw video data. RGB format data storage location is data[0], YUV format data storage location is Y component：data[0], U component：data[1], V component：data[2].
-         * @param dataLength Raw video data length. RGB format data length storage location is dataLength[0], YUV format data storage location respectively Y component length：dataLength[0], U component length：dataLength[1], V component length：dataLength[2].
-         * @param param video frame param.
-         * @param referenceTimeMillisecond video frame reference time, UNIX timestamp, in milliseconds.
-         * @param channel Publishing stream channel.Required: No.Default value: Main publish channel.
-         */
-        public abstract void SendCustomVideoProcessedRawData(ref IntPtr data, ref uint data_length, ZegoVideoFrameParam param, ulong referenceTimeMillisecond, ZegoPublishChannel channel = ZegoPublishChannel.Main);
-
-        public OnCapturedUnprocessedRawData onCapturedUnprocessedRawData;
-#endif
-
-        #if UNITY_STANDALONE_OSX || UNITY_IOS
-        /**
-         * Send the [CVPixelBuffer] type video data after the custom video processing to the SDK (for the specified channel).
-         *
-         * Available since: 2.2.0 (iOS native), 2.4.0 (macOS C++).
-         * Description: When the custom video pre-processing is turned on, the [CVPixelBuffer] format video data after the custom video pre-processing is sent to the SDK, and other channels are supported.
-         * Use cases: After the developer collects the video data by himself or obtains the video data collected by the SDK, if the basic beauty and watermark functions of the SDK cannot meet the needs of the developer (for example, the beauty effect cannot meet the expectations), the ZegoEffects SDK can be used to perform the video Some special processing, such as beautifying, adding pendants, etc., this process is the pre-processing of custom video.
-         * When to call: Must be called in the [onCapturedUnprocessedCVPixelbuffer] callback.
-         * Restrictions: This interface takes effect when [enableCustomVideoProcessing] is called to enable custom video pre-processing and the bufferType of config is passed in [ZegoVideoBufferTypeCVPixelBuffer].
-         * Platform differences: Only valid on Windows platform.
-         *
-         * @param buffer CVPixelBuffer type video frame data to be sent to the SDK.
-         * @param timestamp Timestamp of this video frame.
-         * @param channel Publishing stream channel.
-         */
-        public abstract void SendCustomVideoProcessedCVPixelBuffer(IntPtr buffer, ulong timestamp, ZegoPublishChannel channel = ZegoPublishChannel.Main);
-
-        public OnCapturedUnprocessedCVPixelBuffer onCapturedUnprocessedCVPixelBuffer;
-#endif
-
-        #if UNITY_ANDROID
-        /**
-         * Send the [Texture] type video data after the pre-processing of the custom video to the SDK (for the specified channel).
-         *
-         * Available since: 2.2.0
-         * Description: When the custom video pre-processing is turned on, the [Texture] format video data after the custom video pre-processing is sent to the SDK, and other channels are supported.
-         * Use cases: After the developer collects the video data by himself or obtains the video data collected by the SDK, if the basic beauty and watermark functions of the SDK cannot meet the needs of the developer (for example, the beauty effect cannot meet the expectations), the ZegoEffects SDK can be used to perform the video Some special processing, such as beautifying, adding pendants, etc., this process is the pre-processing of custom video.
-         * When to call: Must be called in the [onCapturedUnprocessedTextureData] callback.
-         * Restrictions: This interface takes effect when [enableCustomVideoProcessing] is called to enable custom video pre-processing and the bufferType of config is passed in [ZegoVideoBufferTypeGLTexture2D].
-         * Platform differences: Only valid on Android platform.
-         *
-         * @param textureID texture ID.
-         * @param width Texture width.
-         * @param height Texture height.
-         * @param referenceTimeMillisecond video frame reference time, UNIX timestamp, in milliseconds.
-         * @param channel Publishing stream channel.
-         */
-        public abstract void SendCustomVideoProcessedTextureData(int textureID, int width, int height, ulong referenceTimeMillisecond, ZegoPublishChannel channel = ZegoPublishChannel.Main);
-        
-        public OnCapturedUnprocessedTextureData onCapturedUnprocessedTextureData;
-#endif
-
         /**
          * Enable audio data observering.
          *
@@ -1517,7 +1428,7 @@ namespace ZEGO
         /**
          * Sends AAC audio data produced by custom audio capture to the SDK (for the specified channel).
          *
-         * Available since: 1.10.0
+         * Available since: 2.20.0
          * Description: Sends the captured audio AAC data to the SDK.
          * Use cases: The customer needs to obtain input after acquisition from the existing audio stream, audio file, or customized acquisition system, and hand it over to the SDK for transmission.
          * When to call: After [enableCustomAudioIO] and publishing stream successfully.
@@ -1526,12 +1437,13 @@ namespace ZEGO
          *
          * @param data AAC buffer data.
          * @param dataLength The total length of the buffer data.
-         * @param configLength The length of AAC specific config (Note: The AAC encoded data length is 'encodedLength = dataLength - configLength').
+         * @param configLength The length of AAC specific config (Note: The AAC encoded data length is 'encodedLength = dataLength - configLength').Value range: [0,64]
          * @param referenceTimeMillisecond The UNIX timestamp of this AAC audio frame in millisecond.
+         * @param samples The number of samples for this AAC audio frame.Value range: [480,512,1024,1960,2048].
          * @param param The param of this AAC audio frame.
          * @param channel Publish channel for capturing audio frames.
          */
-        public abstract void SendCustomAudioCaptureAACData(byte[] data, uint dataLength, uint configLength, ulong referenceTimeMillisecond, ZegoAudioFrameParam param, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+        public abstract void SendCustomAudioCaptureAACData(IntPtr data, uint dataLength, uint configLength, ulong referenceTimeMillisecond, uint samples, ZegoAudioFrameParam param, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
         /**
          * Sends PCM audio data produced by custom audio capture to the SDK (for the specified channel).
@@ -1562,7 +1474,7 @@ namespace ZEGO
          *
          * @param data A block of memory for storing audio PCM data that requires user to manage the memory block's lifecycle, the SDK will copy the audio frame rendering data to this memory block.
          * @param dataLength The length of the audio data to be fetch this time (dataLength = duration * sampleRate * channels * 2(16 bit depth i.e. 2 Btye)).
-         * @param param Specify the parameters of the fetched audio frame.
+         * @param param Specify the parameters of the fetched audio frame. sampleRate in ZegoAudioFrameParam must assignment
          */
         public abstract void FetchCustomAudioRenderPCMData(ref byte[] data, uint dataLength, ZegoAudioFrameParam param);
 
@@ -1598,10 +1510,45 @@ namespace ZEGO
          */
         public abstract void DestroyCopyrightedMusic(ZegoCopyrightedMusic copyrightedMusic);
 
-        public OnCopyrightedMusicDownloadProgressUpdate onCopyrightedMusicDownloadProgressUpdate;
+        /**
+         * [Deprecated] Enables or disables the beauty features for the specified publish channel. Deprecated since 2.16.0, please use the [enableEffectsBeauty] function instead.
+         *
+         * Available since: 1.1.0
+         * Description: When developers do not have much need for beauty features, they can use this function to set some very simple beauty effects.
+         * When to call: It needs to be called after [createEngine].
+         * Default value: When this function is not called, the beauty feature is not enabled by default.
+         * Related APIs: After turning on the beauty features, you can call the [setBeautifyOption] function to adjust the beauty parameters.
+         * Caution: This beauty feature is very simple and may not meet the developer’s expectations. It is recommended to use the custom video processing function [enableCustomVideoProcessing] or the custom video capture function [enableCustomVideoCapture] to connect the [ZegoEffects] AI SDK https://docs.zegocloud.com/article/9896 for best results.
+         * Restrictions: In the case of using the custom video capture function, since the developer has handle the video data capturing, the SDK is no longer responsible for the video data capturing, so this function is no longer valid. It is also invalid when using the custom video processing function.
+         * Note: This function is only available in ZegoExpressVideo SDK!
+         *
+         * @deprecated Deprecated since 2.16.0, please use the [enableEffectsBeauty] function instead.
+         * @param featureBitmask Beauty features, bitmask format, you can choose to enable several features in [ZegoBeautifyFeature] at the same time
+         * @param channel Publishing stream channel
+         */
+        [Obsolete("Deprecated since 2.16.0, please use the [enableEffectsBeauty] function instead.",false)]
+        public abstract void EnableBeautify(int featureBitmask, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
         /**
-         * [Deprecated] Create ZegoExpressEngine singleton object and initialize SDK.
+         * [Deprecated] Set beautify option. Deprecated since 2.16.0, please use the [setEffectsBeautyParam] function instead.
+         *
+         * Available since: 1.1.0
+         * Description: set beautify option for main publish channel.
+         * Use cases: Often used in video call, live broadcasting.
+         * When to call: It needs to be called after [createEngine].
+         * Restrictions: None.
+         * Caution: In the case of using a custom video capture function, because the developer has taken over the video data capturing, the SDK is no longer responsible for the video data capturing, call this function will not take effect. When using custom video processing, the video data collected by the SDK will be handed over to the business for further processing, call this function will not take effect either.
+         * Note: This function is only available in ZegoExpressVideo SDK!
+         *
+         * @deprecated Deprecated since 2.16.0, please use the [setEffectsBeautyParam] function instead.
+         * @param option Beautify option.
+         * @param channel stream publish channel.
+         */
+        [Obsolete("Deprecated since 2.16.0, please use the [setEffectsBeautyParam] function instead.",false)]
+        public abstract void SetBeautifyOption(ZegoBeautifyOption option, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+
+        /**
+         * [Deprecated] Create ZegoExpressEngine singleton object and initialize SDK. Deprecated since 2.14.0, please use the method with the same name without [isTestEnv] parameter instead. Please refer to [Testing environment deprecation](https://docs.zegocloud.com/article/13315) for more details.
          *
          * Available: 1.1.0 ~ 2.13.1, deprecated since 2.14.0, please use the method with the same name without [isTestEnv] parameter instead
          * Description: Create ZegoExpressEngine singleton object and initialize SDK.
@@ -1620,7 +1567,8 @@ namespace ZEGO
         public static ZegoExpressEngine CreateEngine(uint appID, string appSign, bool isTestEnv, ZegoScenario scenario)
         {
             return ZegoExpressEngineImpl.CreateEngine(appID, appSign, isTestEnv, scenario);
-        }
+        } 
+
 
     }
 

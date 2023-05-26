@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-
 namespace ZEGO
 {
 
@@ -52,8 +51,8 @@ namespace ZEGO
          * Related APIs: [loginRoom]、[logoutRoom]、[switchRoom]
          *
          * @param roomID Room ID, a string of up to 128 bytes in length.
-         * @param state Changed room state
-         * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
+         * @param state Changed room state.
+         * @param errorCode Error code, For details, please refer to [Common Error Codes](https://docs.zegocloud.com/article/5548).
          * @param extendedData Extended Information with state updates. When the room login is successful, the key "room_session_id" can be used to obtain the unique RoomSessionID of each audio and video communication, which identifies the continuous communication from the first user in the room to the end of the audio and video communication. It can be used in scenarios such as call quality scoring and call problem diagnosis.
          */
         public delegate void OnRoomStateUpdate(string roomID, ZegoRoomState state, int errorCode, string extendedData);
@@ -82,7 +81,7 @@ namespace ZEGO
          * The callback triggered every 30 seconds to report the current number of online users.
          *
          * Available since: 1.7.0
-         * Description: This method will notify the user of the current number of online users in the room..
+         * Description: This method will notify the user of the current number of online users in the room.
          * Use cases: Developers can use this callback to show the number of user online in the current room.
          * When to call /Trigger: After successfully logging in to the room.
          * Restrictions: None.
@@ -109,7 +108,7 @@ namespace ZEGO
          * @param roomID Room ID where the user is logged in, a string of up to 128 bytes in length.
          * @param updateType Update type (add/delete).
          * @param streamList Updated stream list.
-         * @param extendedData Extended information with stream updates.
+         * @param extendedData Extended information with stream updates.When receiving a stream deletion notification, the developer can convert the string into a json object to get the stream_delete_reason field, which is an array of stream deletion reasons, and the stream_delete_reason[].code field may have the following values: 1 (the user actively stops publishing stream) ; 2 (user heartbeat timeout); 3 (user repeated login); 4 (user kicked out); 5 (user disconnected); 6 (removed by the server).
          */
         public delegate void OnRoomStreamUpdate(string roomID, ZegoUpdateType updateType, List<ZegoStream> streamList, string extendedData);
 
@@ -176,9 +175,9 @@ namespace ZEGO
          * The callback triggered when the first audio frame is captured.
          *
          * Available since: 1.1.0
-         * Description: After the [startPublishingStream] function is called successfully, this callback will be called when SDK received the first frame of audio data. Developers can use this callback to determine whether SDK has actually collected audio data. If the callback is not received, the audio capture device is occupied or abnormal.
-         * Trigger: In the case of no startPublishingStream audio and video stream or preview [startPreview], the first startPublishingStream audio and video stream or first preview, that is, when the engine of the audio and video module inside SDK starts, it will collect audio data of the local device and receive this callback.
-         * Related callbacks: After the [startPublishingStream] function is called successfully, determine if the SDK actually collected video data by the callback function [onPublisherCapturedVideoFirstFrame], determine if the SDK has rendered the first frame of video data collected by calling back [onPublisherRenderVideoFirstFrame].
+         * Description: This callback will be received when the SDK starts the microphone to capture the first frame of audio data. If this callback is not received, the audio capture device is occupied or abnormal.
+         * Trigger: When the engine of the audio/video module inside the SDK starts, the SDK will go and collect the audio data from the local device and will receive the callback at that time.
+         * Related callbacks: Determine if the SDK actually collected video data by the callback function [onPublisherCapturedVideoFirstFrame], determine if the SDK has rendered the first frame of video data collected by calling back [onPublisherRenderVideoFirstFrame].
          */
         public delegate void OnPublisherCapturedAudioFirstFrame();
 
@@ -186,9 +185,9 @@ namespace ZEGO
          * The callback triggered when the first video frame is captured.
          *
          * Available since: 1.1.0
-         * Description: After the [startPublishingStream] function is called successfully, this callback will be called when SDK received the first frame of video data. Developers can use this callback to determine whether SDK has actually collected video data. If the callback is not received, the video capture device is occupied or abnormal.
-         * Trigger: In the case of no startPublishingStream video stream or preview, the first startPublishingStream video stream or first preview, that is, when the engine of the audio and video module inside SDK starts, it will collect video data of the local device and receive this callback.
-         * Related callbacks: After the [startPublishingStream] function is called successfully, determine if the SDK actually collected audio data by the callback function [onPublisherCapturedAudioFirstFrame], determine if the SDK has rendered the first frame of video data collected by calling back [onPublisherRenderVideoFirstFrame].
+         * Description: The SDK will receive this callback when the first frame of video data is captured. If this callback is not received, the video capture device is occupied or abnormal.
+         * Trigger: When the SDK's internal audio/video module's engine starts, the SDK will collect video data from the local device and will receive this callback.
+         * Related callbacks: Determine if the SDK actually collected audio data by the callback function [onPublisherCapturedAudioFirstFrame], determine if the SDK has rendered the first frame of video data collected by calling back [onPublisherRenderVideoFirstFrame].
          * Note: This function is only available in ZegoExpressVideo SDK!
          *
          * @param channel Publishing stream channel.If you only publish one audio and video stream, you can ignore this parameter.
@@ -331,9 +330,11 @@ namespace ZEGO
          * Trigger: After the [startPlayingStream] function is called successfully, when the remote stream sends SEI, the local end will receive this callback.
          * Caution: 1. Since the video encoder itself generates an SEI with a payload type of 5, or when a video file is used for publishing, such SEI may also exist in the video file. Therefore, if the developer needs to filter out this type of SEI, it can be before [createEngine] Call [ZegoEngineConfig.advancedConfig("unregister_sei_filter", "XXXXX")]. Among them, unregister_sei_filter is the key, and XXXXX is the uuid filter string to be set. 2. When [mutePlayStreamVideo] or [muteAllPlayStreamVideo] is called to set only the audio stream to be pulled, the SEI will not be received.
          *
+         * @deprecated This function will switch the ui thread callback data, which may cause sei data exceptions. It will be deprecated in version 3.4.0 and above. Please use the [onPlayerSyncRecvSEI] function instead.
          * @param streamID Stream ID.
          * @param data SEI content.
          */
+        [Obsolete("This function will switch the ui thread callback data, which may cause sei data exceptions. It will be deprecated in version 3.4.0 and above. Please use the [onPlayerSyncRecvSEI] function instead.",false)]
         public delegate void OnPlayerRecvSEI(string streamID, byte[] data);
 
         /**
@@ -627,8 +628,8 @@ namespace ZEGO
          * Available: Since 1.1.0
          * Description: This function will callback all the mixed audio data to be playback. This callback can be used for that you needs to fetch all the mixed audio data to be playback to proccess.
          * When to trigger: On the premise of calling [setAudioDataHandler] to set the listener callback, after calling [startAudioDataObserver] to set the mask 0b10 that means 1 << 1, this callback will be triggered only when it is in the SDK inner audio and video engine started(called the [startPreivew] or [startPlayingStream] or [startPublishingStream]).
-         * Restrictions: None.
-         * Caution: This callback is a high-frequency callback, please do not perform time-consuming operations in this callback. When the engine is started in the non-playing stream state or the media player is not used to play the media file, the audio data to be called back is muted audio data.
+         * Restrictions: When playing copyrighted music, this callback will be disabled by default. If necessary, please contact ZEGO technical support.
+         * Caution: This callback is a high-frequency callback. Please do not perform time-consuming operations in this callback. When the engine is not in the stream publishing state and the media player is not used to play media files, the audio data in the callback is muted audio data.
          *
          * @param data Audio data in PCM format.
          * @param dataLength Length of the data.
@@ -637,12 +638,12 @@ namespace ZEGO
         public delegate void OnPlaybackAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param);
 
         /**
-         * The callback for obtaining the mixed audio data. Such mixed auido data are generated by the SDK by mixing the audio data of all the remote playing streams and the auido data captured locally.
+         * Callback to get the audio data played by the SDK and the audio data captured by the local microphone. The audio data is the data mixed by the SDK.
          *
          * Available: Since 1.1.0
-         * Description: The audio data of all playing data is mixed with the data captured by the local microphone before it is sent to the loudspeaker, and calleback out in this way.
+         * Description: The audio data played by the SDK is mixed with the data captured by the local microphone before being sent to the speaker, and is called back through this function.
          * When to trigger: On the premise of calling [setAudioDataHandler] to set the listener callback, after calling [startAudioDataObserver] to set the mask 0x04, this callback will be triggered only when it is in the publishing stream state or playing stream state.
-         * Restrictions: None.
+         * Restrictions: When playing copyrighted music, this callback will be disabled by default. If necessary, please contact ZEGO technical support.
          * Caution: This callback is a high-frequency callback, please do not perform time-consuming operations in this callback.
          *
          * @param data Audio data in PCM format.
@@ -666,15 +667,6 @@ namespace ZEGO
          * @param streamID Corresponding stream ID.
          */
         public delegate void OnPlayerAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param, string streamID);
-
-        /**
-         * Callback for download song or accompaniment progress rate.
-         *
-         * @param copyrightedMusic Copyrighted music instance that triggers this callback.
-         * @param resourceID The resource ID of the song or accompaniment that triggered this callback.
-         * @param progressRate download progress rate.
-         */
-        public delegate void OnCopyrightedMusicDownloadProgressUpdate(ZegoCopyrightedMusic copyrightedMusic, string resourceID, float progressRate);
 
 
     }
@@ -743,69 +735,6 @@ namespace ZEGO
      * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
     public delegate void OnIMSendCustomCommandResult(int errorCode);
-
-    /**
-     * Callback for copyrighted music init.
-     *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-     */
-    public delegate void OnCopyrightedMusicInit(int errorCode, IntPtr user_context);
-
-    /**
-     * Callback for copyrighted music init.
-     *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-     * @param command request command, see details for specific supported commands.
-     * @param result request result, each request command has corresponding request result, see details.
-     */
-    public delegate void OnCopyrightedMusicSendExtendedRequest(int errorCode, string command, string result);
-
-    /**
-     * Get lrc format lyrics complete callback.
-     *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-     * @param lyrics lrc format lyrics.
-     */
-    public delegate void OnCopyrightedMusicGetLrcLyric(int errorCode, string lyrics);
-
-    /**
-     * Get krc format lyrics complete callback.
-     *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-     * @param lyrics krc format lyrics.
-     */
-    public delegate void OnCopyrightedMusicGetKrcLyricByToken(int errorCode, string lyrics);
-
-    /**
-     * Callback for request song.
-     *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-     * @param resource song resource information.
-     */
-    public delegate void OnCopyrightedMusicRequestSong(int errorCode, string resource);
-
-    /**
-     * Callback for request accompaniment.
-     *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-     * @param resource accompany resource information.
-     */
-    public delegate void OnCopyrightedMusicRequestAccompaniment(int errorCode, string resource);
-
-    /**
-     * Callback for acquire songs or accompaniment through authorization token.
-     *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-     * @param resource song or accompany resource information.
-     */
-    public delegate void OnCopyrightedMusicGetMusicByToken(int errorCode, string resource);
-
-    /**
-     * Callback for download song or accompaniment.
-     *
-     * @param errorCode Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for details.
-     */
-    public delegate void OnCopyrightedMusicDownload(int errorCode);
 
 
 }
