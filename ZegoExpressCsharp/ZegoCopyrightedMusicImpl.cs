@@ -177,7 +177,7 @@ namespace ZEGO
 
             context?.Post(new SendOrPostCallback((o) =>
             {
-                onCopyrightedMusicInit?.Invoke(error_code, user_context);
+                onCopyrightedMusicInit?.Invoke(error_code);
                 onCopyrightedMusicInitDics?.TryRemove(seq, out _);
             }), null);
         }
@@ -279,12 +279,12 @@ namespace ZEGO
 
         public static void zego_on_copyrighted_music_download_progress_update(int seq, [In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(UTF8StringMarshaler))] string resource_id, float progress_rate, IntPtr user_context)
         {
-            if (enginePtr == null || enginePtr.onCopyrightedMusicDownloadProgressUpdate == null) return;
+            if (enginePtr == null || copyrighted_music_instance?.onDownloadProgressUpdate == null) return;
             //string log = string.Format("zego_on_remote_mic_state_update  stream_id:{0} state:{1}", stream_id, state);
             //ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             context?.Post(new SendOrPostCallback((o) =>
             {
-                enginePtr?.onCopyrightedMusicDownloadProgressUpdate?.Invoke(copyrighted_music_instance, resource_id, progress_rate);
+                copyrighted_music_instance?.onDownloadProgressUpdate?.Invoke(copyrighted_music_instance, resource_id, progress_rate);
 
             }), null);
         }

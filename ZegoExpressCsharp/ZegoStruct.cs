@@ -48,7 +48,8 @@ namespace ZEGO
     }
 
     /// SDK feature type.
-    public enum zego_feature_type {
+    public enum zego_feature_type
+    {
         /// Basic audio feature.
         zego_feature_type_audio = 0,
 
@@ -464,7 +465,8 @@ namespace ZEGO
     }
 
     /// Video codec ID.
-    public enum zego_video_codec_id {
+    public enum zego_video_codec_id
+    {
         /// Default (H.264)
         zego_video_codec_id_default = 0,
 
@@ -476,6 +478,9 @@ namespace ZEGO
 
         /// H.265
         zego_video_codec_id_h265 = 3,
+
+        /// Dualstream Scalable Video Coding
+        zego_video_codec_id_h264_dual_stream = 4,
 
         /// Unknown Video Coding
         zego_video_codec_id_unknown = 100
@@ -1206,15 +1211,28 @@ namespace ZEGO
     }
 
     /// Audio capture source type.
-    public enum zego_audio_source_type {
-        /// Default audio capture source (the main channel uses custom audio capture by default; the aux channel uses the same sound as main channel by default)
+    public enum zego_audio_source_type
+    {
+        /// Default audio capture source (the main channel uses custom audio capture by default; the aux channel uses the same sound as main channel by default).
         zego_audio_source_type_default = 0,
 
-        /// Use custom audio capture, refer to [enableCustomAudioIO]
+        /// Use custom audio capture, refer to [enableCustomAudioIO] or [setAudioSource].
         zego_audio_source_type_custom = 1,
 
-        /// Use media player as audio source, only support aux channel
-        zego_audio_source_type_media_player = 2
+        /// Use media player as audio source, only support aux channel.
+        zego_audio_source_type_media_player = 2,
+
+        /// No audio source. This audio source type can only be used in [setAudioSource] interface, has no effect when used in [enableCustomAudioIO] interface.
+        zego_audio_source_type_none = 3,
+
+        /// Using microphone as audio source. This audio source type can only be used in [setAudioSource] interface, has no effect when used in [enableCustomAudioIO] interface.
+        zego_audio_source_type_microphone = 4,
+
+        /// Using main channel as audio source. Ineffective when used in main channel. This audio source type can only be used in [setAudioSource] interface, has no effect when used in [enableCustomAudioIO] interface.
+        zego_audio_source_type_main_publish_channel = 5,
+
+        /// Using screen capture as audio source. Typically used in mobile screen sharing scenarios. This audio source type can only be used in [setAudioSource] interface, has no effect when used in [enableCustomAudioIO] interface.
+        zego_audio_source_type_screen_capture = 6
 
     }
 
@@ -1385,7 +1403,8 @@ namespace ZEGO
     }
 
     /// VOD billing mode.
-    public enum zego_copyrighted_music_billing_mode {
+    public enum zego_copyrighted_music_billing_mode
+    {
         /// Pay-per-use.Each time a user obtains a song resource, a charge is required, that is, the user will be charged for each time based on the actual call to obtain the song resource interface (such as [requestSong], [requestAccompaniment], etc.).
         zego_copyrighted_music_billing_mode_count = 0,
 
@@ -1393,7 +1412,10 @@ namespace ZEGO
         zego_copyrighted_music_billing_mode_user = 1,
 
         /// Monthly billing by room.The room users are billed on a monthly basis, that is, statistical calls to obtain song resources (such as [requestSong], [requestAccompaniment], etc.) are passed as Roomid for a monthly subscription of the room, and fees are charged on a monthly basis.
-        zego_copyrighted_music_billing_mode_room = 2
+        zego_copyrighted_music_billing_mode_room = 2,
+
+        /// Monthly billing by master. Every time a user obtains a resource, it is counted as the owner’s acquisition of resources, that is, according to the actual call to obtain the song resource interface (such as [requestSong], [requestAccompaniment], etc.), the parameters are passed as the Roomid of the room and the Masterid of the owner, and the fee is charged according to the owner.
+        zego_copyrighted_music_billing_mode_master = 3
 
     }
 
@@ -1413,6 +1435,23 @@ namespace ZEGO
 
         /// Song accompaniment clip.
         zego_copyrighted_music_accompaniment_clip = 4
+
+    }
+
+    /// Copyright music resource song copyright provider. For more information about the copyright owner, please contact ZEGO business personnel.
+    public enum zego_copyrighted_music_vendor_id
+    {
+        /// Default copyright provider.
+        zego_copyrighted_music_vendor_default = 0,
+
+        /// First copyright provider.
+        zego_copyrighted_music_vendor1 = 1,
+
+        /// Second copyright provider.
+        zego_copyrighted_music_vendor2 = 2,
+
+        /// Third copyright provider.
+        zego_copyrighted_music_vendor3 = 4
 
     }
 
@@ -1505,6 +1544,23 @@ namespace ZEGO
 
         /// QUIC protocol
         zego_cdn_protocol_quic = 2
+
+    }
+
+    /// Supported httpDNS service types.
+    public enum zego_http_dns_type
+    {
+        /// None.
+        zego_http_dns_type_none = 0,
+
+        /// wangsu httpdns.
+        zego_http_dns_type_wangsu = 1,
+
+        /// tencent httpdns.
+        zego_http_dns_type_tencent = 2,
+
+        /// aliyun httpdns.
+        zego_http_dns_type_aliyun = 3
 
     }
 
@@ -2067,6 +2123,9 @@ namespace ZEGO
         /// QUIC version。 If [protocol] has the QUIC protocol, this information needs to be filled in. If there are multiple version numbers, separate them with commas. Please contact ZEGO technical support if you need to use it, otherwise this parameter can be ignored (set to null or empty string).
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
         public byte[] quic_version;
+
+        /// customized httpdns service. This feature is only supported for playing stream currently.
+        public zego_http_dns_type http_dns;
     };
 
     /// Relay to CDN info.
@@ -2900,14 +2959,26 @@ namespace ZEGO
         public zego_user user;
     };
 
-    /// Request configuration of song or accompaniment.
-    public struct zego_copyrighted_music_request_config {
+    /// The configuration of requesting resource.
+    public struct zego_copyrighted_music_request_config
+    {
         /// the ID of the song.
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
         public byte[] song_id;
 
         /// VOD billing mode.
         public zego_copyrighted_music_billing_mode mode;
+
+        /// Copyright music resource song copyright provider.
+        public zego_copyrighted_music_vendor_id vendor_id;
+
+        /// The room ID, the single-room mode can not be passed, and the corresponding room ID must be passed in the multi-room mode. Indicate in which room to order song/accompaniment/accompaniment clip/accompaniment segment.
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN)]
+        public byte[] room_id;
+
+        /// The master ID, which must be passed when the billing mode is billed by host. Indicate which homeowner to order song/accompaniment/accompaniment clip/accompaniment segment.
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_USERID_LEN)]
+        public byte[] master_id;
     };
 
     /// Orientation.

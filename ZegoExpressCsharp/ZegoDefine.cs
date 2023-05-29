@@ -1,4 +1,3 @@
-﻿using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 
@@ -16,9 +15,9 @@ namespace ZEGO
         Live = 2,
         /// Available since: 3.0.0. Description: The default (generic) scenario. If none of the following scenarios conform to your actual application scenario, this default scenario can be used.
         Default = 3,
-        /// Available since: 3.0.0. Description: Standard video call (or voice call) scenario, it is suitable for one-to-one video or voice call scenarios.
+        /// Available since: 3.0.0. Description: Standard video call scenario, it is suitable for one-to-one video call scenarios.
         StandardVideoCall = 4,
-        /// Available since: 3.0.0. Description: High quality video call (or voice call) scenario, it is similar to the standard video call scenario, but this scenario uses a higher video frame rate, bit rate, and resolution (540p) by default, which is suitable for video call scenario with high image quality requirements.
+        /// Available since: 3.0.0. Description: High quality video call scenario, it is similar to the standard video call scenario, but this scenario uses a higher video frame rate, bit rate, and resolution (540p) by default, which is suitable for video call scenario with high image quality requirements.
         HighQualityVideoCall = 5,
         /// Available since: 3.0.0. Description: Standard chatroom scenario, suitable for multi-person pure voice calls (low data usage). Note: On the ExpressVideo SDK, the camera is not enabled by default in this scenario.
         StandardChatroom = 6,
@@ -27,7 +26,9 @@ namespace ZEGO
         /// Available since: 3.0.0. Description: Live broadcast scenario, it is suitable for one-to-many live broadcast scenarios such as shows, games, e-commerce, and large educational classes. The audio and video quality, fluency, and compatibility have been optimized. Note: Even in live broadcast scenarios, the SDK has no business "roles" (such as anchors and viewers), and all users in the room can publish and play streams.
         Broadcast = 8,
         /// Available since: 3.0.0. Description: Karaoke (KTV) scenario, it is suitable for real-time chorus and online karaoke scenarios, and has optimized delay, sound quality, ear return, echo cancellation, etc., and also ensures accurate alignment and ultra-low delay when multiple people chorus.
-        Karaoke = 9
+        Karaoke = 9,
+        /// Available since: 3.3.0. Description: Standard voice call scenario, it is suitable for one-to-one video or voice call scenarios. Note: On the ExpressVideo SDK, the camera is not enabled by default in this scenario.
+        StandardVoiceCall = 10
     }
 
     /// SDK feature type.
@@ -80,7 +81,11 @@ namespace ZEGO
         /// Range audio feature.
         RangeAudio,
         /// Copy righted music feature.
-        CopyRightedMusic
+        CopyRightedMusic,
+        /// Range scene feature. (3.0.0 and above support)
+        RangeScene,
+        /// Screen capture feature. (3.1.0 and above support)
+        ScreenCapture
     }
 
     /// Language.
@@ -244,7 +249,27 @@ namespace ZEGO
         /// Electronic effects in A minor voice effect
         MinorA,
         /// Electronic effects in harmonic minor voice effect
-        HarmonicMinor
+        HarmonicMinor,
+        /// Female Vitality Sound effect
+        FemaleEnergetic,
+        /// Richness effect
+        RichNess,
+        /// Muffled effect
+        Muffled,
+        /// Roundness effect
+        Roundness,
+        /// Falsetto effect
+        Falsetto,
+        /// Fullness effect
+        Fullness,
+        /// Clear effect
+        Clear,
+        /// Hight effect
+        HighlyResonant,
+        /// Loud clear effect
+        LoudClear,
+        /// Minions effect
+        Minions
     }
 
     /// Reverberation preset value.
@@ -371,6 +396,8 @@ namespace ZEGO
         VP8,
         /// H.265
         H265,
+        /// Dualstream Scalable Video Coding
+        H264DualStream,
         /// Unknown Video Coding
         Unknown = 100
     }
@@ -386,17 +413,6 @@ namespace ZEGO
         ZegoOrientation_180,
         /// Rotate 270 degrees counterclockwise
         ZegoOrientation_270
-    }
-
-    /// Player video layer.
-    public enum ZegoPlayerVideoLayer
-    {
-        /// The layer to be played depends on the network status
-        Auto,
-        /// Play the base layer (small resolution)
-        Base,
-        /// Play the extend layer (big resolution)
-        BaseExtend
     }
 
     /// Video stream type
@@ -906,12 +922,18 @@ namespace ZEGO
     /// Audio capture source type.
     public enum ZegoAudioSourceType
     {
-        /// Default audio capture source (the main channel uses custom audio capture by default; the aux channel uses the same sound as main channel by default)
+        /// Default audio capture source (the main channel uses custom audio capture by default; the aux channel uses the same sound as main channel by default).
         Default,
-        /// Use custom audio capture, refer to [enableCustomAudioIO]
+        /// Use custom audio capture, refer to [enableCustomAudioIO] or [setAudioSource].
         Custom,
-        /// Use media player as audio source, only support aux channel
-        MediaPlayer
+        /// Use media player as audio source, only support aux channel.
+        MediaPlayer,
+        /// No audio source. This audio source type can only be used in [setAudioSource] interface, has no effect when used in [enableCustomAudioIO] interface.
+        None,
+        /// Using microphone as audio source. This audio source type can only be used in [setAudioSource] interface, has no effect when used in [enableCustomAudioIO] interface.
+        Microphone,
+        /// Using main channel as audio source. Ineffective when used in main channel. This audio source type can only be used in [setAudioSource] interface, has no effect when used in [enableCustomAudioIO] interface.
+        MainPublishChannel
     }
 
     /// Record type.
@@ -992,10 +1014,12 @@ namespace ZEGO
         /// Monthly billing by user.Billing for a single user is based on the monthly dimension, that is, the statistics call to obtain song resources (such as [requestSong], [requestAccompaniment], etc.) and the parameters are the user ID of the monthly subscription, and the charging is based on the monthly dimension.
         User,
         /// Monthly billing by room.The room users are billed on a monthly basis, that is, statistical calls to obtain song resources (such as [requestSong], [requestAccompaniment], etc.) are passed as Roomid for a monthly subscription of the room, and fees are charged on a monthly basis.
-        Room
+        Room,
+        /// Monthly billing by master. Every time a user obtains a resource, it is counted as the owner’s acquisition of resources, that is, according to the actual call to obtain the song resource interface (such as [requestSong], [requestAccompaniment], etc.), the parameters are passed as the Roomid of the room and the Masterid of the owner, and the fee is charged according to the owner.
+        Master
     }
 
-    /// The music resource type.
+    /// The music resource type. For [querycache] interface.
     public enum ZegoCopyrightedMusicType
     {
         /// Song.
@@ -1007,7 +1031,22 @@ namespace ZEGO
         /// Song accompaniment.
         ZegoCopyrightedMusicAccompaniment,
         /// Song accompaniment clip.
-        ZegoCopyrightedMusicAccompanimentClip
+        ZegoCopyrightedMusicAccompanimentClip,
+        /// Song accompaniment segment.
+        ZegoCopyrightedMusicAccompanimentSegment
+    }
+
+    /// Copyright music resource song copyright provider. For more information about the copyright owner, please contact ZEGO business personnel.
+    public enum ZegoCopyrightedMusicVendorID
+    {
+        /// Default copyright provider.
+        ZegoCopyrightedMusicVendorDefault = 0,
+        /// First copyright provider.
+        ZegoCopyrightedMusicVendor1 = 1,
+        /// Second copyright provider.
+        ZegoCopyrightedMusicVendor2 = 2,
+        /// Third copyright provider.
+        ZegoCopyrightedMusicVendor3 = 4
     }
 
     /// Font type.
@@ -1066,6 +1105,19 @@ namespace ZEGO
         Captured,
         /// custom processed
         CustomProcessed
+    }
+
+    /// Supported httpDNS service types.
+    public enum ZegoHttpDNSType
+    {
+        /// None.
+        None = 0,
+        /// wangsu httpdns.
+        Wangsu = 1,
+        /// tencent httpdns.
+        Tencent = 2,
+        /// aliyun httpdns.
+        Aliyun = 3
     }
 
     /**
@@ -1172,10 +1224,6 @@ namespace ZEGO
         /// Other special function switches, if not set, no special function will be used by default. Please contact ZEGO technical support before use.
         public Dictionary<string, string> advancedConfig;
 
-        public ZegoEngineConfig()
-        {
-            advancedConfig = new Dictionary<string, string>();
-        }
     }
 
     /**
@@ -1534,7 +1582,7 @@ namespace ZEGO
         /// User object instance.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc.
         public ZegoUser user;
 
-        /// Stream ID, a string of up to 256 characters. Caution: You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '-', ' '.
+        /// Stream ID, a string of up to 256 characters. Caution: You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '-', '_'.
         public string streamID;
 
         /// Stream extra info
@@ -1709,6 +1757,9 @@ namespace ZEGO
         /// QUIC version。 If [protocol] has the QUIC protocol, this information needs to be filled in. If there are multiple version numbers, separate them with commas. Please contact ZEGO technical support if you need to use it, otherwise this parameter can be ignored (set to null or empty string).
         public string quicVersion;
 
+        /// customized httpdns service. This feature is only supported for playing stream currently.
+        public ZegoHttpDNSType httpdns;
+
     }
 
     /**
@@ -1745,9 +1796,6 @@ namespace ZEGO
         /// The CDN configuration for playing stream. If set, the stream is play according to the URL instead of the streamID. After that, the streamID is only used as the ID of SDK internal callback.
         public ZegoCDNConfig cdnConfig;
 
-        /// @deprecated This property has been deprecated since version 1.19.0, please use the [setPlayStreamVideoType] function instead.
-        public ZegoPlayerVideoLayer videoLayer;
-
         /// The Room ID. It only needs to be filled in the multi-room mode, which indicates which room this stream needs to be bound to. This parameter is ignored in single room mode.
         public string roomID;
 
@@ -1764,7 +1812,6 @@ namespace ZEGO
         {
             resourceMode = ZegoStreamResourceMode.Default;
             cdnConfig = new ZegoCDNConfig();
-            videoLayer = (ZegoPlayerVideoLayer)99;
             roomID = "";
             videoCodecID = ZegoVideoCodecID.Unknown;
             sourceResourceType = ZegoResourceType.RTC;
@@ -2113,13 +2160,13 @@ namespace ZEGO
      */
     public class ZegoMixerInput {
 
-        /// Stream ID, a string of up to 256 characters. Caution: You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '-', ' '.
+        /// Stream ID, a string of up to 256 characters. Caution: You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '-', '_'.
         public string streamID;
 
         /// Mix stream content type
         public ZegoMixerInputContentType contentType;
 
-        /// Stream layout. When the mixed stream is an audio stream (that is, the ContentType parameter is set to the audio mixed stream type), the layout field is not processed inside the SDK, and there is no need to pay attention to this parameter.
+        /// Stream layout. When the mixed stream is an audio stream (that is, the ContentType parameter is set to the audio mixed stream type). Developers do not need to assign a value to this field, just use the SDK default.
         public ZegoRect layout;
 
         /// If enable soundLevel in mix stream task, an unique soundLevelID is need for every stream
@@ -2143,7 +2190,7 @@ namespace ZEGO
         /// User image information.
         public ZegoMixerImageInfo imageInfo;
 
-        /// Video frame corner radius, in px. Required: False. Value range: Does not exceed the width and height of the video screen set by the [layout] parameter. Default value: 0.
+        /// Description: Video frame corner radius, in px. Required: False. Value range: Does not exceed the width and height of the video screen set by the [layout] parameter. Default value: 0.
         public uint cornerRadius;
 
         public ZegoMixerInput(string streamID, ZegoMixerInputContentType contentType, ZegoRect layout)
@@ -2179,7 +2226,7 @@ namespace ZEGO
     }
 
     /**
-     * Mixer output object.
+     * Mixer output object, currently, a mixed-stream task only supports a maximum of four video streams with different resolutions.
      *
      * Configure mix stream output target URL or stream ID
      */
@@ -2578,7 +2625,7 @@ namespace ZEGO
     }
 
     /**
-     * Request configuration of song or accompaniment.
+     * The configuration of requesting resource.
      */
     public class ZegoCopyrightedMusicRequestConfig {
 
@@ -2587,6 +2634,15 @@ namespace ZEGO
 
         /// VOD billing mode.
         public ZegoCopyrightedMusicBillingMode mode;
+
+        /// Copyright music resource song copyright provider.
+        public ZegoCopyrightedMusicVendorID vendorID;
+
+        /// The room ID, the single-room mode can not be passed, and the corresponding room ID must be passed in the multi-room mode. Indicate in which room to order song/accompaniment/accompaniment clip/accompaniment segment.
+        public string roomID;
+
+        /// The master ID, which must be passed when the billing mode is billed by host. Indicate which homeowner to order song/accompaniment/accompaniment clip/accompaniment segment.
+        public string masterID;
 
     }
 

@@ -822,7 +822,6 @@ namespace ZEGO
                 zegoPlayerConfig = new zego_player_config();
                 zegoPlayerConfig.resource_mode = (zego_stream_resource_mode)config.resourceMode;
                 zegoPlayerConfig.cdn_config = ZegoUtil.GetStructPointer(ChangeCDNConfigClassToStruct(config.cdnConfig));
-                zegoPlayerConfig.video_layer = (zego_player_video_layer)config.videoLayer;
                 if(config.roomID != null)
                 {
                     zegoPlayerConfig.room_id = new byte[ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN];
@@ -865,6 +864,7 @@ namespace ZEGO
                 ZegoUtil.ZegoCopy(cDNConfig.url, ref config.url, ZEGO_EXPRESS_MAX_URL_LEN);
                 ZegoUtil.ZegoCopy(cDNConfig.protocol, ref config.protocol, ZEGO_EXPRESS_MAX_COMMON_LEN);
                 ZegoUtil.ZegoCopy(cDNConfig.quicVersion, ref config.quic_version, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                config.http_dns = (zego_http_dns_type)cDNConfig.httpdns;
             }
             return config;
         }
@@ -1449,7 +1449,10 @@ namespace ZEGO
             {
                 zego_copyrighted_music_request_config request_config = new zego_copyrighted_music_request_config();
                 request_config.mode = (zego_copyrighted_music_billing_mode)config.mode;
+                request_config.vendor_id = (zego_copyrighted_music_vendor_id)config.vendorID;
                 ZegoUtil.ZegoCopy(config.songID, ref request_config.song_id, ZEGO_EXPRESS_MAX_COMMON_LEN);
+                ZegoUtil.ZegoCopy(config.roomID, ref request_config.room_id, ZEGO_EXPRESS_MAX_ROOMID_LEN);
+                ZegoUtil.ZegoCopy(config.masterID, ref request_config.master_id, ZEGO_EXPRESS_MAX_USERID_LEN);
                 return request_config;
             }
         }
