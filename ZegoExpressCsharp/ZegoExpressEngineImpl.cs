@@ -646,16 +646,12 @@ namespace ZEGO
         }
 
 
-        public override void SendCustomAudioCaptureAACData(byte[] data, uint dataLength, uint configLength, ulong referenceTimeMillisecond, ZegoAudioFrameParam param, ZegoPublishChannel channel = ZegoPublishChannel.Main)
+        public override void SendCustomAudioCaptureAACData(IntPtr data, uint dataLength, uint configLength, ulong referenceTimeMillisecond, uint samples, ZegoAudioFrameParam param, ZegoPublishChannel channel = ZegoPublishChannel.Main)
         {
-            if (enginePtr != null)
-            {
-                zego_audio_frame_param zego_Audio_Frame_Param = ChangeZegoAudioFrameParamClassToStruct(param);
-                int result = IExpressCustomAudioIOInternal.zego_express_send_custom_audio_capture_aac_data(data, dataLength, configLength, referenceTimeMillisecond, zego_Audio_Frame_Param, channel);
-                string log = string.Format("SendCustomAudioCaptureAACData result:{0}", result);
-                ZegoUtil.ZegoPrivateLog(result, log, true, ZegoConstans.ZEGO_EXPRESS_MODULE_CUSTOMAUDIOIO, false);
-            }
+            zego_audio_frame_param frame_param = ChangeZegoAudioFrameParamClassToStruct(param);
+            IExpressCustomAudioIOInternal.zego_express_send_custom_audio_capture_aac_data(data, dataLength, configLength, referenceTimeMillisecond, samples, frame_param, channel);
         }
+
         public override void SendCustomAudioCapturePCMData(byte[] data, uint dataLength, ZegoAudioFrameParam param, ZegoPublishChannel channel = ZegoPublishChannel.Main)
         {
             if (enginePtr != null)

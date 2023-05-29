@@ -50,6 +50,11 @@ namespace ZEGO
         [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_custom_audio_capture_aac_data", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern int zego_express_send_custom_audio_capture_aac_data(byte[] data, uint data_length, uint config_length, ulong reference_time_millisecond, zego_audio_frame_param param, ZegoPublishChannel channel);
 
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_custom_audio_capture_aac_data", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_send_custom_audio_capture_aac_data(IntPtr data, uint data_length, uint config_length, ulong reference_time_millisecond, uint samples, zego_audio_frame_param param, ZegoPublishChannel channel);
+
+
         [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public delegate void zego_on_player_audio_data(IntPtr data, uint data_length, zego_audio_frame_param param, [In()] [MarshalAs(UnmanagedType.LPStr)] string stream_id,IntPtr user_context);
 

@@ -202,5 +202,9 @@ namespace ZEGO
 
         [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_register_copyrighted_music_get_standard_pitch_callback", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
         public static extern void zego_register_copyrighted_music_get_standard_pitch_callback(zego_on_copyrighted_music_get_standard_pitch callback_func, IntPtr user_context);
+
+
+        [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_copyrighted_music_get_lrc_lyric_with_vendor", CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+        public static extern int zego_express_copyrighted_music_get_lrc_lyric_with_vendor([In()][MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string song_id, zego_copyrighted_music_vendor_id vendor_id, ref int sequence);
     }
 }
