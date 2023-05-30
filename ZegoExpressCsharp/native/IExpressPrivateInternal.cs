@@ -4,10 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace ZEGO
-{
-    class IExpressPrivateInternal
-    {
-    }
-    
+namespace ZEGO {
+class IExpressPrivateInternal {}
+
 }

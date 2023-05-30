@@ -1,10 +1,8 @@
 using System;
-namespace ZEGO
-{
+namespace ZEGO {
 
-    public class IZegoCustomVideoProcessHandler
-    {
-        /**
+public class IZegoCustomVideoProcessHandler {
+    /**
          * Call back when the original video data is obtained.
          *
          * Available since: 2.2.0
@@ -20,9 +18,12 @@ namespace ZEGO
          * @param referenceTimeMillisecond Video frame reference time, UNIX timestamp, in milliseconds.
          * @param channel Publishing stream channel.
          */
-        public delegate void OnCapturedUnprocessedRawData(ref IntPtr data, ref uint dataLength, ZegoVideoFrameParam param, ulong referenceTimeMillisecond, ZegoPublishChannel channel);
+    public delegate void OnCapturedUnprocessedRawData(ref IntPtr data, ref uint dataLength,
+                                                      ZegoVideoFrameParam param,
+                                                      ulong referenceTimeMillisecond,
+                                                      ZegoPublishChannel channel);
 
-        /**
+    /**
          * Call back when the original video data of type [CVPixelBuffer] is obtained.
          *
          * Available since: 2.2.0
@@ -36,9 +37,10 @@ namespace ZEGO
          * @param timestamp video frame reference time, UNIX timestamp.
          * @param channel Publishing stream channel.
          */
-        public delegate void OnCapturedUnprocessedCVPixelBuffer(IntPtr buffer, ulong timestamp, ZegoPublishChannel channel);
+    public delegate void OnCapturedUnprocessedCVPixelBuffer(IntPtr buffer, ulong timestamp,
+                                                            ZegoPublishChannel channel);
 
-        /**
+    /**
          * Call back when the original video data of type [Texture] is obtained.
          *
          * Available since: 2.2.0
@@ -54,9 +56,9 @@ namespace ZEGO
          * @param referenceTimeMillisecond video frame reference time, UNIX timestamp, in milliseconds.
          * @param channel Publishing stream channel
          */
-        public delegate void OnCapturedUnprocessedTextureData(int textureID, int width, int height, ulong referenceTimeMillisecond, ZegoPublishChannel channel);
-
-
-    }
+    public delegate void OnCapturedUnprocessedTextureData(int textureID, int width, int height,
+                                                          ulong referenceTimeMillisecond,
+                                                          ZegoPublishChannel channel);
+}
 
 }
