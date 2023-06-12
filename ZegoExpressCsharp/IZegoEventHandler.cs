@@ -2,12 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-namespace ZEGO
-{
+namespace ZEGO {
 
-    public class IZegoEventHandler
-    {
-        /**
+public class IZegoEventHandler {
+    /**
          * The callback for obtaining debugging error information.
          *
          * Available since: 1.1.0
@@ -20,9 +18,9 @@ namespace ZEGO
          * @param funcName Function name.
          * @param info Detailed error information.
          */
-        public delegate void OnDebugError(int errorCode, string funcName, string info);
+    public delegate void OnDebugError(int errorCode, string funcName, string info);
 
-        /**
+    /**
          * The callback triggered when the audio/video engine state changes.
          *
          * Available since: 1.1.0
@@ -35,10 +33,10 @@ namespace ZEGO
          *
          * @param state The audio/video engine state.
          */
-        public delegate void OnEngineStateUpdate(ZegoEngineState state);
+    public delegate void OnEngineStateUpdate(ZegoEngineState state);
 
-        /**
-         * The callback triggered when the room connection state changes.
+    /**
+         * Notification of the room connection state changes.
          *
          * Available since: 1.1.0
          * Description: This callback is triggered when the connection status of the room changes, and the reason for the change is notified.For versions 2.18.0 and above, it is recommended to use the onRoomStateChanged callback instead of the onRoomStateUpdate callback to monitor room state changes.
@@ -55,9 +53,10 @@ namespace ZEGO
          * @param errorCode Error code, For details, please refer to [Common Error Codes](https://docs.zegocloud.com/article/5548).
          * @param extendedData Extended Information with state updates. When the room login is successful, the key "room_session_id" can be used to obtain the unique RoomSessionID of each audio and video communication, which identifies the continuous communication from the first user in the room to the end of the audio and video communication. It can be used in scenarios such as call quality scoring and call problem diagnosis.
          */
-        public delegate void OnRoomStateUpdate(string roomID, ZegoRoomState state, int errorCode, string extendedData);
+    public delegate void OnRoomStateUpdate(string roomID, ZegoRoomState state, int errorCode,
+                                           string extendedData);
 
-        /**
+    /**
          * The callback triggered when the number of other users in the room increases or decreases.
          *
          * Available since: 1.1.0
@@ -75,9 +74,10 @@ namespace ZEGO
          * @param updateType Update type (add/delete).
          * @param userList List of users changed in the current room.
          */
-        public delegate void OnRoomUserUpdate(string roomID, ZegoUpdateType updateType, List<ZegoUser> userList, uint userCount);
+    public delegate void OnRoomUserUpdate(string roomID, ZegoUpdateType updateType,
+                                          List<ZegoUser> userList, uint userCount);
 
-        /**
+    /**
          * The callback triggered every 30 seconds to report the current number of online users.
          *
          * Available since: 1.7.0
@@ -90,9 +90,9 @@ namespace ZEGO
          * @param roomID Room ID where the user is logged in, a string of up to 128 bytes in length.
          * @param count Count of online users.
          */
-        public delegate void OnRoomOnlineUserCountUpdate(string roomID, int count);
+    public delegate void OnRoomOnlineUserCountUpdate(string roomID, int count);
 
-        /**
+    /**
          * The callback triggered when the number of streams published by the other users in the same room increases or decreases.
          *
          * Available since: 1.1.0
@@ -110,9 +110,10 @@ namespace ZEGO
          * @param streamList Updated stream list.
          * @param extendedData Extended information with stream updates.When receiving a stream deletion notification, the developer can convert the string into a json object to get the stream_delete_reason field, which is an array of stream deletion reasons, and the stream_delete_reason[].code field may have the following values: 1 (the user actively stops publishing stream) ; 2 (user heartbeat timeout); 3 (user repeated login); 4 (user kicked out); 5 (user disconnected); 6 (removed by the server).
          */
-        public delegate void OnRoomStreamUpdate(string roomID, ZegoUpdateType updateType, List<ZegoStream> streamList, string extendedData);
+    public delegate void OnRoomStreamUpdate(string roomID, ZegoUpdateType updateType,
+                                            List<ZegoStream> streamList, string extendedData);
 
-        /**
+    /**
          * The callback triggered when there is an update on the extra information of the streams published by other users in the same room.
          *
          * Available since: 1.1.0
@@ -126,9 +127,9 @@ namespace ZEGO
          * @param roomID Room ID where the user is logged in, a string of up to 128 bytes in length.
          * @param streamList List of streams that the extra info was updated.
          */
-        public delegate void OnRoomStreamExtraInfoUpdate(string roomID, List<ZegoStream> streamList);
+    public delegate void OnRoomStreamExtraInfoUpdate(string roomID, List<ZegoStream> streamList);
 
-        /**
+    /**
          * The callback triggered when there is an update on the extra information of the room.
          *
          * Available since: 1.1.0
@@ -141,9 +142,10 @@ namespace ZEGO
          * @param roomID Room ID where the user is logged in, a string of up to 128 bytes in length.
          * @param roomExtraInfoList List of the extra info updated.
          */
-        public delegate void OnRoomExtraInfoUpdate(string roomID, List<ZegoRoomExtraInfo> roomExtraInfoList);
+    public delegate void OnRoomExtraInfoUpdate(string roomID,
+                                               List<ZegoRoomExtraInfo> roomExtraInfoList);
 
-        /**
+    /**
          * The callback triggered when the state of stream publishing changes.
          *
          * Available since: 1.1.0
@@ -156,9 +158,10 @@ namespace ZEGO
          * @param errorCode The error code corresponding to the status change of the publish stream, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
          * @param extendedData Extended information with state updates, include playing stream CDN address.
          */
-        public delegate void OnPublisherStateUpdate(string streamID, ZegoPublisherState state, int errorCode, string extendedData);
+    public delegate void OnPublisherStateUpdate(string streamID, ZegoPublisherState state,
+                                                int errorCode, string extendedData);
 
-        /**
+    /**
          * Callback for current stream publishing quality.
          *
          * Available since: 1.1.0
@@ -169,9 +172,10 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param quality Publishing stream quality, including audio and video framerate, bitrate, RTT, etc.
          */
-        public delegate void OnPublisherQualityUpdate(string streamID, ZegoPublishStreamQuality quality);
+    public delegate void OnPublisherQualityUpdate(string streamID,
+                                                  ZegoPublishStreamQuality quality);
 
-        /**
+    /**
          * The callback triggered when the first audio frame is captured.
          *
          * Available since: 1.1.0
@@ -179,9 +183,9 @@ namespace ZEGO
          * Trigger: When the engine of the audio/video module inside the SDK starts, the SDK will go and collect the audio data from the local device and will receive the callback at that time.
          * Related callbacks: Determine if the SDK actually collected video data by the callback function [onPublisherCapturedVideoFirstFrame], determine if the SDK has rendered the first frame of video data collected by calling back [onPublisherRenderVideoFirstFrame].
          */
-        public delegate void OnPublisherCapturedAudioFirstFrame();
+    public delegate void OnPublisherCapturedAudioFirstFrame();
 
-        /**
+    /**
          * The callback triggered when the first video frame is captured.
          *
          * Available since: 1.1.0
@@ -192,9 +196,9 @@ namespace ZEGO
          *
          * @param channel Publishing stream channel.If you only publish one audio and video stream, you can ignore this parameter.
          */
-        public delegate void OnPublisherCapturedVideoFirstFrame(ZegoPublishChannel channel);
+    public delegate void OnPublisherCapturedVideoFirstFrame(ZegoPublishChannel channel);
 
-        /**
+    /**
          * The callback triggered when the video capture resolution changes.
          *
          * Available since: 1.1.0
@@ -208,9 +212,10 @@ namespace ZEGO
          * @param height Video capture resolution height.
          * @param channel Publishing stream channel.If you only publish one audio and video stream, you can ignore this parameter.
          */
-        public delegate void OnPublisherVideoSizeChanged(int width, int height, ZegoPublishChannel channel);
+    public delegate void OnPublisherVideoSizeChanged(int width, int height,
+                                                     ZegoPublishChannel channel);
 
-        /**
+    /**
          * The callback triggered when the state of relayed streaming to CDN changes.
          *
          * Available since: 1.1.0
@@ -221,9 +226,10 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param infoList List of information that the current CDN is relaying.
          */
-        public delegate void OnPublisherRelayCDNStateUpdate(string streamID, List<ZegoStreamRelayCDNInfo> infoList);
+    public delegate void OnPublisherRelayCDNStateUpdate(string streamID,
+                                                        List<ZegoStreamRelayCDNInfo> infoList);
 
-        /**
+    /**
          * The callback triggered when the state of stream playing changes.
          *
          * Available since: 1.1.0
@@ -236,9 +242,10 @@ namespace ZEGO
          * @param errorCode The error code corresponding to the status change of the playing stream, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
          * @param extendedData Extended Information with state updates. As the standby, only an empty json table is currently returned.
          */
-        public delegate void OnPlayerStateUpdate(string streamID, ZegoPlayerState state, int errorCode, string extendedData);
+    public delegate void OnPlayerStateUpdate(string streamID, ZegoPlayerState state, int errorCode,
+                                             string extendedData);
 
-        /**
+    /**
          * Callback for current stream playing quality.
          *
          * Available since: 1.1.0
@@ -250,9 +257,9 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param quality Playing stream quality, including audio and video framerate, bitrate, RTT, etc.
          */
-        public delegate void OnPlayerQualityUpdate(string streamID, ZegoPlayStreamQuality quality);
+    public delegate void OnPlayerQualityUpdate(string streamID, ZegoPlayStreamQuality quality);
 
-        /**
+    /**
          * The callback triggered when a media event occurs during streaming playing.
          *
          * Available since: 1.1.0
@@ -263,9 +270,9 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param mediaEvent Specific events received when playing the stream.
          */
-        public delegate void OnPlayerMediaEvent(string streamID, ZegoPlayerMediaEvent mediaEvent);
+    public delegate void OnPlayerMediaEvent(string streamID, ZegoPlayerMediaEvent mediaEvent);
 
-        /**
+    /**
          * The callback triggered when the first audio frame is received.
          *
          * Available since: 1.1.0
@@ -276,9 +283,9 @@ namespace ZEGO
          *
          * @param streamID Stream ID.
          */
-        public delegate void OnPlayerRecvAudioFirstFrame(string streamID);
+    public delegate void OnPlayerRecvAudioFirstFrame(string streamID);
 
-        /**
+    /**
          * The callback triggered when the first video frame is received.
          *
          * Available since: 1.1.0
@@ -290,9 +297,9 @@ namespace ZEGO
          *
          * @param streamID Stream ID.
          */
-        public delegate void OnPlayerRecvVideoFirstFrame(string streamID);
+    public delegate void OnPlayerRecvVideoFirstFrame(string streamID);
 
-        /**
+    /**
          * The callback triggered when the first video frame is rendered.
          *
          * Available since: 1.1.0
@@ -304,9 +311,9 @@ namespace ZEGO
          *
          * @param streamID Stream ID.
          */
-        public delegate void OnPlayerRenderVideoFirstFrame(string streamID);
+    public delegate void OnPlayerRenderVideoFirstFrame(string streamID);
 
-        /**
+    /**
          * The callback triggered when the stream playback resolution changes.
          *
          * Available since: 1.1.0
@@ -320,9 +327,9 @@ namespace ZEGO
          * @param width Video decoding resolution width.
          * @param height Video decoding resolution height.
          */
-        public delegate void OnPlayerVideoSizeChanged(string streamID, int width, int height);
+    public delegate void OnPlayerVideoSizeChanged(string streamID, int width, int height);
 
-        /**
+    /**
          * The callback triggered when Supplemental Enhancement Information is received.
          *
          * Available since: 1.1.0
@@ -334,10 +341,12 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param data SEI content.
          */
-        [Obsolete("This function will switch the ui thread callback data, which may cause sei data exceptions. It will be deprecated in version 3.4.0 and above. Please use the [onPlayerSyncRecvSEI] function instead.",false)]
-        public delegate void OnPlayerRecvSEI(string streamID, byte[] data);
+    [Obsolete(
+        "This function will switch the ui thread callback data, which may cause sei data exceptions. It will be deprecated in version 3.4.0 and above. Please use the [onPlayerSyncRecvSEI] function instead.",
+        false)]
+    public delegate void OnPlayerRecvSEI(string streamID, byte[] data);
 
-        /**
+    /**
          * The callback triggered when the state of relayed streaming of the mixed stream to CDN changes.
          *
          * Available since: 1.2.1
@@ -351,9 +360,10 @@ namespace ZEGO
          * @param taskID The mixing task ID. Value range: the length does not exceed 256. Caution: This parameter is in string format and cannot contain URL keywords, such as 'http' and '?' etc., otherwise the push and pull flow will fail. Only supports numbers, English characters and'~','!','@','$','%','^','&','*','(',')','_' ,'+','=','-','`',';',''',',','.','<','>','/','\'.
          * @param infoList List of information that the current CDN is being mixed.
          */
-        public delegate void OnMixerRelayCDNStateUpdate(string taskID, List<ZegoStreamRelayCDNInfo> infoList);
+    public delegate void OnMixerRelayCDNStateUpdate(string taskID,
+                                                    List<ZegoStreamRelayCDNInfo> infoList);
 
-        /**
+    /**
          * The callback triggered when the sound level of any input stream changes in the stream mixing process.
          *
          * Available since: 1.2.1
@@ -366,9 +376,9 @@ namespace ZEGO
          *
          * @param soundLevels The sound key-value pair of each single stream in the mixed stream, the key is the soundLevelID of each single stream, and the value is the sound value of the corresponding single stream. Value range: The value range of value is 0.0 ~ 100.0.
          */
-        public delegate void OnMixerSoundLevelUpdate(Dictionary<uint, float> soundLevels);
+    public delegate void OnMixerSoundLevelUpdate(Dictionary<uint, float> soundLevels);
 
-        /**
+    /**
          * The local captured audio sound level callback.
          *
          * Available since: 1.1.0
@@ -381,9 +391,9 @@ namespace ZEGO
          *
          * @param soundLevel Locally captured sound level value, ranging from 0.0 to 100.0.
          */
-        public delegate void OnCapturedSoundLevelUpdate(float soundLevel);
+    public delegate void OnCapturedSoundLevelUpdate(float soundLevel);
 
-        /**
+    /**
          * The remote playing streams audio sound level callback.
          *
          * Available since: 1.1.0
@@ -394,9 +404,9 @@ namespace ZEGO
          *
          * @param soundLevels Remote sound level hash map, key is the streamID, value is the sound level value of the corresponding streamID, value ranging from 0.0 to 100.0.
          */
-        public delegate void OnRemoteSoundLevelUpdate(Dictionary<string, float> soundLevels);
+    public delegate void OnRemoteSoundLevelUpdate(Dictionary<string, float> soundLevels);
 
-        /**
+    /**
          * The local captured audio spectrum callback.
          *
          * Available since: 1.1.0
@@ -407,9 +417,9 @@ namespace ZEGO
          *
          * @param audioSpectrum Locally captured audio spectrum value list. Spectrum value range is [0-2^30].
          */
-        public delegate void OnCapturedAudioSpectrumUpdate(float[] audioSpectrum);
+    public delegate void OnCapturedAudioSpectrumUpdate(float[] audioSpectrum);
 
-        /**
+    /**
          * The remote playing streams audio spectrum callback.
          *
          * Available since: 1.1.0
@@ -420,9 +430,9 @@ namespace ZEGO
          *
          * @param audioSpectrums Remote audio spectrum hash map, key is the streamID, value is the audio spectrum list of the corresponding streamID. Spectrum value range is [0-2^30]
          */
-        public delegate void OnRemoteAudioSpectrumUpdate(Dictionary<string, float[]> audioSpectrums);
+    public delegate void OnRemoteAudioSpectrumUpdate(Dictionary<string, float[]> audioSpectrums);
 
-        /**
+    /**
          * The callback triggered when a local device exception occurred.
          *
          * Available since: 2.15.0
@@ -433,9 +443,10 @@ namespace ZEGO
          * @param deviceType The type of device where the exception occurred.
          * @param deviceID Device ID. Currently, only desktop devices are supported to distinguish different devices; for mobile devices, this parameter will return an empty string.
          */
-        public delegate void OnLocalDeviceExceptionOccurred(ZegoDeviceExceptionType exceptionType, ZegoDeviceType deviceType, string deviceID);
+    public delegate void OnLocalDeviceExceptionOccurred(ZegoDeviceExceptionType exceptionType,
+                                                        ZegoDeviceType deviceType, string deviceID);
 
-        /**
+    /**
          * The callback triggered when the state of the remote camera changes.
          *
          * Available since: 1.1.0
@@ -448,9 +459,9 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param state Remote camera status.
          */
-        public delegate void OnRemoteCameraStateUpdate(string streamID, ZegoRemoteDeviceState state);
+    public delegate void OnRemoteCameraStateUpdate(string streamID, ZegoRemoteDeviceState state);
 
-        /**
+    /**
          * The callback triggered when the state of the remote microphone changes.
          *
          * Available since: 1.1.0
@@ -462,9 +473,9 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param state Remote microphone status.
          */
-        public delegate void OnRemoteMicStateUpdate(string streamID, ZegoRemoteDeviceState state);
+    public delegate void OnRemoteMicStateUpdate(string streamID, ZegoRemoteDeviceState state);
 
-        /**
+    /**
          * The callback triggered when Broadcast Messages are received.
          *
          * Available since: 1.2.1
@@ -478,9 +489,10 @@ namespace ZEGO
          * @param roomID Room ID. Value range: The maximum length is 128 bytes.
          * @param messageList List of received messages. Value range: Up to 50 messages can be received each time.
          */
-        public delegate void OnIMRecvBroadcastMessage(string roomID, List<ZegoBroadcastMessageInfo> messageList);
+    public delegate void OnIMRecvBroadcastMessage(string roomID,
+                                                  List<ZegoBroadcastMessageInfo> messageList);
 
-        /**
+    /**
          * The callback triggered when Barrage Messages are received.
          *
          * Available since: 1.5.0
@@ -494,9 +506,10 @@ namespace ZEGO
          * @param roomID Room ID. Value range: The maximum length is 128 bytes.
          * @param messageList List of received messages. Value range: Up to 50 messages can be received each time.
          */
-        public delegate void OnIMRecvBarrageMessage(string roomID, List<ZegoBarrageMessageInfo> messageList);
+    public delegate void OnIMRecvBarrageMessage(string roomID,
+                                                List<ZegoBarrageMessageInfo> messageList);
 
-        /**
+    /**
          * The callback triggered when a Custom Command is received.
          *
          * Available since: 1.2.1
@@ -511,9 +524,9 @@ namespace ZEGO
          * @param fromUser Sender of the command.
          * @param command Command content received.Value range: The maximum length is 1024 bytes.
          */
-        public delegate void OnIMRecvCustomCommand(string roomID, ZegoUser fromUser, string command);
+    public delegate void OnIMRecvCustomCommand(string roomID, ZegoUser fromUser, string command);
 
-        /**
+    /**
          * The callback triggered when the state of data recording (to a file) changes.
          *
          * Available since: 1.10.0
@@ -527,9 +540,11 @@ namespace ZEGO
          * @param config Record config.
          * @param channel Publishing stream channel.
          */
-        public delegate void OnCapturedDataRecordStateUpdate(ZegoDataRecordState state, int errorCode, ZegoDataRecordConfig config, ZegoPublishChannel channel);
+    public delegate void OnCapturedDataRecordStateUpdate(ZegoDataRecordState state, int errorCode,
+                                                         ZegoDataRecordConfig config,
+                                                         ZegoPublishChannel channel);
 
-        /**
+    /**
          * The callback to report the current recording progress.
          *
          * Available since: 1.10.0
@@ -542,9 +557,11 @@ namespace ZEGO
          * @param config Record config.
          * @param channel Publishing stream channel.
          */
-        public delegate void OnCapturedDataRecordProgressUpdate(ZegoDataRecordProgress progress, ZegoDataRecordConfig config, ZegoPublishChannel channel);
+    public delegate void OnCapturedDataRecordProgressUpdate(ZegoDataRecordProgress progress,
+                                                            ZegoDataRecordConfig config,
+                                                            ZegoPublishChannel channel);
 
-        /**
+    /**
          * Customize the notification of the start of video capture.
          *
          * Available since: 1.1.0
@@ -557,9 +574,9 @@ namespace ZEGO
          *
          * @param channel Publishing stream channel.
          */
-        public delegate void OnCustomVideoCaptureStart(ZegoPublishChannel channel);
+    public delegate void OnCustomVideoCaptureStart(ZegoPublishChannel channel);
 
-        /**
+    /**
          * Customize the notification of the end of the collection.
          *
          * Available since: 1.1.0
@@ -572,9 +589,9 @@ namespace ZEGO
          *
          * @param channel Publishing stream channel.
          */
-        public delegate void OnCustomVideoCaptureStop(ZegoPublishChannel channel);
+    public delegate void OnCustomVideoCaptureStop(ZegoPublishChannel channel);
 
-        /**
+    /**
          * When custom video rendering is enabled, the original video frame data collected by the local preview is called back.
          *
          * Available since: 1.1.0
@@ -589,9 +606,12 @@ namespace ZEGO
          * @param flipMode video flip mode.
          * @param channel Publishing stream channel.
          */
-        public delegate void OnCapturedVideoFrameRawData(ref IntPtr data, ref uint dataLength, ZegoVideoFrameParam param, ZegoVideoFlipMode flipMode, ZegoPublishChannel channel);
+    public delegate void OnCapturedVideoFrameRawData(ref IntPtr data, ref uint dataLength,
+                                                     ZegoVideoFrameParam param,
+                                                     ZegoVideoFlipMode flipMode,
+                                                     ZegoPublishChannel channel);
 
-        /**
+    /**
          * When custom video rendering is enabled, the remote end pulls the original video frame data to call back, and distinguishes different streams by streamID.
          *
          * Available since: 1.1.0
@@ -605,9 +625,10 @@ namespace ZEGO
          * @param param Video frame parameters.
          * @param streamID Stream ID.
          */
-        public delegate void OnRemoteVideoFrameRawData(ref IntPtr data, ref uint dataLength, ZegoVideoFrameParam param, string streamID);
+    public delegate void OnRemoteVideoFrameRawData(ref IntPtr data, ref uint dataLength,
+                                                   ZegoVideoFrameParam param, string streamID);
 
-        /**
+    /**
          * The callback for obtaining the audio data captured by the local microphone.
          *
          * Available: Since 1.1.0
@@ -620,9 +641,10 @@ namespace ZEGO
          * @param dataLength Length of the data.
          * @param param Parameters of the audio frame.
          */
-        public delegate void OnCapturedAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param);
+    public delegate void OnCapturedAudioData(IntPtr data, uint dataLength,
+                                             ZegoAudioFrameParam param);
 
-        /**
+    /**
          * The callback for obtaining the audio data of all the streams playback by SDK.
          *
          * Available: Since 1.1.0
@@ -635,9 +657,10 @@ namespace ZEGO
          * @param dataLength Length of the data.
          * @param param Parameters of the audio frame.
          */
-        public delegate void OnPlaybackAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param);
+    public delegate void OnPlaybackAudioData(IntPtr data, uint dataLength,
+                                             ZegoAudioFrameParam param);
 
-        /**
+    /**
          * Callback to get the audio data played by the SDK and the audio data captured by the local microphone. The audio data is the data mixed by the SDK.
          *
          * Available: Since 1.1.0
@@ -650,9 +673,9 @@ namespace ZEGO
          * @param dataLength Length of the data.
          * @param param Parameters of the audio frame.
          */
-        public delegate void OnMixedAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param);
+    public delegate void OnMixedAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param);
 
-        /**
+    /**
          * The callback for obtaining the audio data of each stream.
          *
          * Available: Since 1.1.0
@@ -666,75 +689,73 @@ namespace ZEGO
          * @param param Parameters of the audio frame.
          * @param streamID Corresponding stream ID.
          */
-        public delegate void OnPlayerAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param, string streamID);
-
-
-    }
-    /**
+    public delegate void OnPlayerAudioData(IntPtr data, uint dataLength, ZegoAudioFrameParam param,
+                                           string streamID);
+}
+/**
      * Callback for asynchronous destruction completion.
      *
      * In general, developers do not need to listen to this callback.
      */
-    public delegate void IZegoDestroyCompletionCallback();
+public delegate void IZegoDestroyCompletionCallback();
 
-    /**
+/**
      * Callback for setting room extra information.
      *
      * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
-    public delegate void OnRoomSetRoomExtraInfoResult(int errorCode);
+public delegate void OnRoomSetRoomExtraInfoResult(int errorCode);
 
-    /**
+/**
      * Callback for setting stream extra information.
      *
      * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
-    public delegate void OnPublisherSetStreamExtraInfoResult(int errorCode);
+public delegate void OnPublisherSetStreamExtraInfoResult(int errorCode);
 
-    /**
+/**
      * Callback for add/remove CDN URL.
      *
      * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
-    public delegate void OnPublisherUpdateCdnUrlResult(int errorCode);
+public delegate void OnPublisherUpdateCdnUrlResult(int errorCode);
 
-    /**
+/**
      * Results of starting a mixer task.
      *
      * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      * @param extendedData Extended Information
      */
-    public delegate void OnMixerStartResult(int errorCode, string extendedData);
+public delegate void OnMixerStartResult(int errorCode, string extendedData);
 
-    /**
+/**
      * Results of stoping a mixer task.
      *
      * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
-    public delegate void OnMixerStopResult(int errorCode);
+public delegate void OnMixerStopResult(int errorCode);
 
-    /**
+/**
      * Callback for sending broadcast messages.
      *
      * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      * @param messageID ID of this message
      */
-    public delegate void OnIMSendBroadcastMessageResult(int errorCode, ulong messageID);
+public delegate void OnIMSendBroadcastMessageResult(int errorCode, ulong messageID);
 
-    /**
+/**
      * Callback for sending barrage message.
      *
      * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      * @param messageID ID of this message
      */
-    public delegate void OnIMSendBarrageMessageResult(int errorCode, string messageID);
+public delegate void OnIMSendBarrageMessageResult(int errorCode, string messageID);
 
-    /**
+/**
      * Callback for sending custom command.
      *
      * @param errorCode Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
      */
-    public delegate void OnIMSendCustomCommandResult(int errorCode);
-
+public delegate void OnIMSendCustomCommandResult(int errorCode);
 
 }

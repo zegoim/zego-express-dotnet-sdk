@@ -1,12 +1,10 @@
 using System;
 using static ZEGO.IZegoCopyrightedMusicHandler;
 
-namespace ZEGO
-{
+namespace ZEGO {
 
-    public abstract class ZegoCopyrightedMusic
-    {
-        /**
+public abstract class ZegoCopyrightedMusic {
+    /**
          * Initialize the copyrighted music module.
          *
          * Available since: 2.13.0
@@ -17,9 +15,10 @@ namespace ZEGO
          * @param config the copyrighted music configuration.
          * @param callback init result
          */
-        public abstract void InitCopyrightedMusic(ZegoCopyrightedMusicConfig config, OnCopyrightedMusicInit callback);
+    public abstract void InitCopyrightedMusic(ZegoCopyrightedMusicConfig config,
+                                              OnCopyrightedMusicInit callback);
 
-        /**
+    /**
          * Get cache size.
          *
          * Available since: 2.13.0
@@ -29,9 +28,9 @@ namespace ZEGO
          *
          * @return cache file size, in byte.
          */
-        public abstract ulong GetCacheSize();
+    public abstract ulong GetCacheSize();
 
-        /**
+    /**
          * Clear cache.
          *
          * Available since: 2.13.0
@@ -39,9 +38,9 @@ namespace ZEGO
          * Use case: Used to clear the cache of the App.
          * When to call: After initializing the copyrighted music [createCopyrightedMusic].
          */
-        public abstract void ClearCache();
+    public abstract void ClearCache();
 
-        /**
+    /**
          * Send extended feature request.
          *
          * Available since: 2.13.0
@@ -53,9 +52,10 @@ namespace ZEGO
          * @param param request parameters, each request command has corresponding request parameters.
          * @param callback send extended feature request result
          */
-        public abstract void SendExtendedRequest(string command, string param, OnCopyrightedMusicSendExtendedRequest callback);
+    public abstract void SendExtendedRequest(string command, string param,
+                                             OnCopyrightedMusicSendExtendedRequest callback);
 
-        /**
+    /**
          * Get lyrics in lrc format.
          *
          * Available since: 3.2.1
@@ -67,22 +67,24 @@ namespace ZEGO
          * @param vendorID Copyright music resource song copyright provider.
          * @param callback get lyrics result
          */
-        public abstract void GetLrcLyric(string songID, ZegoCopyrightedMusicVendorID vendorID, OnCopyrightedMusicGetLrcLyric callback);
+    public abstract void GetLrcLyric(string songID, ZegoCopyrightedMusicVendorID vendorID,
+                                     OnCopyrightedMusicGetLrcLyric callback);
 
-        /**
+    /**
          * Get lyrics in krc format.
          *
          * Available since: 2.13.0
-         * Description: Get lyrics in krc format, support parsing lyrics word by word.
+         * Description: Get verbatim lyrics, support parsing lyrics word by word.
          * Use case: Used to display lyrics word by word.
          * When to call: After initializing the copyrighted music success [initCopyrightedMusic].
          *
          * @param krcToken The krcToken obtained by calling requestAccompaniment.
          * @param callback get lyrics result.
          */
-        public abstract void GetKrcLyricByToken(string krcToken, OnCopyrightedMusicGetKrcLyricByToken callback);
+    public abstract void GetKrcLyricByToken(string krcToken,
+                                            OnCopyrightedMusicGetKrcLyricByToken callback);
 
-        /**
+    /**
          * Download song or accompaniment.
          *
          * Available since: 2.13.0
@@ -94,9 +96,9 @@ namespace ZEGO
          * @param resourceID the resource ID corresponding to the song or accompaniment.
          * @param callback download song or accompaniment result.
          */
-        public abstract void Download(string resourceID, OnCopyrightedMusicDownload callback);
+    public abstract void Download(string resourceID, OnCopyrightedMusicDownload callback);
 
-        /**
+    /**
          * Get the playing time of a song or accompaniment file.
          *
          * Available since: 2.13.0
@@ -106,11 +108,11 @@ namespace ZEGO
          *
          * @param resourceID the resource ID corresponding to the song or accompaniment.
          */
-        public abstract ulong GetDuration(string resourceID);
+    public abstract ulong GetDuration(string resourceID);
 
-        public OnDownloadProgressUpdate onDownloadProgressUpdate;
+    public OnDownloadProgressUpdate onDownloadProgressUpdate;
 
-        /**
+    /**
          * [Deprecated] Request a song. Deprecated since 3.0.2, please use the [requestResource] function instead.
          *
          * Available since: 2.13.0
@@ -123,10 +125,11 @@ namespace ZEGO
          * @param config request configuration.
          * @param callback request a song result
          */
-        [Obsolete("Deprecated since 3.0.2, please use the [requestResource] function instead.",false)]
-        public abstract void RequestSong(ZegoCopyrightedMusicRequestConfig config, OnCopyrightedMusicRequestSong callback);
+    [Obsolete("Deprecated since 3.0.2, please use the [requestResource] function instead.", false)]
+    public abstract void RequestSong(ZegoCopyrightedMusicRequestConfig config,
+                                     OnCopyrightedMusicRequestSong callback);
 
-        /**
+    /**
          * [Deprecated] Request accompaniment. Deprecated since 3.0.2, please use the [requestResource] function instead.
          *
          * Available since: 2.13.0
@@ -139,10 +142,11 @@ namespace ZEGO
          * @param config request configuration.
          * @param callback request accompaniment result.
          */
-        [Obsolete("Deprecated since 3.0.2, please use the [requestResource] function instead.",false)]
-        public abstract void RequestAccompaniment(ZegoCopyrightedMusicRequestConfig config, OnCopyrightedMusicRequestAccompaniment callback);
+    [Obsolete("Deprecated since 3.0.2, please use the [requestResource] function instead.", false)]
+    public abstract void RequestAccompaniment(ZegoCopyrightedMusicRequestConfig config,
+                                              OnCopyrightedMusicRequestAccompaniment callback);
 
-        /**
+    /**
          * [Deprecated] Get a song or accompaniment. Deprecated since 3.0.2, please use the [getSharedResource] function instead.
          *
          * Available since: 2.13.0
@@ -154,10 +158,12 @@ namespace ZEGO
          * @param shareToken access the corresponding authorization token for a song or accompaniment.
          * @param callback get a song or accompaniment result.
          */
-        [Obsolete("Deprecated since 3.0.2, please use the [getSharedResource] function instead.",false)]
-        public abstract void GetMusicByToken(string shareToken, OnCopyrightedMusicGetMusicByToken callback);
+    [Obsolete("Deprecated since 3.0.2, please use the [getSharedResource] function instead.",
+              false)]
+    public abstract void GetMusicByToken(string shareToken,
+                                         OnCopyrightedMusicGetMusicByToken callback);
 
-        /**
+    /**
          * [Deprecated] Get lyrics in lrc format. Deprecated since 3.2.1, please use the method with the same name with [vendorID] parameter instead.
          *
          * Available since: 2.13.0
@@ -169,10 +175,10 @@ namespace ZEGO
          * @param songID the ID of the song or accompaniment, the song and accompaniment of a song share the same ID.
          * @param callback get lyrics result
          */
-        [Obsolete("Deprecated since 2.14.0, please use the method with the same name with [vendorID] parameter instead.",false)]
-        public abstract void GetLrcLyric(string songID, OnCopyrightedMusicGetLrcLyric callback);
-
-
-    }
+    [Obsolete(
+        "Deprecated since 2.14.0, please use the method with the same name with [vendorID] parameter instead.",
+        false)]
+    public abstract void GetLrcLyric(string songID, OnCopyrightedMusicGetLrcLyric callback);
+}
 
 }
