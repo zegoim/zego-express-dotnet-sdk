@@ -4,8 +4,8 @@ namespace ZEGO {
 public class IExpressAudioEffectPlayerInternal {
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_create_audio_effect_player",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern ZegoAudioEffectPlayerInstanceIndex
-    zego_express_create_audio_effect_player();
+    public static extern int
+    zego_express_create_audio_effect_player(ref ZegoAudioEffectPlayerInstanceIndex index);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_audio_effect_player_start",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
@@ -46,7 +46,8 @@ public class IExpressAudioEffectPlayerInternal {
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int
     zego_express_audio_effect_player_seek_to(uint audio_effect_id, ulong millisecond,
-                                             ZegoAudioEffectPlayerInstanceIndex instance_index);
+                                             ZegoAudioEffectPlayerInstanceIndex instance_index,
+                                             ref int seq);
 
     [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public delegate void
@@ -64,7 +65,7 @@ public class IExpressAudioEffectPlayerInternal {
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_audio_effect_player_load_resource(
         uint audio_effect_id, [In()][MarshalAs(UnmanagedType.LPStr)] string path,
-        ZegoAudioEffectPlayerInstanceIndex instance_index);
+        ZegoAudioEffectPlayerInstanceIndex instance_index, ref int seq);
 
     [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public delegate void
@@ -91,14 +92,16 @@ public class IExpressAudioEffectPlayerInternal {
     [DllImport(ZegoConstans.LIB_NAME,
                EntryPoint = "zego_express_audio_effect_player_get_current_progress",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern ulong zego_express_audio_effect_player_get_current_progress(
-        uint audio_effect_id, ZegoAudioEffectPlayerInstanceIndex instance_index);
+    public static extern int zego_express_audio_effect_player_get_current_progress(
+        uint audio_effect_id, ZegoAudioEffectPlayerInstanceIndex instance_index,
+        ref ulong progress);
 
     [DllImport(ZegoConstans.LIB_NAME,
                EntryPoint = "zego_express_audio_effect_player_get_total_duration",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern ulong zego_express_audio_effect_player_get_total_duration(
-        uint audio_effect_id, ZegoAudioEffectPlayerInstanceIndex instance_index);
+    public static extern int zego_express_audio_effect_player_get_total_duration(
+        uint audio_effect_id, ZegoAudioEffectPlayerInstanceIndex instance_index,
+        ref ulong progress);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_audio_effect_player_pause",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
@@ -126,5 +129,13 @@ public class IExpressAudioEffectPlayerInternal {
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int
     zego_express_destroy_audio_effect_player(ZegoAudioEffectPlayerInstanceIndex instance_index);
+
+#if !UNITY_WEBGL
+    [DllImport(ZegoConstans.LIB_NAME,
+               EntryPoint = "zego_express_audio_effect_player_update_position",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_audio_effect_player_update_position(
+        uint audio_effect_id, float[] position, ZegoAudioEffectPlayerInstanceIndex instance_index);
+#endif
 }
 }

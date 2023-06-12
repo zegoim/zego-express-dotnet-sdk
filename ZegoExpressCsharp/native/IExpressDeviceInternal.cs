@@ -21,6 +21,14 @@ public class IExpressDeviceInternal {
     zego_on_remote_audio_spectrum_update(System.IntPtr audio_spectrum_info_list, uint info_count,
                                          System.IntPtr user_context);
 
+    [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public delegate void zego_on_get_audio_device_list_result(int seq, ZegoDeviceInfo[] deviceInfos,
+                                                              System.IntPtr user_context);
+
+    [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public delegate void zego_on_get_video_device_list_result(int seq, ZegoDeviceInfo[] deviceInfos,
+                                                              System.IntPtr user_context);
+
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_use_front_camera",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_use_front_camera(bool enable, ZegoPublishChannel channel);
@@ -104,14 +112,25 @@ public class IExpressDeviceInternal {
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_audio_device_list",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern System.IntPtr
-    zego_express_get_audio_device_list(ZegoAudioDeviceType device_type, ref int device_count);
+#if UNITY_WEBGL
+    public static extern int zego_express_get_audio_device_list(ZegoAudioDeviceType device_type,
+                                                                int sequence);
+#else
+    public static extern int zego_express_get_audio_device_list(ZegoAudioDeviceType device_type,
+                                                                ref int device_count,
+                                                                ref IntPtr device_list);
+#endif
 
     /// Return Type: zego_device_info*
     ///device_count: int*
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_video_device_list",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern System.IntPtr zego_express_get_video_device_list(ref int device_count);
+#if UNITY_WEBGL
+    public static extern int zego_express_get_video_device_list(int sequence);
+#else
+    public static extern int zego_express_get_video_device_list(ref int device_count,
+                                                                ref IntPtr device_list);
+#endif
 
     /// Return Type: int
     ///device_id: char*
@@ -136,14 +155,12 @@ public class IExpressDeviceInternal {
     /// Return Type: boolean
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_is_microphone_muted",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    [return:MarshalAs(UnmanagedType.I1)]
-    public static extern bool zego_express_is_microphone_muted();
+    public static extern int zego_express_is_microphone_muted(ref bool muted);
 
     /// Return Type: boolean
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_is_speaker_muted",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    [return:MarshalAs(UnmanagedType.I1)]
-    public static extern bool zego_express_is_speaker_muted();
+    public static extern int zego_express_is_speaker_muted(ref bool muted);
 
     [DllImportAttribute(ZegoConstans.LIB_NAME,
                         EntryPoint = "zego_express_enable_audio_capture_device",
@@ -164,6 +181,23 @@ public class IExpressDeviceInternal {
                         EntryPoint = "zego_express_set_headphone_monitor_volume",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_set_headphone_monitor_volume(int volume);
+
+    [DllImportAttribute(ZegoConstans.LIB_NAME,
+                        EntryPoint = "zego_express_enable_camera_adaptive_fps",
+                        CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_enable_camera_adaptive_fps(bool enable, int min_fps,
+                                                                     int max_fps,
+                                                                     zego_publish_channel channel);
+
+    [DllImportAttribute(ZegoConstans.LIB_NAME,
+                        EntryPoint = "zego_express_enable_mix_system_playout",
+                        CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_enable_mix_system_playout(bool enable);
+
+    [DllImportAttribute(ZegoConstans.LIB_NAME,
+                        EntryPoint = "zego_express_set_mix_system_playout_volume",
+                        CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_set_mix_system_playout_volume(int volume);
 
     /// Return Type: void
     ///stream_id: char*
@@ -228,7 +262,7 @@ public class IExpressDeviceInternal {
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_audio_route_type",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern ZegoAudioRoute zego_express_get_audio_route_type();
+    public static extern int zego_express_get_audio_route_type(ref ZegoAudioRoute route);
 
     [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public delegate void zego_on_audio_route_change(ZegoAudioRoute audio_route,
