@@ -47,9 +47,14 @@ public class IExpressPlayerInternal {
                                       System.IntPtr canvas);
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_playing_stream_with_config",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
+    public static extern int zego_express_start_playing_stream_with_config(string stream_id,
+                                                                           string config);
+#else
     public static extern int zego_express_start_playing_stream_with_config(
         [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, System.IntPtr canvas,
         zego_player_config config);
+#endif
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_stop_playing_stream",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
@@ -184,5 +189,11 @@ public class IExpressPlayerInternal {
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern void zego_register_player_render_camera_video_first_frame_callback(
         zego_on_player_render_camera_video_first_frame callback_func, System.IntPtr user_context);
+
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_playing_stream_in_scene",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_start_playing_stream_in_scene(
+        [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, System.IntPtr canvas,
+        zego_scene_player_config config);
 }
 }

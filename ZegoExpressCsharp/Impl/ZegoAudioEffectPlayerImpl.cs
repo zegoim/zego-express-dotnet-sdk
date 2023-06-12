@@ -26,9 +26,11 @@ public class ZegoAudioEffectPlayerImpl : ZegoAudioEffectPlayer {
     public override ulong GetCurrentProgress(uint audioEffectID) {
         if (enginePtr != null) {
             int index = CheckZegoAudioEffectPlayer(this);
-            ulong result = IExpressAudioEffectPlayerInternal
-                               .zego_express_audio_effect_player_get_current_progress(
-                                   audioEffectID, (ZegoAudioEffectPlayerInstanceIndex)index);
+            ulong result = 0;
+            int error =
+                IExpressAudioEffectPlayerInternal
+                    .zego_express_audio_effect_player_get_current_progress(
+                        audioEffectID, (ZegoAudioEffectPlayerInstanceIndex)index, ref result);
             string log =
                 string.Format("AudioEffectPlayer GetCurrentProgress audioEffectID:{0} result:{1}",
                               audioEffectID, result);
@@ -52,9 +54,11 @@ public class ZegoAudioEffectPlayerImpl : ZegoAudioEffectPlayer {
     public override ulong GetTotalDuration(uint audioEffectID) {
         if (enginePtr != null) {
             int index = CheckZegoAudioEffectPlayer(this);
-            ulong result = IExpressAudioEffectPlayerInternal
-                               .zego_express_audio_effect_player_get_total_duration(
-                                   audioEffectID, (ZegoAudioEffectPlayerInstanceIndex)index);
+            ulong result = 0;
+            int error =
+                IExpressAudioEffectPlayerInternal
+                    .zego_express_audio_effect_player_get_total_duration(
+                        audioEffectID, (ZegoAudioEffectPlayerInstanceIndex)index, ref result);
             string log =
                 string.Format("AudioEffectPlayer GetTotalDuration audioEffectID:{0} result:{1}",
                               audioEffectID, result);
@@ -71,16 +75,23 @@ public class ZegoAudioEffectPlayerImpl : ZegoAudioEffectPlayer {
         if (enginePtr != null) {
             lock(zegoAudioEffectPlayerLock) {
                 int index = CheckZegoAudioEffectPlayer(this);
-                int seq = IExpressAudioEffectPlayerInternal
-                              .zego_express_audio_effect_player_load_resource(
-                                  audioEffectID, path, (ZegoAudioEffectPlayerInstanceIndex)index);
-                string log = string.Format(
-                    "AudioEffectPlayer LoadResource audioEffectID:{0} path:{1} seq:{2} ",
-                    audioEffectID, path, seq);
-                onAudioEffectPlayerLoadResourceCallbackDics.AddOrUpdate(
-                    seq, onAudioEffectPlayerLoadResourceCallback,
-                    (key, oldValue) => onAudioEffectPlayerLoadResourceCallback);
-                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+                int seq = -1;
+                int error = IExpressAudioEffectPlayerInternal
+                                .zego_express_audio_effect_player_load_resource(
+                                    audioEffectID, path, (ZegoAudioEffectPlayerInstanceIndex)index,
+                                    ref seq);
+
+                if (error != 0) {
+                    onAudioEffectPlayerLoadResourceCallback?.Invoke(error);
+                } else {
+                    if (onAudioEffectPlayerLoadResourceCallback != null) {
+                        onAudioEffectPlayerLoadResourceCallbackDics.AddOrUpdate(
+                            seq, onAudioEffectPlayerLoadResourceCallback,
+                            (key, oldValue) => onAudioEffectPlayerLoadResourceCallback);
+                    }
+                }
+                //string log = string.Format("AudioEffectPlayer LoadResource audioEffectID:{0} path:{1} seq:{2} ", audioEffectID, path, seq);
+                //ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
     }
@@ -139,16 +150,23 @@ public class ZegoAudioEffectPlayerImpl : ZegoAudioEffectPlayer {
         if (enginePtr != null) {
             lock(zegoAudioEffectPlayerLock) {
                 int index = CheckZegoAudioEffectPlayer(this);
-                int seq =
+                int seq = -1;
+                int error =
                     IExpressAudioEffectPlayerInternal.zego_express_audio_effect_player_seek_to(
-                        audioEffectID, millisecond, (ZegoAudioEffectPlayerInstanceIndex)index);
-                string log = string.Format(
-                    "AudioEffectPlayer SeekTo audioEffectID:{0} millisecond:{1} seq:{2} ",
-                    audioEffectID, millisecond, seq);
-                onAudioEffectPlayerSeekToCallbackDics.AddOrUpdate(
-                    seq, onAudioEffectPlayerSeekToCallback,
-                    (key, oldValue) => onAudioEffectPlayerSeekToCallback);
-                ZegoUtil.ZegoPrivateLog(0, log, false, 0);
+                        audioEffectID, millisecond, (ZegoAudioEffectPlayerInstanceIndex)index,
+                        ref seq);
+                // string log = string.Format("AudioEffectPlayer SeekTo audioEffectID:{0} millisecond:{1} seq:{2} ", audioEffectID, millisecond, seq);
+
+                if (error != 0) {
+                    onAudioEffectPlayerSeekToCallback?.Invoke(error);
+                } else {
+                    if (onAudioEffectPlayerSeekToCallback != null) {
+                        onAudioEffectPlayerSeekToCallbackDics.AddOrUpdate(
+                            seq, onAudioEffectPlayerSeekToCallback,
+                            (key, oldValue) => onAudioEffectPlayerSeekToCallback);
+                    }
+                }
+                // ZegoUtil.ZegoPrivateLog(0, log, false, 0);
             }
         }
     }
@@ -241,7 +259,7 @@ public class ZegoAudioEffectPlayerImpl : ZegoAudioEffectPlayer {
             ZegoAudioEffectPlayerImpl zegoAudioEffectPlayerImpl =
                 (ZegoAudioEffectPlayerImpl)GetObjectFromIndex(audioEffectPlayerAndIndex,
                                                               (int)instance_index);
-            if (zegoAudioEffectPlayerImpl.onAudioEffectPlayerSeekToCallbackDics != null) {
+            if (zegoAudioEffectPlayerImpl?.onAudioEffectPlayerSeekToCallbackDics != null) {
                 string log = string.Format(
                     "zego_on_audio_effect_player_seek_to instance_index:{0} seq:{1} error_code:{2}",
                     instance_index, seq, error_code);
@@ -275,7 +293,7 @@ public class ZegoAudioEffectPlayerImpl : ZegoAudioEffectPlayer {
             ZegoAudioEffectPlayerImpl zegoAudioEffectPlayerImpl =
                 (ZegoAudioEffectPlayerImpl)GetObjectFromIndex(audioEffectPlayerAndIndex,
                                                               (int)instance_index);
-            if (zegoAudioEffectPlayerImpl.onAudioEffectPlayerLoadResourceCallbackDics != null) {
+            if (zegoAudioEffectPlayerImpl?.onAudioEffectPlayerLoadResourceCallbackDics != null) {
                 string log = string.Format(
                     "zego_on_audio_effect_player_load_resource instance_index:{0} seq:{1} error_code:{2}",
                     instance_index, seq, error_code);
@@ -308,7 +326,7 @@ public class ZegoAudioEffectPlayerImpl : ZegoAudioEffectPlayer {
         ZegoAudioEffectPlayerImpl zegoAudioEffectPlayerImpl =
             (ZegoAudioEffectPlayerImpl)GetObjectFromIndex(audioEffectPlayerAndIndex,
                                                           (int)instance_index);
-        if (zegoAudioEffectPlayerImpl.onAudioEffectPlayStateUpdate != null) {
+        if (zegoAudioEffectPlayerImpl?.onAudioEffectPlayStateUpdate != null) {
             string log = string.Format(
                 "zego_on_audio_effect_play_state_update instance_index:{0} audio_effect_id:{1} state:{2} error_code:{3}",
                 instance_index, audio_effect_id, state, error_code);

@@ -64,12 +64,21 @@ public class IExpressPublisherInternal {
         [InAttribute()][MarshalAsAttribute(UnmanagedType.LPStr)] string stream_id,
         ZegoPublishChannel channel);
 
+#if UNITY_WEBGL
+    [DllImport(ZegoConstans.LIB_NAME,
+               EntryPoint = "zego_express_start_publishing_stream_with_config",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int
+    zego_express_start_publishing_stream_with_config(string stream_id, ZegoPublishChannel channel,
+                                                     string roomid = "");
+#else
     [DllImport(ZegoConstans.LIB_NAME,
                EntryPoint = "zego_express_start_publishing_stream_with_config",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_start_publishing_stream_with_config(
         [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id, zego_publisher_config config,
         ZegoPublishChannel channel);
+#endif
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_stop_publishing_stream",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
@@ -86,6 +95,7 @@ public class IExpressPublisherInternal {
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_start_preview(System.IntPtr canvas,
                                                         ZegoPublishChannel channel);
+
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_stop_preview",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_stop_preview(ZegoPublishChannel channel);
@@ -101,8 +111,13 @@ public class IExpressPublisherInternal {
     [System.Runtime.InteropServices.DllImportAttribute(
         ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_video_config",
         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
+    public static extern int zego_express_set_video_config(string video_config,
+                                                           ZegoPublishChannel channel);
+#else
     public static extern int zego_express_set_video_config(zego_video_config video_config,
                                                            ZegoPublishChannel channel);
+#endif
 
     /// Return Type: int
     ///mirror_mode: zego_video_mirror_mode
@@ -126,9 +141,14 @@ public class IExpressPublisherInternal {
     [System.Runtime.InteropServices.DllImportAttribute(
         ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_audio_config_by_channel",
         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
+    public static extern int zego_express_set_audio_config_by_channel(string audio_config,
+                                                                      ZegoPublishChannel channel);
+#else
     public static extern int
     zego_express_set_audio_config_by_channel(zego_audio_config audio_config,
                                              ZegoPublishChannel channel);
+#endif
 
     /// Return Type: int
     ///mute: boolean
@@ -172,6 +192,28 @@ public class IExpressPublisherInternal {
         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_set_min_video_bitrate_for_traffic_control(
         int bitrate, ZegoTrafficControlMinVideoBitrateMode mode);
+
+    [DllImportAttribute(ZegoConstans.LIB_NAME,
+                        EntryPoint =
+                            "zego_express_set_min_video_bitrate_for_traffic_control_by_channel",
+                        CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_set_min_video_bitrate_for_traffic_control_by_channel(
+        int bitrate, ZegoTrafficControlMinVideoBitrateMode mode, ZegoPublishChannel channel);
+
+    [DllImportAttribute(ZegoConstans.LIB_NAME,
+                        EntryPoint =
+                            "zego_express_set_min_video_fps_for_traffic_control_by_channel",
+                        CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int
+    zego_express_set_min_video_fps_for_traffic_control_by_channel(int fps,
+                                                                  ZegoPublishChannel channel);
+
+    [DllImportAttribute(ZegoConstans.LIB_NAME,
+                        EntryPoint =
+                            "zego_express_set_min_video_resolution_for_traffic_control_by_channel",
+                        CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_set_min_video_resolution_for_traffic_control_by_channel(
+        int width, int height, ZegoPublishChannel channel);
 
     /// Return Type: int
     ///volume: int
@@ -245,20 +287,38 @@ public class IExpressPublisherInternal {
     ///target_url: char*
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_add_publish_cdn_url",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
     public static extern int zego_express_add_publish_cdn_url(
         [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id,
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
-                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string target_url);
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string target_url,
+        int seq);
+#else
+    public static extern int zego_express_add_publish_cdn_url(
+        [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id,
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string target_url,
+        ref int seq);
+#endif
 
     /// Return Type: int
     ///stream_id: char*
     ///target_url: char*
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_remove_publish_cdn_url",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
     public static extern int zego_express_remove_publish_cdn_url(
         [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id,
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
-                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string target_url);
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string target_url,
+        int seq);
+#else
+    public static extern int zego_express_remove_publish_cdn_url(
+        [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id,
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string target_url,
+        ref int seq);
+#endif
 
     /// Return Type: void
     ///callback_func: zego_on_publisher_update_cdn_url_result
@@ -286,8 +346,12 @@ public class IExpressPublisherInternal {
     [System.Runtime.InteropServices.DllImportAttribute(
         ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_sei",
         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
+    public static extern int zego_express_send_sei(string data, ZegoPublishChannel channel);
+#else
     public static extern int zego_express_send_sei(System.IntPtr data, uint data_length,
                                                    ZegoPublishChannel channel);
+#endif
 
     /// Return Type: int
     ///is_preview_visible: boolean
@@ -305,10 +369,17 @@ public class IExpressPublisherInternal {
     ///channel: zego_publish_channel
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_stream_extra_info",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
     public static extern int zego_express_set_stream_extra_info(
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
                          MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extra_info,
-        ZegoPublishChannel channel);
+        ZegoPublishChannel channel, int seq);
+#else
+    public static extern int zego_express_set_stream_extra_info(
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string extra_info,
+        ZegoPublishChannel channel, ref int seq);
+#endif
 
     /// Return Type: void
     ///callback_func: zego_on_publisher_update_stream_extra_info_result
@@ -326,12 +397,28 @@ public class IExpressPublisherInternal {
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_audio_config",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern zego_audio_config zego_express_get_audio_config();
+#if UNITY_WEBGL
+    public static extern string zego_express_get_audio_config(ZegoPublishChannel channel);
+#else
+    public static extern int zego_express_get_audio_config(ref zego_audio_config audio_config);
+#endif
+
+#if !UNITY_WEBGL
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_audio_config_by_channel",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int
+    zego_express_get_audio_config_by_channel(ZegoPublishChannel channel,
+                                             ref zego_audio_config audio_config);
+#endif
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_video_config",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern zego_video_config
-    zego_express_get_video_config(ZegoPublishChannel channel);
+#if UNITY_WEBGL
+    public static extern string zego_express_get_video_config(ZegoPublishChannel channel);
+#else
+    public static extern int zego_express_get_video_config(ZegoPublishChannel channel,
+                                                           ref zego_video_config video_config);
+#endif
 
     [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public delegate void zego_on_publisher_render_video_first_frame(ZegoPublishChannel channel,
@@ -402,5 +489,12 @@ public class IExpressPublisherInternal {
     public static extern int
     zego_express_set_traffic_control_focus_on_by_channel(ZegoTrafficControlFocusOnMode mode,
                                                          ZegoPublishChannel channel);
+
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_publishing_stream_in_scene",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_start_publishing_stream_in_scene(
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string stream_id,
+        zego_publish_channel channel, zego_scene_publisher_config config);
 }
 }

@@ -17,8 +17,13 @@ public class IExpressPreprocessInternal {
     [System.Runtime.InteropServices.DllImportAttribute(
         ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_beautify_option",
         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
+    public static extern int zego_express_set_beautify_option(string option,
+                                                              ZegoPublishChannel channel);
+#else
     public static extern int zego_express_set_beautify_option(zego_beautify_option option,
                                                               ZegoPublishChannel channel);
+#endif
 
     /// Return Type: int
     ///enable: boolean
@@ -74,5 +79,12 @@ public class IExpressPreprocessInternal {
         ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_ans_mode",
         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_set_ans_mode(ZegoANSMode mode);
+
+    [System.Runtime.InteropServices.DllImportAttribute(
+        ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_low_light_enhancement",
+        CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int
+    zego_express_set_low_light_enhancement(zego_low_light_enhancement_mode mode,
+                                           zego_publish_channel channel);
 }
 }

@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 namespace ZEGO {
 public class IExpressMediaPlayerInternal {
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_create_media_player",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern ZegoMediaPlayerInstanceIndex zego_express_create_media_player();
+    public static extern int
+    zego_express_create_media_player(ref ZegoMediaPlayerInstanceIndex index);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_destroy_media_player",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
@@ -65,14 +66,14 @@ public class IExpressMediaPlayerInternal {
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_current_state",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern ZegoMediaPlayerState
-    zego_express_media_player_get_current_state(ZegoMediaPlayerInstanceIndex instance_index);
+    public static extern int
+    zego_express_media_player_get_current_state(ZegoMediaPlayerInstanceIndex instance_index,
+                                                ref ZegoMediaPlayerState state);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_seek_to",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern int
-    zego_express_media_player_seek_to(ulong millisecond,
-                                      ZegoMediaPlayerInstanceIndex instance_index);
+    public static extern int zego_express_media_player_seek_to(
+        ulong millisecond, ZegoMediaPlayerInstanceIndex instance_index, ref int sequence);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_set_volume",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
@@ -94,22 +95,26 @@ public class IExpressMediaPlayerInternal {
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_play_volume",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int
-    zego_express_media_player_get_play_volume(ZegoMediaPlayerInstanceIndex instance_index);
+    zego_express_media_player_get_play_volume(ZegoMediaPlayerInstanceIndex instance_index,
+                                              ref int volume);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_publish_volume",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int
-    zego_express_media_player_get_publish_volume(ZegoMediaPlayerInstanceIndex instance_index);
+    zego_express_media_player_get_publish_volume(ZegoMediaPlayerInstanceIndex instance_index,
+                                                 ref int volume);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_total_duration",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern ulong
-    zego_express_media_player_get_total_duration(ZegoMediaPlayerInstanceIndex instance_index);
+    public static extern int
+    zego_express_media_player_get_total_duration(ZegoMediaPlayerInstanceIndex instance_index,
+                                                 ref ulong duration);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_get_current_progress",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern ulong
-    zego_express_media_player_get_current_progress(ZegoMediaPlayerInstanceIndex instance_index);
+    public static extern int
+    zego_express_media_player_get_current_progress(ZegoMediaPlayerInstanceIndex instance_index,
+                                                   ref ulong progress);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_mute_local_audio",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
@@ -151,8 +156,9 @@ public class IExpressMediaPlayerInternal {
     [DllImport(ZegoConstans.LIB_NAME,
                EntryPoint = "zego_express_media_player_get_audio_track_count",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern uint
-    zego_express_media_player_get_audio_track_count(ZegoMediaPlayerInstanceIndex instance_index);
+    public static extern int
+    zego_express_media_player_get_audio_track_count(ZegoMediaPlayerInstanceIndex instance_index,
+                                                    ref uint track_count);
 
     [DllImport(ZegoConstans.LIB_NAME,
                EntryPoint = "zego_express_media_player_set_audio_track_index",
@@ -220,6 +226,14 @@ public class IExpressMediaPlayerInternal {
     public static extern int zego_express_media_player_enable_frequency_spectrum_monitor(
         [MarshalAs(UnmanagedType.I1)] bool enable, uint millisecond,
         ZegoMediaPlayerInstanceIndex instance_index);
+
+#if !UNITY_WEBGL
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_media_player_update_position",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int
+    zego_express_media_player_update_position(float[] position,
+                                              ZegoMediaPlayerInstanceIndex instance_index);
+#endif
 
     [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public delegate void
