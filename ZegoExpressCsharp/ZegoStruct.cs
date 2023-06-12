@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -18,10 +18,10 @@ public enum zego_scenario {
     /// Available since: 3.0.0. Description: The default (generic) scenario. If none of the following scenarios conform to your actual application scenario, this default scenario can be used.
     zego_scenario_default = 3,
 
-    /// Available since: 3.0.0. Description: Standard video call (or voice call) scenario, it is suitable for one-to-one video or voice call scenarios.
+    /// Available since: 3.0.0. Description: Standard video call scenario, it is suitable for one-to-one video call scenarios.
     zego_scenario_standard_video_call = 4,
 
-    /// Available since: 3.0.0. Description: High quality video call (or voice call) scenario, it is similar to the standard video call scenario, but this scenario uses a higher video frame rate, bit rate, and resolution (540p) by default, which is suitable for video call scenario with high image quality requirements.
+    /// Available since: 3.0.0. Description: High quality video call scenario, it is similar to the standard video call scenario, but this scenario uses a higher video frame rate, bit rate, and resolution (540p) by default, which is suitable for video call scenario with high image quality requirements.
     zego_scenario_high_quality_video_call = 5,
 
     /// Available since: 3.0.0. Description: Standard chatroom scenario, suitable for multi-person pure voice calls (low data usage). Note: On the ExpressVideo SDK, the camera is not enabled by default in this scenario.
@@ -34,7 +34,10 @@ public enum zego_scenario {
     zego_scenario_broadcast = 8,
 
     /// Available since: 3.0.0. Description: Karaoke (KTV) scenario, it is suitable for real-time chorus and online karaoke scenarios, and has optimized delay, sound quality, ear return, echo cancellation, etc., and also ensures accurate alignment and ultra-low delay when multiple people chorus.
-    zego_scenario_karaoke = 9
+    zego_scenario_karaoke = 9,
+
+    /// Available since: 3.3.0. Description: Standard voice call scenario, it is suitable for one-to-one video or voice call scenarios. Note: On the ExpressVideo SDK, the camera is not enabled by default in this scenario.
+    zego_scenario_standard_voice_call = 10
 
 }
 
@@ -110,7 +113,16 @@ public enum zego_feature_type {
     zego_feature_type_range_audio = 22,
 
     /// Copy righted music feature.
-    zego_feature_type_copy_righted_music = 23
+    zego_feature_type_copy_righted_music = 23,
+
+    /// Video object segmentation feature.
+    zego_feature_type_video_object_segmentation = 24,
+
+    /// Range scene feature. (3.0.0 and above support)
+    zego_feature_type_range_scene = 25,
+
+    /// Screen capture feature. (3.1.0 and above support)
+    zego_feature_type_screen_capture = 26
 
 }
 
@@ -131,6 +143,38 @@ public enum zego_room_mode {
 
     /// Multiple room mode.
     zego_room_mode_multi_room = 1
+
+}
+
+/// Geo fence type.
+public enum zego_geo_fence_type {
+    /// Not use geo fence.
+    zego_geo_fence_type_none = 0,
+
+    /// Include the specified geo fence areas.
+    zego_geo_fence_type_include = 1,
+
+    /// Exclude the specified geo fence areas.
+    zego_geo_fence_type_exclude = 2
+
+}
+
+/// Geo fence area code.
+public enum zego_geo_fence_area_code {
+    /// Chinese mainland (excluding Hong Kong, Macao and Taiwan).
+    zego_geo_fence_area_code_cn = 2,
+
+    /// North America.
+    zego_geo_fence_area_code_na = 3,
+
+    /// Europe, including the UK.
+    zego_geo_fence_area_code_eu = 4,
+
+    /// Asia, excluding Chinese mainland and India.
+    zego_geo_fence_area_code_as = 5,
+
+    /// India.
+    zego_geo_fence_area_code_in = 6
 
 }
 
@@ -314,7 +358,37 @@ public enum zego_voice_changer_preset {
     zego_voice_changer_preset_minor_a = 12,
 
     /// Electronic effects in harmonic minor voice effect
-    zego_voice_changer_preset_harmonic_minor = 13
+    zego_voice_changer_preset_harmonic_minor = 13,
+
+    /// Female Vitality Sound effect
+    zego_voice_changer_preset_female_energetic = 14,
+
+    /// Richness effect
+    zego_voice_changer_preset_rich_ness = 15,
+
+    /// Muffled effect
+    zego_voice_changer_preset_muffled = 16,
+
+    /// Roundness effect
+    zego_voice_changer_preset_roundness = 17,
+
+    /// Falsetto effect
+    zego_voice_changer_preset_falsetto = 18,
+
+    /// Fullness effect
+    zego_voice_changer_preset_fullness = 19,
+
+    /// Clear effect
+    zego_voice_changer_preset_clear = 20,
+
+    /// Hight effect
+    zego_voice_changer_preset_highly_resonant = 21,
+
+    /// Loud clear effect
+    zego_voice_changer_preset_loud_clear = 22,
+
+    /// Minions effect
+    zego_voice_changer_preset_minions = 23
 
 }
 
@@ -354,7 +428,10 @@ public enum zego_reverb_preset {
     zego_reverb_preset_vocal_concert = 10,
 
     /// Gramophone reverb effect
-    zego_reverb_preset_gramo_phone = 11
+    zego_reverb_preset_gramo_phone = 11,
+
+    /// Enhanced KTV reverb effect. Provide KTV effect with more concentrated voice and better brightness. Compared with the original KTV reverb effect, the reverberation time is shortened and the dry-wet ratio is increased.
+    zego_reverb_preset_enhanced_ktv = 12
 
 }
 
@@ -502,19 +579,6 @@ public enum zego_orientation {
 
     /// Rotate 270 degrees counterclockwise
     zego_orientation_270 = 3
-
-}
-
-/// Player video layer.
-public enum zego_player_video_layer {
-    /// The layer to be played depends on the network status
-    zego_player_video_layer_auto = 0,
-
-    /// Play the base layer (small resolution)
-    zego_player_video_layer_base = 1,
-
-    /// Play the extend layer (big resolution)
-    zego_player_video_layer_base_extend = 2
 
 }
 
@@ -1093,6 +1157,32 @@ public enum zego_range_audio_mode {
 
 }
 
+/// Range audio speak mode
+public enum zego_range_audio_speak_mode {
+    /// All mode, everyone in the room can hear his voice.
+    zego_range_audio_speak_mode_all = 0,
+
+    /// Only world mode, only those within range can hear his voice.
+    zego_range_audio_speak_mode_world = 1,
+
+    /// Only team mode, only members of the team can hear his voice (not restricted by range).
+    zego_range_audio_speak_mode_team = 2
+
+}
+
+/// Range audio listening mode
+public enum zego_range_audio_listen_mode {
+    /// All mode, can hear everyone in the room.
+    zego_range_audio_listen_mode_all = 0,
+
+    /// Only world mode, only listen to people within range.
+    zego_range_audio_listen_mode_world = 1,
+
+    /// Only team mode, only listen to the voices of members of the team you belong to (not restricted by range).
+    zego_range_audio_listen_mode_team = 2
+
+}
+
 /// Range audio microphone state.
 public enum zego_range_audio_microphone_state {
     /// The range audio microphone is off.
@@ -1122,6 +1212,16 @@ public enum zego_media_player_state {
 
 }
 
+/// Player audio track mode.
+public enum zego_media_player_audio_track_mode {
+    /// Normal audio track mode
+    zego_media_player_audio_track_mode_normal = 0,
+
+    /// Multiple audio track mode
+    zego_media_player_audio_track_mode_multiple = 1
+
+}
+
 /// Player network event.
 public enum zego_media_player_network_event {
     /// Network resources are not playing well, and start trying to cache data
@@ -1142,6 +1242,16 @@ public enum zego_media_player_audio_channel {
 
     /// Audio channel all
     zego_media_player_audio_channel_all = 2
+
+}
+
+/// Media player first frame event type.
+public enum zego_media_player_first_frame_event {
+    /// The first video frame is rendered event.
+    zego_media_player_first_frame_event_video_rendered = 0,
+
+    /// The first audio frame is rendered event.
+    zego_media_player_first_frame_event_audio_rendered = 1
 
 }
 
@@ -1406,7 +1516,7 @@ public enum zego_copyrighted_music_billing_mode {
 
 }
 
-/// The music resource type.
+/// The music resource type. For [querycache] interface.
 public enum zego_copyrighted_music_type {
     /// Song.
     zego_copyrighted_music_song = 0,
@@ -1421,7 +1531,26 @@ public enum zego_copyrighted_music_type {
     zego_copyrighted_music_accompaniment = 3,
 
     /// Song accompaniment clip.
-    zego_copyrighted_music_accompaniment_clip = 4
+    zego_copyrighted_music_accompaniment_clip = 4,
+
+    /// Song accompaniment segment.
+    zego_copyrighted_music_accompaniment_segment = 5
+
+}
+
+/// The music resource type. For [ZegoCopyrightedMusicRequestConfig] and [ZegoCopyrightedMusicGetSharedConfig].
+public enum zego_copyrighted_music_resource_type {
+    /// Song.
+    zego_copyrighted_music_resource_song = 0,
+
+    /// Song accompaniment.
+    zego_copyrighted_music_resource_accompaniment = 1,
+
+    /// Song accompaniment clip.
+    zego_copyrighted_music_resource_accompaniment_clip = 2,
+
+    /// Song accompaniment segment.
+    zego_copyrighted_music_resource_accompaniment_segment = 3
 
 }
 
@@ -1595,6 +1724,19 @@ public enum zego_stream_event {
 
 }
 
+/// Type of capture target.
+public enum zego_screen_capture_source_type {
+    /// Unknow.
+    zego_screen_capture_source_type_unknow = 0,
+
+    /// The capture target is a certain window.
+    zego_screen_capture_source_type_window = 1,
+
+    /// The capture target is the screen of a certain monitor.
+    zego_screen_capture_source_type_screen = 2
+
+}
+
 /// Low light enhanced mode.
 public enum zego_low_light_enhancement_mode {
     /// Turn off the low-light enhancement, and the brightness of the captured image remains unchanged.
@@ -1669,6 +1811,44 @@ public enum zego_broadcast_mode {
 
 }
 
+/// Team state.
+public enum zego_team_state {
+    /// Joining the team. When calling [joinTeam] to join the team, it will enter this state, indicating that it is requesting to connect to the server. The application interface is usually displayed through this state.
+    zego_team_state_logining = 0,
+
+    /// Join the room successfully. When joined the team successfully, it will enter this state.
+    zego_team_state_logined = 1,
+
+    /// Failed to join the room. When the join team fails, it will enter this state.
+    zego_team_state_login_failed = 2,
+
+    /// The team connection is temporarily interrupted. If the interruption occurs due to poor network quality, the SDK will retry internally.
+    zego_team_state_reconnecting = 3,
+
+    /// The team connection is successfully reconnected. If there is an interruption due to poor network quality, the SDK will retry internally, and enter this state after successful reconnection.
+    zego_team_state_reconnected = 4,
+
+    /// The team connection fails to reconnect. If there is an interruption due to poor network quality, the SDK will retry internally, and enter this state after the reconnection fails.
+    zego_team_state_reconnect_failed = 5,
+
+    /// Kicked out of the team by the server. For example, if you join the team with the same user name in other places, and the local end is kicked out of the team, it will enter this state.
+    zego_team_state_kick_out = 6,
+
+    /// Leave the team is successful. It is in this state by default before join the team. When calling [leaveTeam] to leave the team successfully, it will enter this state.
+    zego_team_state_logout = 7
+
+}
+
+/// The mode of create item.
+public enum zego_create_item_mode {
+    /// Do not bind user after item is created.
+    zego_create_item_mode_no_bind = 0,
+
+    /// Bind the user after creating the item.
+    zego_create_item_mode_bind = 1
+
+}
+
 /// Super resolution mode.
 public enum zego_super_resolution_state {
     /// Super resolution turned off.
@@ -1676,6 +1856,173 @@ public enum zego_super_resolution_state {
 
     /// Super resolution turned on.
     zego_super_resolution_state_on = 1
+
+}
+
+/// Video config preference.
+public enum zego_video_config_preference {
+    zego_video_config_preference_smooth = 0,
+
+    zego_video_config_preference_clear = 1,
+
+    zego_video_config_preference_balanced = 2
+
+}
+
+/// video capture source.
+public enum zego_video_source_type {
+    /// No capture, i.e. no video data.
+    zego_video_source_type_none = 1,
+
+    /// Video source from camera.
+    zego_video_source_type_camera = 2,
+
+    /// Video source from custom capture.
+    zego_video_source_type_custom = 3,
+
+    /// Video source from the main publish channel. When publishing the main channel, this value cannot be set.
+    zego_video_source_type_main_publish_channel = 4,
+
+    /// Video source from media player.
+    zego_video_source_type_player = 5,
+
+    /// Video source from screen capture.
+    zego_video_source_type_screen_capture = 6,
+
+    /// @deprecated Which video source to be used will determined by SDK
+    zego_video_source_default = 7,
+
+    /// @deprecated Same as [None], that is, no capture
+    zego_video_source_none = 8,
+
+    /// @deprecated Same as [Camera], that is, video source from camera
+    zego_video_source_camera = 9,
+
+    /// @deprecated Same as [Custom], that is, video source from custom capture
+    zego_video_source_external_capture = 10,
+
+    /// @deprecated Same as [MainPublishChannel], that is, video source from the main publish channel
+    zego_video_source_main_publish_channel = 11,
+
+    /// @deprecated Same as [Player], that is, video source from media player
+    zego_video_source_player = 12,
+
+    /// @deprecated Same as [ScreenCapture], that is, video source from screen capture
+    zego_video_source_screen_capture = 13
+
+}
+
+/// Screen capture source exception type.
+public enum zego_screen_capture_source_exception_type {
+    /// Unknown exception type.
+    zego_screen_capture_source_exception_type_unknown = 0,
+
+    /// The capture target fails, such as the monitor is unplugged and the window is closed.
+    zego_screen_capture_source_exception_type_invalid = 1,
+
+    /// Failed to collect target, internal reasons of the system.
+    zego_screen_capture_source_exception_type_failed = 2
+
+}
+
+/// The state of the screen capture source window changes.
+public enum zego_screen_capture_window_state {
+    /// The window is on the current screen, and the coordinate area changes.
+    zego_screen_capture_window_state_on_screen = 0,
+
+    /// The window leaves the current screen and pauses the capture.
+    zego_screen_capture_window_state_off_screen = 1,
+
+    /// The window is destroy.
+    zego_screen_capture_window_state_destroy = 2
+
+}
+
+/// Multimedia load type.
+public enum zego_multimedia_load_type {
+    /// Load by file path.
+    zego_multimedia_load_type_file_path = 0,
+
+    /// Load by memory.
+    zego_multimedia_load_type_memory = 1,
+
+    /// Load by copyrighted music resource ID.
+    zego_multimedia_load_type_resource_id = 2
+
+}
+
+/// Alpha channel data layout.
+public enum zego_alpha_layout_type {
+    /// There is no alpha data.
+    zego_alpha_layout_type_none = 0,
+
+    /// Alpha channel data is to the left of RGB/YUV data.
+    zego_alpha_layout_type_left = 1,
+
+    /// Alpha channel data is to the right of RGB/YUV data.
+    zego_alpha_layout_type_right = 2,
+
+    /// Alpha channel data is to the bottom of RGB/YUV data.
+    zego_alpha_layout_type_bottom = 3
+
+}
+
+/// Object segmentation type.
+public enum zego_object_segmentation_type {
+    /// Any background object segmentation.
+    zego_object_segmentation_type_any_background = 0,
+
+    /// Green screen background object segmentation.
+    zego_object_segmentation_type_green_screen_background = 1
+
+}
+
+/// Object segmentation state.
+public enum zego_object_segmentation_state {
+    /// Object segmentation turned off.
+    zego_object_segmentation_state_off = 0,
+
+    /// Object segmentation turned on.
+    zego_object_segmentation_state_on = 1
+
+}
+
+/// Video background process type.
+public enum zego_background_process_type {
+    /// Background is transparent.
+    zego_background_process_type_transparent = 0,
+
+    /// Fill the background with a solid color.
+    zego_background_process_type_color = 1,
+
+    /// Blur background.
+    zego_background_process_type_blur = 2,
+
+    /// The background is the specified image.
+    zego_background_process_type_image = 3
+
+}
+
+/// Background blur level.
+public enum zego_background_blur_level {
+    /// Background blur level low.
+    zego_background_blur_level_low = 0,
+
+    /// Background blur level medium.
+    zego_background_blur_level_medium = 1,
+
+    /// Background blur level high.
+    zego_background_blur_level_high = 2
+
+}
+
+/// The config of the media data publisher.
+public enum zego_media_data_publisher_mode {
+    /// Both publish video and audio.
+    zego_media_data_publisher_mode_both_video_and_audio = 0,
+
+    /// Only publish video.
+    zego_media_data_publisher_mode_only_video = 1
 
 }
 
@@ -1946,7 +2293,7 @@ public struct zego_stream {
     /// User object instance.Please do not fill in sensitive user information in this field, including but not limited to mobile phone number, ID number, passport number, real name, etc.
     public zego_user user;
 
-    /// Stream ID, a string of up to 256 characters. Caution: You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '-', ' '.
+    /// Stream ID, a string of up to 256 characters. Caution: You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '-', '_'.
     [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN)]
     public byte[] stream_id;
 
@@ -2019,6 +2366,10 @@ public struct zego_canvas {
 
     /// Background color, the format is 0xRRGGBB, default is black, which is 0x000000
     public int background_color;
+
+    /// If enable alpha blend render, default is false.
+    [MarshalAs(UnmanagedType.I1)]
+    public bool alpha_blend;
 };
 
 /// Advanced publisher configuration.
@@ -2145,9 +2496,6 @@ public struct zego_player_config {
     /// The CDN configuration for playing stream. If set, the stream is play according to the URL instead of the streamID. After that, the streamID is only used as the ID of SDK internal callback.
     public System.IntPtr cdn_config;
 
-    /// @deprecated This property has been deprecated since version 1.19.0, please use the [setPlayStreamVideoType] function instead.
-    public zego_player_video_layer video_layer;
-
     /// The Room ID. It only needs to be filled in the multi-room mode, which indicates which room this stream needs to be bound to. This parameter is ignored in single room mode.
     [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN)]
     public byte[] room_id;
@@ -2160,6 +2508,18 @@ public struct zego_player_config {
 
     /// Preconfigured codec template ID, please contact ZEGO technical support if you need to use it, otherwise this parameter can be ignored.
     public int codec_template_id;
+};
+
+/// Advanced scene player configuration.
+public struct zego_scene_player_config {
+    /// Range scene handle. Obtained through [getHandle] of ZegoRangeScene instance.
+    public int range_scene_handle;
+
+    /// Stream resource mode.
+    public zego_stream_resource_mode resource_mode;
+
+    /// The CDN configuration for playing stream. If set, the stream is play according to the URL instead of the streamID. After that, the streamID is only used as the ID of SDK internal callback.
+    public System.IntPtr cdn_config;
 };
 
 /// Played stream quality information.
@@ -2457,14 +2817,14 @@ public struct zego_mixer_image_info {
 ///
 /// Configure the mix stream input stream ID, type, and the layout
 public struct zego_mixer_input {
-    /// Stream ID, a string of up to 256 characters. Caution: You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '-', ' '.
+    /// Stream ID, a string of up to 256 characters. Caution: You cannot include URL keywords, otherwise publishing stream and playing stream will fails. Only support numbers, English characters and '-', '_'.
     [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_STREAM_LEN)]
     public byte[] stream_id;
 
     /// Mix stream content type
     public zego_mixer_input_content_type content_type;
 
-    /// Stream layout. When the mixed stream is an audio stream (that is, the ContentType parameter is set to the audio mixed stream type), the layout field is not processed inside the SDK, and there is no need to pay attention to this parameter.
+    /// Stream layout. When the mixed stream is an audio stream (that is, the ContentType parameter is set to the audio mixed stream type). Developers do not need to assign a value to this field, just use the SDK default.
     public zego_rect layout;
 
     /// If enable soundLevel in mix stream task, an unique soundLevelID is need for every stream
@@ -2489,14 +2849,14 @@ public struct zego_mixer_input {
     /// User image information.
     public zego_mixer_image_info image_info;
 
-    /// Video frame corner radius, in px. Required: False. Value range: Does not exceed the width and height of the video screen set by the [layout] parameter. Default value: 0.
+    /// Description: Video frame corner radius, in px. Required: False. Value range: Does not exceed the width and height of the video screen set by the [layout] parameter. Default value: 0.
     public uint corner_radius;
 
     [MarshalAs(UnmanagedType.I1)]
     public bool enable_audio_direction;
 };
 
-/// Mixer output object.
+/// Mixer output object, currently, a mixed-stream task only supports a maximum of four video streams with different resolutions.
 ///
 /// Configure mix stream output target URL or stream ID
 public struct zego_mixer_output {
@@ -2520,6 +2880,33 @@ public struct zego_watermark {
     public zego_rect layout;
 };
 
+/// Mixer whiteboard object.
+///
+/// Configure the mix whiteboard ID, aspect ratio and the layout.
+public struct zego_mixer_whiteboard {
+    /// Whiteboard ID.
+    public ulong whiteboard_id;
+
+    /// Whiteboard aspect ratio(width), the default aspect ratio is 16:9.
+    public int horizontal_ratio;
+
+    /// Whiteboard aspect ratio(height), the default aspect ratio is 16:9.
+    public int vertical_ratio;
+
+    /// Whether the whiteboard will load dynamic PPT files or not, default value is false.
+    [MarshalAs(UnmanagedType.I1)]
+    public bool is_ppt_animation;
+
+    /// Whiteboard layout.
+    public zego_rect layout;
+
+    /// Whiteboard z-order.
+    public int z_order;
+
+    /// Whiteboard background color. Defaule is 0xF1F3F400 (gray). The color value corresponding to RGBA is 0xRRGGBBAA, and setting the transparency of the background color is currently not supported. The AA in 0xRRGGBBAA is 00. For example, select RGB as \#87CEFA as the background color, this parameter passes 0x87CEFA00.F
+    public int background_color;
+};
+
 /// Mix stream task object.
 ///
 /// This class is the configuration class of the stream mixing task. When a stream mixing task is requested to the ZEGO RTC server, the configuration of the stream mixing task is required.
@@ -2541,6 +2928,8 @@ public struct zego_mixer_task {
     public zego_mixer_audio_config audio_config;
 
     public System.IntPtr watermark;
+
+    public System.IntPtr whiteboard;
 
     public int background_color;
 
@@ -2967,6 +3356,9 @@ public struct zego_copyrighted_music_request_config {
     /// The master ID, which must be passed when the billing mode is billed by host. Indicate which homeowner to order song/accompaniment/accompaniment clip/accompaniment segment.
     [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_USERID_LEN)]
     public byte[] master_id;
+
+    /// The scene ID, indicate the actual business. For details, please consult ZEGO technical support.
+    public int scene_id;
 };
 
 /// Orientation.
@@ -3005,17 +3397,212 @@ public struct zego_scene_param {
     /// Scene ID.
     public long scene_id;
 
+    /// Scene template ID.
+    public uint template_id;
+
     /// User position.
     public zego_position position;
 
-    /// Broadcast user's own information mode.
+    /// Broadcast user's own information mode, the default is ALL.
     public zego_broadcast_mode broadcast_mode;
+
+    /// Authentication token.
+    [MarshalAs(UnmanagedType.ByValArray,
+               SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_ROOM_TOKEN_VALUE_LEN)]
+    public byte[] token;
 };
 
 /// Scene config.
 public struct zego_scene_config {
     /// State channel count.
     public uint channel_count;
+};
+
+/// Team param.
+public struct zego_team_param {
+    /// Team ID.
+    public uint team_id;
+};
+
+/// Item param.
+public struct zego_item_param {
+    /// Item ID.
+    public long item_id;
+
+    /// The number of users allowed to bind the item.
+    public uint capacity;
+
+    /// The initial position of the item in the range scene.
+    public zego_position position;
+
+    /// The mode of create item.
+    public zego_create_item_mode create_mode;
+};
+
+/// Scene stream config.
+public struct zego_scene_stream_config {
+    /// Enable play stream in range or not.
+    [MarshalAs(UnmanagedType.I1)]
+    public bool enable_play_in_range;
+
+    /// Enable publish stream to world or not.
+    [MarshalAs(UnmanagedType.I1)]
+    public bool enable_publish_to_world;
+};
+
+/// The configuration of getting shared resource.
+public struct zego_copyrighted_music_get_shared_config {
+    /// the ID of the song.
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
+    public byte[] song_id;
+
+    /// Copyright music resource song copyright provider.
+    public zego_copyrighted_music_vendor_id vendor_id;
+
+    /// The room ID, the single-room mode can not be passed, and the corresponding room ID must be passed in the multi-room mode. Indicates which room to get resources from.
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_ROOMID_LEN)]
+    public byte[] room_id;
+};
+
+/// image data content
+public struct zego_image_buffer {
+    /// image content in BGRA32 format.
+    public System.IntPtr buffer;
+
+    /// buffer size.
+    public uint length;
+
+    /// buffer width.
+    public uint width;
+
+    /// buffer height.
+    public uint height;
+};
+
+/// The screen captures source information.
+public struct zego_screen_capture_source_info {
+    /// Target type for screen capture. (only for desktop)
+    public zego_screen_capture_source_type source_type;
+
+    /// The ID of the capture source.
+    public System.IntPtr source_id;
+
+    /// Capture source name (in UTF8 encoding).
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_USERNAME_LEN)]
+    public byte[] source_name;
+
+    /// Thumbnail of the capture window.
+    public zego_image_buffer thumbnail_image;
+
+    /// The image content of the icon.
+    public zego_image_buffer icon_image;
+};
+
+/// Audio source mix config
+///
+/// Used to config whether mix media player, audio effect player and captured system audio into publish stream or not when set audio source.
+public struct zego_audio_source_mix_config {
+    /// Media player instance index list.
+    public System.IntPtr media_player_index_list;
+
+    /// Media player instance count.
+    public int media_player_count;
+
+    /// Audio effect player instance index list.
+    public System.IntPtr audio_effect_player_index_list;
+
+    /// Audio effect player instance count.
+    public int audio_effect_player_count;
+
+    /// Enable or disable mix captured system audio into publish stream.
+    [MarshalAs(UnmanagedType.I1)]
+    public bool enable_mix_system_playout;
+
+    /// Enable or disable mix SDK playout into publish stream.
+    [MarshalAs(UnmanagedType.I1)]
+    public bool enable_mix_engine_playout;
+};
+
+/// Multimedia resource for ZEGO media player.
+///
+/// Used to configure loading parameters when loading multimedia resources.
+public struct zego_media_player_resource {
+    /// Used to specify the loading type of multimedia resources.
+    public zego_multimedia_load_type load_type;
+
+    /// The progress at which the plaback started.
+    public long start_position;
+
+    /// If the specified resource has a transparent effect, you need to specify the layout position of the alpha data.
+    public zego_alpha_layout_type alpha_layout;
+
+    /// Common resource path.The absolute resource path or the URL of the network resource and cannot be null or "". Android can set this path string with Uri.
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
+    public byte[] file_path;
+
+    /// binary data memory.
+    public System.IntPtr memory;
+
+    /// Binary data memory length.
+    public int memory_length;
+
+    /// The resource ID obtained from the copyrighted music module.
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_COMMON_LEN)]
+    public byte[] resource_id;
+};
+
+/// Background config.
+///
+/// It is used to configure background when the object segmentation is turned on.
+public struct zego_background_config {
+    /// Background process type.
+    public zego_background_process_type process_type;
+
+    /// Background color, the format is 0xRRGGBB, default is black, which is 0x000000
+    public int color;
+
+    /// Background image URL.
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = ZegoConstans.ZEGO_EXPRESS_MAX_URL_LEN)]
+    public byte[] image_url;
+
+    /// Background blur level.
+    public zego_background_blur_level blur_level;
+};
+
+/// Object segmentation config.
+///
+/// It is used to configure parameters when the object segmentation is turned on.
+public struct zego_object_segmentation_config {
+    /// The type of object segmentation.
+    public zego_object_segmentation_type object_segmentation_type;
+
+    /// Background config.
+    public zego_background_config background_config;
+};
+
+/// Media Infomration of media file.
+///
+/// Meida information such as video resolution of media file.
+public struct zego_media_player_media_info {
+    /// Video resolution width.
+    public int width;
+
+    /// Video resolution height.
+    public int height;
+
+    /// Video frame rate.
+    public int frame_rate;
+};
+
+/// Used to config the media data publisher.
+///
+/// Used to config the media data publisher when creating it.
+public struct zego_media_data_publisher_config {
+    /// Used to specify the publish channel index of publisher.
+    public int channel;
+
+    /// Used to specify the mode of publisher.
+    public zego_media_data_publisher_mode mode;
 };
 
 }

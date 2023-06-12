@@ -7,12 +7,10 @@ using System.Threading;
 using static ZEGO.IZegoEventHandler;
 using static ZEGO.IZegoCustomVideoProcessHandler;
 //version tag:
-namespace ZEGO
-{
+namespace ZEGO {
 
-    public abstract class ZegoExpressEngine
-    {
-        /**
+public abstract class ZegoExpressEngine {
+    /**
          * Create ZegoExpressEngine singleton object and initialize SDK.
          *
          * Available since: 2.14.0
@@ -24,12 +22,12 @@ namespace ZEGO
          * @param profile The basic configuration information is used to create the engine.
          * @return engine singleton instance.
          */
-        public static ZegoExpressEngine CreateEngine(ZegoEngineProfile profile, SynchronizationContext uiThreadContext)
-        {
-            return ZegoExpressEngineImpl.CreateEngine(profile, uiThreadContext);
-        } 
+    public static ZegoExpressEngine CreateEngine(ZegoEngineProfile profile,
+                                                 SynchronizationContext uiThreadContext) {
+        return ZegoExpressEngineImpl.CreateEngine(profile, uiThreadContext);
+    }
 
-        /**
+    /**
          * Destroy the ZegoExpressEngine singleton object and deinitialize the SDK.
          *
          * Available since: 1.1.0
@@ -40,12 +38,11 @@ namespace ZEGO
          *
          * @param onDestroyCompletion Notification callback for destroy engine completion. Developers can listen to this callback to ensure that device hardware resources are released. If the developer only uses SDK to implement audio and video functions, this parameter can be passed [null].
          */
-        public static void DestroyEngine(IZegoDestroyCompletionCallback onDestroyCompletion = null)
-        {
-            ZegoExpressEngineImpl.DestroyEngine(onDestroyCompletion);
-        } 
+    public static void DestroyEngine(IZegoDestroyCompletionCallback onDestroyCompletion = null) {
+        ZegoExpressEngineImpl.DestroyEngine(onDestroyCompletion);
+    }
 
-        /**
+    /**
          * Returns the singleton instance of ZegoExpressEngine.
          *
          * Available since: 1.1.0
@@ -55,12 +52,9 @@ namespace ZEGO
          *
          * @return Engine singleton instance
          */
-        public static ZegoExpressEngine GetEngine()
-        {
-            return ZegoExpressEngineImpl.GetEngine();
-        } 
+    public static ZegoExpressEngine GetEngine() { return ZegoExpressEngineImpl.GetEngine(); }
 
-        /**
+    /**
          * Set advanced engine configuration.
          *
          * Available since: 1.1.0
@@ -70,12 +64,11 @@ namespace ZEGO
          *
          * @param config Advanced engine configuration
          */
-        public static void SetEngineConfig(ZegoEngineConfig config)
-        {
-            ZegoExpressEngineImpl.SetEngineConfig(config);
-        } 
+    public static void SetEngineConfig(ZegoEngineConfig config) {
+        ZegoExpressEngineImpl.SetEngineConfig(config);
+    }
 
-        /**
+    /**
          * Set log configuration.
          *
          * Available since: 2.3.0
@@ -86,12 +79,11 @@ namespace ZEGO
          *
          * @param config log configuration.
          */
-        public static void SetLogConfig(ZegoLogConfig config)
-        {
-            ZegoExpressEngineImpl.SetLogConfig(config);
-        } 
+    public static void SetLogConfig(ZegoLogConfig config) {
+        ZegoExpressEngineImpl.SetLogConfig(config);
+    }
 
-        /**
+    /**
          * Set room mode.
          *
          * Available since: 2.9.0
@@ -102,12 +94,9 @@ namespace ZEGO
          *
          * @param mode Room mode. Description: Used to set the room mode. Use cases: If you need to enter multiple rooms at the same time for publish-play stream, please turn on the multi-room mode through this interface. Required: True. Default value: ZEGO_ROOM_MODE_SINGLE_ROOM.
          */
-        public static void SetRoomMode(ZegoRoomMode mode)
-        {
-            ZegoExpressEngineImpl.SetRoomMode(mode);
-        } 
+    public static void SetRoomMode(ZegoRoomMode mode) { ZegoExpressEngineImpl.SetRoomMode(mode); }
 
-        /**
+    /**
          * Gets the SDK's version number.
          *
          * Available since: 1.1.0
@@ -118,12 +107,9 @@ namespace ZEGO
          *
          * @return SDK version.
          */
-        public static string GetVersion()
-        {
-            return ZegoExpressEngineImpl.GetVersion();
-        } 
+    public static string GetVersion() { return ZegoExpressEngineImpl.GetVersion(); }
 
-        /**
+    /**
          * Uploads logs to the ZEGO server.
          *
          * Available since: 1.1.0
@@ -133,9 +119,9 @@ namespace ZEGO
          * Restrictions: If you call this interface repeatedly within 10 minutes, only the last call will take effect.
          * Caution: After calling this interface to upload logs, if you call [destroyEngine] or exit the App too quickly, there may be a failure.It is recommended to wait a few seconds, and then call [destroyEngine] or exit the App after receiving the upload success callback.
          */
-        public abstract void UploadLog();
+    public abstract void UploadLog();
 
-        /**
+    /**
          * Enable the debug assistant. Note, do not enable this feature in the online version! Use only during development phase!
          *
          * Available since: 2.17.0
@@ -148,13 +134,13 @@ namespace ZEGO
          *
          * @param enable Whether to enable the debug assistant.
          */
-        public abstract void EnableDebugAssistant(bool enable);
+    public abstract void EnableDebugAssistant(bool enable);
 
-        public OnDebugError onDebugError;
+    public OnDebugError onDebugError;
 
-        public OnEngineStateUpdate onEngineStateUpdate;
+    public OnEngineStateUpdate onEngineStateUpdate;
 
-        /**
+    /**
          * Logs in to a room with advanced room configurations. You must log in to a room before publishing or playing streams.
          *
          * Available since: 1.1.0
@@ -187,10 +173,10 @@ namespace ZEGO
          * @param user User object instance, configure userID, userName. Note that the userID needs to be globally unique with the same appID, otherwise the user who logs in later will kick out the user who logged in first.
          * @param config Advanced room configuration.
          */
-        public abstract void LoginRoom(string roomID, ZegoUser user, ZegoRoomConfig config = null);
+    public abstract void LoginRoom(string roomID, ZegoUser user, ZegoRoomConfig config = null);
 
-        /**
-         * Logs out of a room.
+    /**
+         * Exit the room.
          *
          * Available since: 2.9.0
          * Description: This API will log out the current user has logged in the room, if user logs in more than one room, all the rooms will be logged out.
@@ -201,10 +187,10 @@ namespace ZEGO
          * Related callbacks: After calling this function, you will receive [onRoomStateChanged] (Not supported before 2.18.0, please use [onRoomStateUpdate]) callback notification successfully exits the room, while other users in the same room will receive the [onRoomUserUpdate] callback notification(On the premise of enabling isUserStatusNotify configuration).
          * Related APIs: Users can use [loginRoom], [switchRoom] functions to log in or switch rooms.
          */
-        public abstract void LogoutRoom();
+    public abstract void LogoutRoom();
 
-        /**
-         * Logs out of a room.
+    /**
+         * Exit the room of the specified room ID.
          *
          * Available since: 1.1.0
          * Description: This API will log out the room named roomID.
@@ -220,9 +206,9 @@ namespace ZEGO
          *   1. Only support numbers, English characters and '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '`', ';', '’', ',', '.', '<', '>', '/', '\'.
          *   2. If you need to communicate with the Web SDK, please do not use '%'.
          */
-        public abstract void LogoutRoom(string roomID);
+    public abstract void LogoutRoom(string roomID);
 
-        /**
+    /**
          * Switch the room with advanced room configurations.
          *
          * Available since: 1.15.0
@@ -243,9 +229,10 @@ namespace ZEGO
          * @param toRoomID The next roomID.
          * @param config Advanced room configuration.
          */
-        public abstract void SwitchRoom(string fromRoomID, string toRoomID, ZegoRoomConfig config = null);
+    public abstract void SwitchRoom(string fromRoomID, string toRoomID,
+                                    ZegoRoomConfig config = null);
 
-        /**
+    /**
          * Set room extra information.
          *
          * Available since: 1.13.0
@@ -262,21 +249,23 @@ namespace ZEGO
          * @param value value if the extra info.
          * @param onRoomSetRoomExtraInfoResult Callback for setting room extra information.
          */
-        public abstract void SetRoomExtraInfo(string roomID, string key, string value, OnRoomSetRoomExtraInfoResult onRoomSetRoomExtraInfoResult);
+    public abstract void
+    SetRoomExtraInfo(string roomID, string key, string value,
+                     OnRoomSetRoomExtraInfoResult onRoomSetRoomExtraInfoResult);
 
-        public OnRoomStateUpdate onRoomStateUpdate;
+    public OnRoomStateUpdate onRoomStateUpdate;
 
-        public OnRoomUserUpdate onRoomUserUpdate;
+    public OnRoomUserUpdate onRoomUserUpdate;
 
-        public OnRoomOnlineUserCountUpdate onRoomOnlineUserCountUpdate;
+    public OnRoomOnlineUserCountUpdate onRoomOnlineUserCountUpdate;
 
-        public OnRoomStreamUpdate onRoomStreamUpdate;
+    public OnRoomStreamUpdate onRoomStreamUpdate;
 
-        public OnRoomStreamExtraInfoUpdate onRoomStreamExtraInfoUpdate;
+    public OnRoomStreamExtraInfoUpdate onRoomStreamExtraInfoUpdate;
 
-        public OnRoomExtraInfoUpdate onRoomExtraInfoUpdate;
+    public OnRoomExtraInfoUpdate onRoomExtraInfoUpdate;
 
-        /**
+    /**
          * Starts publishing a stream (for the specified channel). You can call this function to publish a second stream.
          *
          * Available since: 1.1.0
@@ -296,9 +285,10 @@ namespace ZEGO
          *   3. Only support numbers, English characters and '-', '_'.
          * @param channel Publish stream channel.
          */
-        public abstract void StartPublishingStream(string streamID, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    StartPublishingStream(string streamID, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Starts publishing a stream. Support multi-room mode.
          *
          * Available since: 1.1.0
@@ -320,9 +310,11 @@ namespace ZEGO
          * @param config Advanced publish configuration.
          * @param channel Publish stream channel.
          */
-        public abstract void StartPublishingStream(string streamID, ZegoPublisherConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    StartPublishingStream(string streamID, ZegoPublisherConfig config,
+                          ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Stops publishing a stream (for the specified channel).
          *
          * Available since: 1.1.0
@@ -337,9 +329,9 @@ namespace ZEGO
          *
          * @param channel Publish stream channel.
          */
-        public abstract void StopPublishingStream(ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void StopPublishingStream(ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Sets the extra information of the stream being published for the specified publish channel.
          *
          * Available since: 1.1.0
@@ -352,9 +344,12 @@ namespace ZEGO
          * @param onPublisherSetStreamExtraInfoResult Set stream extra information execution result notification.
          * @param channel Publish stream channel.
          */
-        public abstract void SetStreamExtraInfo(string extraInfo, OnPublisherSetStreamExtraInfoResult onPublisherSetStreamExtraInfoResult, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    SetStreamExtraInfo(string extraInfo,
+                       OnPublisherSetStreamExtraInfoResult onPublisherSetStreamExtraInfoResult,
+                       ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Starts/Updates the local video preview (for the specified channel).
          *
          * Available since: 1.1.0
@@ -368,9 +363,10 @@ namespace ZEGO
          * @param canvas The view used to display the preview image. If the view is set to null, no preview will be made.
          * @param channel Publish stream channel
          */
-        public abstract void StartPreview(ZegoCanvas canvas, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void StartPreview(ZegoCanvas canvas,
+                                      ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Stops the local preview (for the specified channel).
          *
          * Available since: 1.1.0
@@ -380,9 +376,9 @@ namespace ZEGO
          *
          * @param channel Publish stream channel
          */
-        public abstract void StopPreview(ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void StopPreview(ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Sets up the video configurations (for the specified channel).
          *
          * Available since: 1.1.0
@@ -396,9 +392,10 @@ namespace ZEGO
          * @param config Video configuration, the SDK provides a common setting combination of resolution, frame rate and bit rate, they also can be customized.
          * @param channel Publish stream channel.
          */
-        public abstract void SetVideoConfig(ZegoVideoConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void SetVideoConfig(ZegoVideoConfig config,
+                                        ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Gets the current video configurations (for the specified channel).
          *
          * This function can be used to get the specified publish channel's current video frame rate, bit rate, video capture resolution, and video encoding output resolution.
@@ -407,9 +404,10 @@ namespace ZEGO
          * @param channel Publish stream channel
          * @return Video configuration object
          */
-        public abstract ZegoVideoConfig GetVideoConfig(ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract
+        ZegoVideoConfig GetVideoConfig(ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Sets the video mirroring mode (for the specified channel).
          *
          * Available since: 1.1.0
@@ -421,9 +419,10 @@ namespace ZEGO
          * @param mirrorMode Mirror mode for previewing or publishing the stream.
          * @param channel Publish stream channel.
          */
-        public abstract void SetVideoMirrorMode(ZegoVideoMirrorMode mirrorMode, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void SetVideoMirrorMode(ZegoVideoMirrorMode mirrorMode,
+                                            ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Sets the video orientation (for the specified channel).
          *
          * Available since: 1.1.0
@@ -436,9 +435,10 @@ namespace ZEGO
          * @param orientation Video orientation.
          * @param channel Publish stream channel.
          */
-        public abstract void SetAppOrientation(ZegoOrientation orientation, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void SetAppOrientation(ZegoOrientation orientation,
+                                           ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Sets up the audio configurations for the specified publish channel.
          *
          * Available since: 1.3.4
@@ -451,9 +451,10 @@ namespace ZEGO
          * @param config Audio config.
          * @param channel Publish stream channel.
          */
-        public abstract void SetAudioConfig(ZegoAudioConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void SetAudioConfig(ZegoAudioConfig config,
+                                        ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Gets the current audio configurations.
          *
          * Available since: 1.8.0
@@ -465,9 +466,9 @@ namespace ZEGO
          *
          * @return Audio config.
          */
-        public abstract ZegoAudioConfig GetAudioConfig();
+    public abstract ZegoAudioConfig GetAudioConfig();
 
-        /**
+    /**
          * Stops or resumes sending the audio part of a stream for the specified channel.
          *
          * Available since: 1.1.0
@@ -480,9 +481,10 @@ namespace ZEGO
          * @param mute Whether to stop sending audio streams, true means not to send audio stream, and false means sending audio stream. The default is false.
          * @param channel Publish stream channel.
          */
-        public abstract void MutePublishStreamAudio(bool mute, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    MutePublishStreamAudio(bool mute, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Stops or resumes sending the video part of a stream for the specified channel.
          *
          * Available since: 1.1.0
@@ -496,9 +498,10 @@ namespace ZEGO
          * @param mute Whether to stop sending video streams, true means not to send video stream, and false means sending video stream. The default is false.
          * @param channel Publish stream channel.
          */
-        public abstract void MutePublishStreamVideo(bool mute, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    MutePublishStreamVideo(bool mute, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Enables or disables traffic control.
          *
          * Available since: 1.5.0
@@ -511,9 +514,9 @@ namespace ZEGO
          * @param enable Whether to enable traffic control. The default is ture.
          * @param property Adjustable property of traffic control, bitmask OR format. Should be one or the combinations of [ZegoTrafficControlProperty] enumeration. [AdaptiveFPS] as default.
          */
-        public abstract void EnableTrafficControl(bool enable, int property);
+    public abstract void EnableTrafficControl(bool enable, int property);
 
-        /**
+    /**
          * Set the minimum video bitrate threshold for traffic control.
          *
          * Available since: 1.1.0
@@ -528,9 +531,10 @@ namespace ZEGO
          * @param bitrate Minimum video bitrate threshold for traffic control(kbps).
          * @param mode Video sending mode below the minimum bitrate.
          */
-        public abstract void SetMinVideoBitrateForTrafficControl(int bitrate, ZegoTrafficControlMinVideoBitrateMode mode);
+    public abstract void
+    SetMinVideoBitrateForTrafficControl(int bitrate, ZegoTrafficControlMinVideoBitrateMode mode);
 
-        /**
+    /**
          * Sets the audio recording volume for stream publishing.
          *
          * Available since: 1.13.0
@@ -542,9 +546,9 @@ namespace ZEGO
          *
          * @param volume The volume gain percentage, the range is 0 ~ 200, and the default value is 100, which means 100% of the original collection volume of the device.
          */
-        public abstract void SetCaptureVolume(int volume);
+    public abstract void SetCaptureVolume(int volume);
 
-        /**
+    /**
          * Set audio capture stereo mode.
          *
          * Available since: 1.15.0 (iOS/Android/Windows); support macOS since 2.16.0
@@ -557,9 +561,9 @@ namespace ZEGO
          *
          * @param mode Audio stereo capture mode.
          */
-        public abstract void SetAudioCaptureStereoMode(ZegoAudioCaptureStereoMode mode);
+    public abstract void SetAudioCaptureStereoMode(ZegoAudioCaptureStereoMode mode);
 
-        /**
+    /**
          * Adds a target CDN URL to which the stream will be relayed from ZEGO RTC server.
          *
          * Available since: 1.1.0
@@ -574,9 +578,11 @@ namespace ZEGO
          * @param targetURL CDN relay address, supported address format is rtmp, rtmps.
          * @param onPublisherUpdateCdnUrlResult The execution result of update the relay CDN operation.
          */
-        public abstract void AddPublishCdnUrl(string streamID, string targetURL, OnPublisherUpdateCdnUrlResult onPublisherUpdateCdnUrlResult);
+    public abstract void
+    AddPublishCdnUrl(string streamID, string targetURL,
+                     OnPublisherUpdateCdnUrlResult onPublisherUpdateCdnUrlResult);
 
-        /**
+    /**
          * Deletes the specified CDN URL, which is used for relaying streams from ZEGO RTC server to CDN.
          *
          * Available since: 1.1.0
@@ -590,9 +596,11 @@ namespace ZEGO
          * @param targetURL CDN relay address, supported address format rtmp.
          * @param onPublisherUpdateCdnUrlResult The execution result of update the relay CDN operation.
          */
-        public abstract void RemovePublishCdnUrl(string streamID, string targetURL, OnPublisherUpdateCdnUrlResult onPublisherUpdateCdnUrlResult);
+    public abstract void
+    RemovePublishCdnUrl(string streamID, string targetURL,
+                        OnPublisherUpdateCdnUrlResult onPublisherUpdateCdnUrlResult);
 
-        /**
+    /**
          * Whether to directly push to CDN (without going through the ZEGO RTC server), for the specified channel.
          *
          * Available since: 1.5.0
@@ -607,10 +615,12 @@ namespace ZEGO
          * @param config CDN configuration, if null, use Zego's background default configuration.
          * @param channel Publish stream channel.
          */
-        public abstract void EnablePublishDirectToCDN(bool enable, ZegoCDNConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    EnablePublishDirectToCDN(bool enable, ZegoCDNConfig config,
+                             ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
-         * Sends Supplemental Enhancement Information.
+    /**
+         * Sends Supplemental Enhancement Information to the specified publish channel.
          *
          * Available since: 1.1.0
          * Description: While pushing the stream to transmit the audio and video stream data, the stream media enhancement supplementary information is sent to synchronize some other additional information.
@@ -623,9 +633,9 @@ namespace ZEGO
          * @param data SEI data.
          * @param channel Publish stream channel.
          */
-        public abstract void SendSEI(byte[] data, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void SendSEI(byte[] data, ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Enables or disables hardware encoding.
          *
          * Available since: 1.1.0
@@ -635,9 +645,9 @@ namespace ZEGO
          *
          * @param enable Whether to enable hardware encoding, true: enable hardware encoding, false: disable hardware encoding.
          */
-        public abstract void EnableHardwareEncoder(bool enable);
+    public abstract void EnableHardwareEncoder(bool enable);
 
-        /**
+    /**
          * Sets the timing of video scaling in the video capture workflow. You can choose to do video scaling right after video capture (the default value) or before encoding.
          *
          * Available since: 1.1.0
@@ -647,21 +657,21 @@ namespace ZEGO
          *
          * @param mode The capture scale timing mode.
          */
-        public abstract void SetCapturePipelineScaleMode(ZegoCapturePipelineScaleMode mode);
+    public abstract void SetCapturePipelineScaleMode(ZegoCapturePipelineScaleMode mode);
 
-        public OnPublisherStateUpdate onPublisherStateUpdate;
+    public OnPublisherStateUpdate onPublisherStateUpdate;
 
-        public OnPublisherQualityUpdate onPublisherQualityUpdate;
+    public OnPublisherQualityUpdate onPublisherQualityUpdate;
 
-        public OnPublisherCapturedAudioFirstFrame onPublisherCapturedAudioFirstFrame;
+    public OnPublisherCapturedAudioFirstFrame onPublisherCapturedAudioFirstFrame;
 
-        public OnPublisherCapturedVideoFirstFrame onPublisherCapturedVideoFirstFrame;
+    public OnPublisherCapturedVideoFirstFrame onPublisherCapturedVideoFirstFrame;
 
-        public OnPublisherVideoSizeChanged onPublisherVideoSizeChanged;
+    public OnPublisherVideoSizeChanged onPublisherVideoSizeChanged;
 
-        public OnPublisherRelayCDNStateUpdate onPublisherRelayCDNStateUpdate;
+    public OnPublisherRelayCDNStateUpdate onPublisherRelayCDNStateUpdate;
 
-        /**
+    /**
          * Starts playing a stream from ZEGO RTC server or from third-party CDN. Support multi-room mode.
          *
          * Available since: 1.1.0
@@ -678,9 +688,10 @@ namespace ZEGO
          * @param canvas The view used to display the play audio and video stream's image. When the view is set to [null], no video is displayed, only audio is played.
          * @param config Advanced player configuration.
          */
-        public abstract void StartPlayingStream(string streamID, ZegoCanvas canvas, ZegoPlayerConfig config = null);
+    public abstract void StartPlayingStream(string streamID, ZegoCanvas canvas,
+                                            ZegoPlayerConfig config = null);
 
-        /**
+    /**
          * Stops playing a stream.
          *
          * Available since: 1.1.0
@@ -692,9 +703,9 @@ namespace ZEGO
          *
          * @param streamID Stream ID.
          */
-        public abstract void StopPlayingStream(string streamID);
+    public abstract void StopPlayingStream(string streamID);
 
-        /**
+    /**
          * Sets the stream playback volume.
          *
          * Available since: 1.16.0
@@ -707,9 +718,9 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param volume Volume percentage. The value ranges from 0 to 200, and the default value is 100.
          */
-        public abstract void SetPlayVolume(string streamID, int volume);
+    public abstract void SetPlayVolume(string streamID, int volume);
 
-        /**
+    /**
          * Whether the pull stream can receive the specified audio data.
          *
          * Available since: 1.1.0
@@ -722,9 +733,9 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param mute Whether it can receive the audio data of the specified remote user when streaming, "true" means prohibition, "false" means receiving, the default value is "false".
          */
-        public abstract void MutePlayStreamAudio(string streamID, bool mute);
+    public abstract void MutePlayStreamAudio(string streamID, bool mute);
 
-        /**
+    /**
          * Whether the pull stream can receive the specified video data.
          *
          * Available since: 1.1.0
@@ -738,9 +749,9 @@ namespace ZEGO
          * @param streamID Stream ID.
          * @param mute Whether it is possible to receive the video data of the specified remote user when streaming, "true" means prohibition, "false" means receiving, the default value is "false". The default value for automatically played streams within the SDK is false.
          */
-        public abstract void MutePlayStreamVideo(string streamID, bool mute);
+    public abstract void MutePlayStreamVideo(string streamID, bool mute);
 
-        /**
+    /**
          * Enables or disables hardware decoding.
          *
          * Available since: 1.1.0
@@ -753,9 +764,9 @@ namespace ZEGO
          *
          * @param enable Whether to turn on hardware decoding switch, true: enable hardware decoding, false: disable hardware decoding.
          */
-        public abstract void EnableHardwareDecoder(bool enable);
+    public abstract void EnableHardwareDecoder(bool enable);
 
-        /**
+    /**
          * Enables or disables frame order detection.
          *
          * Available since: 1.1.0
@@ -769,26 +780,28 @@ namespace ZEGO
          *
          * @param enable Whether to turn on frame order detection, true: enable check poc, false: disable check poc.
          */
-        public abstract void EnableCheckPoc(bool enable);
+    public abstract void EnableCheckPoc(bool enable);
 
-        public OnPlayerStateUpdate onPlayerStateUpdate;
+    public OnPlayerStateUpdate onPlayerStateUpdate;
 
-        public OnPlayerQualityUpdate onPlayerQualityUpdate;
+    public OnPlayerQualityUpdate onPlayerQualityUpdate;
 
-        public OnPlayerMediaEvent onPlayerMediaEvent;
+    public OnPlayerMediaEvent onPlayerMediaEvent;
 
-        public OnPlayerRecvAudioFirstFrame onPlayerRecvAudioFirstFrame;
+    public OnPlayerRecvAudioFirstFrame onPlayerRecvAudioFirstFrame;
 
-        public OnPlayerRecvVideoFirstFrame onPlayerRecvVideoFirstFrame;
+    public OnPlayerRecvVideoFirstFrame onPlayerRecvVideoFirstFrame;
 
-        public OnPlayerRenderVideoFirstFrame onPlayerRenderVideoFirstFrame;
+    public OnPlayerRenderVideoFirstFrame onPlayerRenderVideoFirstFrame;
 
-        public OnPlayerVideoSizeChanged onPlayerVideoSizeChanged;
+    public OnPlayerVideoSizeChanged onPlayerVideoSizeChanged;
 
-        [Obsolete("This function will switch the ui thread callback data, which may cause sei data exceptions. It will be deprecated in version 3.4.0 and above. Please use the [onPlayerSyncRecvSEI] function instead.",false)]
-        public OnPlayerRecvSEI onPlayerRecvSEI;
+    [Obsolete(
+        "This function will switch the ui thread callback data, which may cause sei data exceptions. It will be deprecated in version 3.4.0 and above. Please use the [onPlayerSyncRecvSEI] function instead.",
+        false)]
+    public OnPlayerRecvSEI onPlayerRecvSEI;
 
-        /**
+    /**
          * Starts a stream mixing task.
          *
          * Available since: 1.2.1
@@ -803,9 +816,9 @@ namespace ZEGO
          * @param task Mixing task object. Required: Yes.
          * @param onMixerStartResult Start notification of mixing task results.Required: No. Caution: Passing [null] means not receiving callback notifications.
          */
-        public abstract void StartMixerTask(ZegoMixerTask task, OnMixerStartResult onMixerStartResult);
+    public abstract void StartMixerTask(ZegoMixerTask task, OnMixerStartResult onMixerStartResult);
 
-        /**
+    /**
          * Stops a stream mixing task.
          *
          * Available since: 1.2.1
@@ -819,13 +832,13 @@ namespace ZEGO
          * @param task Mixing task object. Required: Yes.
          * @param onMixerStopResult Stop stream mixing task result callback notification.Required: No. Caution: Passing [null] means not receiving callback notifications.
          */
-        public abstract void StopMixerTask(ZegoMixerTask task, OnMixerStopResult onMixerStopResult);
+    public abstract void StopMixerTask(ZegoMixerTask task, OnMixerStopResult onMixerStopResult);
 
-        public OnMixerRelayCDNStateUpdate onMixerRelayCDNStateUpdate;
+    public OnMixerRelayCDNStateUpdate onMixerRelayCDNStateUpdate;
 
-        public OnMixerSoundLevelUpdate onMixerSoundLevelUpdate;
+    public OnMixerSoundLevelUpdate onMixerSoundLevelUpdate;
 
-        /**
+    /**
          * Mutes or unmutes the microphone.
          *
          * Available since: 1.1.0
@@ -837,9 +850,9 @@ namespace ZEGO
          *
          * @param mute Whether to mute (disable) the microphone, `true`: mute (disable) microphone, `false`: enable microphone.
          */
-        public abstract void MuteMicrophone(bool mute);
+    public abstract void MuteMicrophone(bool mute);
 
-        /**
+    /**
          * Checks whether the microphone is muted.
          *
          * Available since: 1.1.0
@@ -850,9 +863,9 @@ namespace ZEGO
          *
          * @return Whether the microphone is muted; true: the microphone is muted; `false`: the microphone is enable (not muted).
          */
-        public abstract bool IsMicrophoneMuted();
+    public abstract bool IsMicrophoneMuted();
 
-        /**
+    /**
          * Mutes or unmutes the audio output speaker.
          *
          * Available since: 1.1.0
@@ -863,9 +876,9 @@ namespace ZEGO
          *
          * @param mute Whether to mute (disable) speaker audio output, `true`: mute (disable) speaker audio output, `false`: enable speaker audio output.
          */
-        public abstract void MuteSpeaker(bool mute);
+    public abstract void MuteSpeaker(bool mute);
 
-        /**
+    /**
          * Checks whether the audio output speaker is muted.
          *
          * Available since: 1.1.0
@@ -876,9 +889,9 @@ namespace ZEGO
          *
          * @return Whether the speaker is muted; `true`: the speaker is muted; `false`: the speaker is enable (not muted).
          */
-        public abstract bool IsSpeakerMuted();
+    public abstract bool IsSpeakerMuted();
 
-        /**
+    /**
          * Gets a list of audio devices.
          *
          * Only for Windows / macOS / Linux
@@ -886,9 +899,9 @@ namespace ZEGO
          * @param deviceType Audio device type
          * @return Audo device List
          */
-        public abstract ZegoDeviceInfo[] GetAudioDeviceList(ZegoAudioDeviceType deviceType);
+    public abstract ZegoDeviceInfo[] GetAudioDeviceList(ZegoAudioDeviceType deviceType);
 
-        /**
+    /**
          * Chooses to use the specified audio device.
          *
          * Available since: 1.0.0
@@ -899,9 +912,9 @@ namespace ZEGO
          * @param deviceType Audio device type
          * @param deviceID ID of a device obtained by [getAudioDeviceList]
          */
-        public abstract void UseAudioDevice(ZegoAudioDeviceType deviceType, string deviceID);
+    public abstract void UseAudioDevice(ZegoAudioDeviceType deviceType, string deviceID);
 
-        /**
+    /**
          * Enables or disables the audio capture device.
          *
          * Available since: 1.1.0
@@ -914,9 +927,9 @@ namespace ZEGO
          *
          * @param enable Whether to enable the audio capture device, `true`: enable audio capture device, `false`: disable audio capture device.
          */
-        public abstract void EnableAudioCaptureDevice(bool enable);
+    public abstract void EnableAudioCaptureDevice(bool enable);
 
-        /**
+    /**
          * Turns on/off the camera (for the specified channel).
          *
          * Available since: 1.1.0
@@ -930,9 +943,10 @@ namespace ZEGO
          * @param enable Whether to turn on the camera, `true`: turn on camera, `false`: turn off camera
          * @param channel Publishing stream channel
          */
-        public abstract void EnableCamera(bool enable, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void EnableCamera(bool enable,
+                                      ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Switches to the front or the rear camera (for the specified channel).
          *
          * Available since: 1.1.0
@@ -946,9 +960,10 @@ namespace ZEGO
          * @param enable Whether to use the front camera, `true`: use the front camera, `false`: use the the rear camera.
          * @param channel Publishing stream channel
          */
-        public abstract void UseFrontCamera(bool enable, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void UseFrontCamera(bool enable,
+                                        ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Chooses to use the specified video device (for the specified channel).
          *
          * Only for Windows / macOS / Linux
@@ -957,9 +972,10 @@ namespace ZEGO
          * @param deviceID ID of a device obtained by [getVideoDeviceList]
          * @param channel Publishing stream channel
          */
-        public abstract void UseVideoDevice(string deviceID, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void UseVideoDevice(string deviceID,
+                                        ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Gets a list of video devices.
          *
          * Only for Windows / macOS / Linux
@@ -967,9 +983,9 @@ namespace ZEGO
          *
          * @return Video device List
          */
-        public abstract ZegoDeviceInfo[] GetVideoDeviceList();
+    public abstract ZegoDeviceInfo[] GetVideoDeviceList();
 
-        /**
+    /**
          * Starts sound level monitoring. Support setting the listening interval.
          *
          * Available since: 1.15.0
@@ -982,9 +998,9 @@ namespace ZEGO
          *
          * @param millisecond Monitoring time period of the sound level, in milliseconds, has a value range of [100, 3000]. Default is 100 ms.
          */
-        public abstract void StartSoundLevelMonitor(uint millisecond = 100);
+    public abstract void StartSoundLevelMonitor(uint millisecond = 100);
 
-        /**
+    /**
          * Starts sound level monitoring. Support enable some advanced feature.
          *
          * Available since: 2.10.0
@@ -997,9 +1013,9 @@ namespace ZEGO
          *
          * @param config Configuration for starts the sound level monitor.
          */
-        public abstract void StartSoundLevelMonitor(ZegoSoundLevelConfig config);
+    public abstract void StartSoundLevelMonitor(ZegoSoundLevelConfig config);
 
-        /**
+    /**
          * Stops sound level monitoring.
          *
          * Available since: 1.1.0
@@ -1007,9 +1023,9 @@ namespace ZEGO
          * When to call: After the engine is created [createEngine].
          * Related APIs: Soundwave monitoring can be initiated via [startSoundLevelMonitor].
          */
-        public abstract void StopSoundLevelMonitor();
+    public abstract void StopSoundLevelMonitor();
 
-        /**
+    /**
          * Starts audio spectrum monitoring. Support setting the listening interval.
          *
          * Available since: 1.15.0
@@ -1020,9 +1036,9 @@ namespace ZEGO
          *
          * @param millisecond Monitoring time period of the audio spectrum, in milliseconds, has a value range of [100, 3000]. Default is 100 ms.
          */
-        public abstract void StartAudioSpectrumMonitor(uint millisecond = 100);
+    public abstract void StartAudioSpectrumMonitor(uint millisecond = 100);
 
-        /**
+    /**
          * Stops audio spectrum monitoring.
          *
          * Available since: 1.1.0
@@ -1030,9 +1046,9 @@ namespace ZEGO
          * When to call: After the engine is created [createEngine].
          * Related APIs: Audio spectrum monitoring can be initiated via [startAudioSpectrumMonitor].
          */
-        public abstract void StopAudioSpectrumMonitor();
+    public abstract void StopAudioSpectrumMonitor();
 
-        /**
+    /**
          * Enables or disables headphone monitoring.
          *
          * Available since: 1.9.0
@@ -1045,9 +1061,9 @@ namespace ZEGO
          *
          * @param enable Whether to use headphone monitor, true: enable, false: disable
          */
-        public abstract void EnableHeadphoneMonitor(bool enable);
+    public abstract void EnableHeadphoneMonitor(bool enable);
 
-        /**
+    /**
          * Sets the headphone monitor volume.
          *
          * Available since: 1.9.0
@@ -1058,23 +1074,23 @@ namespace ZEGO
          *
          * @param volume headphone monitor volume, range from 0 to 200, 60 as default.
          */
-        public abstract void SetHeadphoneMonitorVolume(int volume);
+    public abstract void SetHeadphoneMonitorVolume(int volume);
 
-        public OnCapturedSoundLevelUpdate onCapturedSoundLevelUpdate;
+    public OnCapturedSoundLevelUpdate onCapturedSoundLevelUpdate;
 
-        public OnRemoteSoundLevelUpdate onRemoteSoundLevelUpdate;
+    public OnRemoteSoundLevelUpdate onRemoteSoundLevelUpdate;
 
-        public OnCapturedAudioSpectrumUpdate onCapturedAudioSpectrumUpdate;
+    public OnCapturedAudioSpectrumUpdate onCapturedAudioSpectrumUpdate;
 
-        public OnRemoteAudioSpectrumUpdate onRemoteAudioSpectrumUpdate;
+    public OnRemoteAudioSpectrumUpdate onRemoteAudioSpectrumUpdate;
 
-        public OnLocalDeviceExceptionOccurred onLocalDeviceExceptionOccurred;
+    public OnLocalDeviceExceptionOccurred onLocalDeviceExceptionOccurred;
 
-        public OnRemoteCameraStateUpdate onRemoteCameraStateUpdate;
+    public OnRemoteCameraStateUpdate onRemoteCameraStateUpdate;
 
-        public OnRemoteMicStateUpdate onRemoteMicStateUpdate;
+    public OnRemoteMicStateUpdate onRemoteMicStateUpdate;
 
-        /**
+    /**
          * Whether to enable acoustic echo cancellation (AEC).
          *
          * Available since: 1.1.0
@@ -1087,9 +1103,9 @@ namespace ZEGO
          *
          * @param enable Whether to enable echo cancellation, true: enable, false: disable
          */
-        public abstract void EnableAEC(bool enable);
+    public abstract void EnableAEC(bool enable);
 
-        /**
+    /**
          * Sets the acoustic echo cancellation (AEC) mode.
          *
          * Available since: 1.1.0
@@ -1101,9 +1117,9 @@ namespace ZEGO
          *
          * @param mode Echo cancellation mode
          */
-        public abstract void SetAECMode(ZegoAECMode mode);
+    public abstract void SetAECMode(ZegoAECMode mode);
 
-        /**
+    /**
          * Enables or disables automatic gain control (AGC).
          *
          * Available since: 1.1.0
@@ -1115,9 +1131,9 @@ namespace ZEGO
          *
          * @param enable Whether to enable automatic gain control, true: enable, false: disable
          */
-        public abstract void EnableAGC(bool enable);
+    public abstract void EnableAGC(bool enable);
 
-        /**
+    /**
          * Enables or disables active noise suppression (ANS, aka ANC).
          *
          * Available since: 1.1.0
@@ -1130,9 +1146,9 @@ namespace ZEGO
          *
          * @param enable Whether to enable noise suppression, true: enable, false: disable
          */
-        public abstract void EnableANS(bool enable);
+    public abstract void EnableANS(bool enable);
 
-        /**
+    /**
          * Enables or disables transient noise suppression.
          *
          * Available since: 1.17.0
@@ -1145,9 +1161,9 @@ namespace ZEGO
          *
          * @param enable Whether to enable transient noise suppression, true: enable, false: disable
          */
-        public abstract void EnableTransientANS(bool enable);
+    public abstract void EnableTransientANS(bool enable);
 
-        /**
+    /**
          * Sets the automatic noise suppression (ANS) mode.
          *
          * Available since: 1.1.0
@@ -1159,9 +1175,9 @@ namespace ZEGO
          *
          * @param mode Audio Noise Suppression mode
          */
-        public abstract void SetANSMode(ZegoANSMode mode);
+    public abstract void SetANSMode(ZegoANSMode mode);
 
-        /**
+    /**
          * Sends a Broadcast Message.
          *
          * Available since: 1.2.1
@@ -1180,9 +1196,11 @@ namespace ZEGO
          * @param message The content of the message. Required: Yes. Value range: The length does not exceed 1024 bytes.
          * @param onIMSendBroadcastMessageResult Send a notification of the result of a broadcast message. Required: No. Caution: Passing [null] means not receiving callback notifications.
          */
-        public abstract void SendBroadcastMessage(string roomID, string message, OnIMSendBroadcastMessageResult onIMSendBroadcastMessageResult);
+    public abstract void
+    SendBroadcastMessage(string roomID, string message,
+                         OnIMSendBroadcastMessageResult onIMSendBroadcastMessageResult);
 
-        /**
+    /**
          * Sends a Barrage Message (bullet screen) to all users in the same room, without guaranteeing the delivery.
          *
          * Available since: 1.5.0
@@ -1201,9 +1219,11 @@ namespace ZEGO
          * @param message The content of the message. Required: Yes. Value range: The length does not exceed 1024 bytes.
          * @param onIMSendBarrageMessageResult Send barrage message result callback.Required: No. Caution: Passing [null] means not receiving callback notifications.
          */
-        public abstract void SendBarrageMessage(string roomID, string message, OnIMSendBarrageMessageResult onIMSendBarrageMessageResult);
+    public abstract void
+    SendBarrageMessage(string roomID, string message,
+                       OnIMSendBarrageMessageResult onIMSendBarrageMessageResult);
 
-        /**
+    /**
          * Sends a Custom Command to the specified users in the same room.
          *
          * Available since: 1.2.1
@@ -1224,15 +1244,16 @@ namespace ZEGO
          * @param toUserList List of recipients of signaling. Required: Yes. Value range: user list or [null]. Caution: When it is [null], the SDK will send custom signaling back to all users in the room
          * @param onIMSendCustomCommandResult Send a notification of the signaling result. Required: No. Caution: Passing [null] means not receiving callback notifications.
          */
-        public abstract void SendCustomCommand(string roomID, string command, List<ZegoUser> toUserList, OnIMSendCustomCommandResult onIMSendCustomCommandResult);
+    public abstract void SendCustomCommand(string roomID, string command, List<ZegoUser> toUserList,
+                                           OnIMSendCustomCommandResult onIMSendCustomCommandResult);
 
-        public OnIMRecvBroadcastMessage onIMRecvBroadcastMessage;
+    public OnIMRecvBroadcastMessage onIMRecvBroadcastMessage;
 
-        public OnIMRecvBarrageMessage onIMRecvBarrageMessage;
+    public OnIMRecvBarrageMessage onIMRecvBarrageMessage;
 
-        public OnIMRecvCustomCommand onIMRecvCustomCommand;
+    public OnIMRecvCustomCommand onIMRecvCustomCommand;
 
-        /**
+    /**
          * Creates a media player instance.
          *
          * Available since: 2.1.0
@@ -1245,9 +1266,9 @@ namespace ZEGO
          *
          * @return Media player instance, null will be returned when the maximum number is exceeded.
          */
-        public abstract ZegoMediaPlayer CreateMediaPlayer();
+    public abstract ZegoMediaPlayer CreateMediaPlayer();
 
-        /**
+    /**
          * Destroys a media player instance.
          *
          * Available since: 2.1.0
@@ -1256,9 +1277,9 @@ namespace ZEGO
          *
          * @param mediaPlayer The media player instance object to be destroyed.
          */
-        public abstract void DestroyMediaPlayer(ZegoMediaPlayer mediaPlayer);
+    public abstract void DestroyMediaPlayer(ZegoMediaPlayer mediaPlayer);
 
-        /**
+    /**
          * Starts to record and directly save the data to a file.
          *
          * Available since: 1.10.0
@@ -1270,9 +1291,11 @@ namespace ZEGO
          * @param config Record config.
          * @param channel Publishing stream channel.
          */
-        public abstract void StartRecordingCapturedData(ZegoDataRecordConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    StartRecordingCapturedData(ZegoDataRecordConfig config,
+                               ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Stops recording locally captured audio or video.
          *
          * Available since: 1.10.0
@@ -1282,13 +1305,14 @@ namespace ZEGO
          *
          * @param channel Publishing stream channel.
          */
-        public abstract void StopRecordingCapturedData(ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    StopRecordingCapturedData(ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        public OnCapturedDataRecordStateUpdate onCapturedDataRecordStateUpdate;
+    public OnCapturedDataRecordStateUpdate onCapturedDataRecordStateUpdate;
 
-        public OnCapturedDataRecordProgressUpdate onCapturedDataRecordProgressUpdate;
+    public OnCapturedDataRecordProgressUpdate onCapturedDataRecordProgressUpdate;
 
-        /**
+    /**
          * Enables or disables custom video rendering.
          *
          * Available since: 1.9.0
@@ -1303,9 +1327,9 @@ namespace ZEGO
          * @param enable enable or disable
          * @param config custom video render config
          */
-        public abstract void EnableCustomVideoRender(bool enable, ZegoCustomVideoRenderConfig config);
+    public abstract void EnableCustomVideoRender(bool enable, ZegoCustomVideoRenderConfig config);
 
-        /**
+    /**
          * Enables or disables custom video capture (for the specified channel).
          *
          * Available since: 1.9.0
@@ -1321,9 +1345,11 @@ namespace ZEGO
          * @param config custom video capture config
          * @param channel publish channel
          */
-        public abstract void EnableCustomVideoCapture(bool enable, ZegoCustomVideoCaptureConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    EnableCustomVideoCapture(bool enable, ZegoCustomVideoCaptureConfig config,
+                             ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Sends the video frames (Raw Data) produced by custom video capture to the SDK (for the specified channel).
          *
          * Available since: 1.9.0
@@ -1339,9 +1365,12 @@ namespace ZEGO
          * @param referenceTimeMillisecond video frame reference time, UNIX timestamp, in milliseconds.
          * @param channel Publishing stream channel
          */
-        public abstract void SendCustomVideoCaptureRawData(byte[] data, uint dataLength, ZegoVideoFrameParam param, ulong referenceTimeMillisecond, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    SendCustomVideoCaptureRawData(byte[] data, uint dataLength, ZegoVideoFrameParam param,
+                                  ulong referenceTimeMillisecond,
+                                  ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Sends the video frames (Raw Data) produced by custom video capture to the SDK (for the specified channel).
          *
          * Available since: 1.9.0
@@ -1357,18 +1386,21 @@ namespace ZEGO
          * @param referenceTimeMillisecond video frame reference time, UNIX timestamp, in milliseconds.
          * @param channel Publishing stream channel
          */
-        public abstract void SendCustomVideoCaptureRawData(IntPtr data, uint dataLength, ZegoVideoFrameParam param, ulong referenceTimeMillisecond, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    SendCustomVideoCaptureRawData(IntPtr data, uint dataLength, ZegoVideoFrameParam param,
+                                  ulong referenceTimeMillisecond,
+                                  ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        public OnCustomVideoCaptureStart onCustomVideoCaptureStart;
+    public OnCustomVideoCaptureStart onCustomVideoCaptureStart;
 
-        public OnCustomVideoCaptureStop onCustomVideoCaptureStop;
+    public OnCustomVideoCaptureStop onCustomVideoCaptureStop;
 
-        public OnCapturedVideoFrameRawData onCapturedVideoFrameRawData;
+    public OnCapturedVideoFrameRawData onCapturedVideoFrameRawData;
 
-        public OnRemoteVideoFrameRawData onRemoteVideoFrameRawData;
+    public OnRemoteVideoFrameRawData onRemoteVideoFrameRawData;
 
-        /**
-         * Enables or disables custom video processing.
+    /**
+         * Enables or disables custom video processing, and support specifying the publish channel.
          *
          * Available since: 2.2.0 (Android/iOS/macOS native), 2.4.0 (Windows/macOS C++).
          * Description: When the developer opens custom pre-processing, by calling [setCustomVideoProcessHandler] you can set the custom video pre-processing callback.
@@ -1383,9 +1415,11 @@ namespace ZEGO
          * @param config custom video processing configuration. Required: Yes.Caution: If NULL is passed, the platform default value is used.
          * @param channel Publishing stream channel.Required: No.Default value: Main publish channel.
          */
-        public abstract void EnableCustomVideoProcessing(bool enable, ZegoCustomVideoProcessConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    EnableCustomVideoProcessing(bool enable, ZegoCustomVideoProcessConfig config,
+                                ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Enable audio data observering.
          *
          * Available since: 1.1.0 
@@ -1398,9 +1432,9 @@ namespace ZEGO
          * @param observerBitMask The callback function bitmask marker for receive audio data, refer to enum [ZegoAudioDataCallbackBitMask], when this param converted to binary, 0b01 that means 1 << 0 for triggering [onCapturedAudioData], 0x10 that means 1 << 1 for triggering [onPlaybackAudioData], 0x100 that means 1 << 2 for triggering [onMixedAudioData], 0x1000 that means 1 << 3 for triggering [onPlayerAudioData]. The masks can be combined to allow different callbacks to be triggered simultaneously.
          * @param param param of audio frame.
          */
-        public abstract void StartAudioDataObserver(uint observerBitMask, ZegoAudioFrameParam param);
+    public abstract void StartAudioDataObserver(uint observerBitMask, ZegoAudioFrameParam param);
 
-        /**
+    /**
          * Disable audio data observering.
          *
          * Available since: 1.1.0 
@@ -1408,9 +1442,9 @@ namespace ZEGO
          * Use cases: When develop need to monitor the original audio.
          * When to call: After calling [startAudioDataObserver] to start audio data monitoring.
          */
-        public abstract void StopAudioDataObserver();
+    public abstract void StopAudioDataObserver();
 
-        /**
+    /**
          * Enables the custom audio I/O function (for the specified channel), support PCM, AAC format data.
          *
          * Available since: 1.10.0
@@ -1423,9 +1457,10 @@ namespace ZEGO
          * @param config Custom audio IO config.
          * @param channel Specify the publish channel to enable custom audio IO.
          */
-        public abstract void EnableCustomAudioIO(bool enable, ZegoCustomAudioConfig config, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void EnableCustomAudioIO(bool enable, ZegoCustomAudioConfig config,
+                                             ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Sends AAC audio data produced by custom audio capture to the SDK (for the specified channel).
          *
          * Available since: 2.20.0
@@ -1443,9 +1478,13 @@ namespace ZEGO
          * @param param The param of this AAC audio frame.
          * @param channel Publish channel for capturing audio frames.
          */
-        public abstract void SendCustomAudioCaptureAACData(IntPtr data, uint dataLength, uint configLength, ulong referenceTimeMillisecond, uint samples, ZegoAudioFrameParam param, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    SendCustomAudioCaptureAACData(IntPtr data, uint dataLength, uint configLength,
+                                  ulong referenceTimeMillisecond, uint samples,
+                                  ZegoAudioFrameParam param,
+                                  ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Sends PCM audio data produced by custom audio capture to the SDK (for the specified channel).
          *
          * Available since: 1.10.0
@@ -1460,9 +1499,11 @@ namespace ZEGO
          * @param param The param of this PCM audio frame.
          * @param channel Publish channel for capturing audio frames.
          */
-        public abstract void SendCustomAudioCapturePCMData(byte[] data, uint dataLength, ZegoAudioFrameParam param, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    public abstract void
+    SendCustomAudioCapturePCMData(byte[] data, uint dataLength, ZegoAudioFrameParam param,
+                                  ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * Fetches PCM audio data of the remote stream from the SDK for custom audio rendering.
          *
          * Available since: 1.10.0
@@ -1476,17 +1517,18 @@ namespace ZEGO
          * @param dataLength The length of the audio data to be fetch this time (dataLength = duration * sampleRate * channels * 2(16 bit depth i.e. 2 Btye)).
          * @param param Specify the parameters of the fetched audio frame. sampleRate in ZegoAudioFrameParam must assignment
          */
-        public abstract void FetchCustomAudioRenderPCMData(ref byte[] data, uint dataLength, ZegoAudioFrameParam param);
+    public abstract void FetchCustomAudioRenderPCMData(ref byte[] data, uint dataLength,
+                                                       ZegoAudioFrameParam param);
 
-        public OnCapturedAudioData onCapturedAudioData;
+    public OnCapturedAudioData onCapturedAudioData;
 
-        public OnPlaybackAudioData onPlaybackAudioData;
+    public OnPlaybackAudioData onPlaybackAudioData;
 
-        public OnMixedAudioData onMixedAudioData;
+    public OnMixedAudioData onMixedAudioData;
 
-        public OnPlayerAudioData onPlayerAudioData;
+    public OnPlayerAudioData onPlayerAudioData;
 
-        /**
+    /**
          * Creates a copyrighted music instance.
          *
          * Available since: 2.13.0
@@ -1497,9 +1539,9 @@ namespace ZEGO
          *
          * @return copyrighted music instance, multiple calls to this function return the same object.
          */
-        public abstract ZegoCopyrightedMusic CreateCopyrightedMusic();
+    public abstract ZegoCopyrightedMusic CreateCopyrightedMusic();
 
-        /**
+    /**
          * Destroys a copyrighted music instance.
          *
          * Available since: 2.13.0
@@ -1508,9 +1550,9 @@ namespace ZEGO
          *
          * @param copyrightedMusic The copyrighted music instance object to be destroyed.
          */
-        public abstract void DestroyCopyrightedMusic(ZegoCopyrightedMusic copyrightedMusic);
+    public abstract void DestroyCopyrightedMusic(ZegoCopyrightedMusic copyrightedMusic);
 
-        /**
+    /**
          * [Deprecated] Enables or disables the beauty features for the specified publish channel. Deprecated since 2.16.0, please use the [enableEffectsBeauty] function instead.
          *
          * Available since: 1.1.0
@@ -1526,10 +1568,12 @@ namespace ZEGO
          * @param featureBitmask Beauty features, bitmask format, you can choose to enable several features in [ZegoBeautifyFeature] at the same time
          * @param channel Publishing stream channel
          */
-        [Obsolete("Deprecated since 2.16.0, please use the [enableEffectsBeauty] function instead.",false)]
-        public abstract void EnableBeautify(int featureBitmask, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    [Obsolete("Deprecated since 2.16.0, please use the [enableEffectsBeauty] function instead.",
+              false)]
+    public abstract void EnableBeautify(int featureBitmask,
+                                        ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * [Deprecated] Set beautify option. Deprecated since 2.16.0, please use the [setEffectsBeautyParam] function instead.
          *
          * Available since: 1.1.0
@@ -1544,10 +1588,12 @@ namespace ZEGO
          * @param option Beautify option.
          * @param channel stream publish channel.
          */
-        [Obsolete("Deprecated since 2.16.0, please use the [setEffectsBeautyParam] function instead.",false)]
-        public abstract void SetBeautifyOption(ZegoBeautifyOption option, ZegoPublishChannel channel = ZegoPublishChannel.Main);
+    [Obsolete("Deprecated since 2.16.0, please use the [setEffectsBeautyParam] function instead.",
+              false)]
+    public abstract void SetBeautifyOption(ZegoBeautifyOption option,
+                                           ZegoPublishChannel channel = ZegoPublishChannel.Main);
 
-        /**
+    /**
          * [Deprecated] Create ZegoExpressEngine singleton object and initialize SDK. Deprecated since 2.14.0, please use the method with the same name without [isTestEnv] parameter instead. Please refer to [Testing environment deprecation](https://docs.zegocloud.com/article/13315) for more details.
          *
          * Available: 1.1.0 ~ 2.13.1, deprecated since 2.14.0, please use the method with the same name without [isTestEnv] parameter instead
@@ -1563,13 +1609,13 @@ namespace ZEGO
          * @param scenario The room scenario. the SDK will optimize the audio and video configuration for the specified scenario to achieve the best effect in this scenario. After specifying the scenario, you can call other APIs to adjusting the audio and video configuration. Differences between scenarios and how to choose a suitable scenario, please refer to https://docs.zegocloud.com/article/14940
          * @return Engine singleton instance.
          */
-        [Obsolete("Deprecated since 2.14.0, please use the method with the same name without [isTestEnv] parameter instead.",false)]
-        public static ZegoExpressEngine CreateEngine(uint appID, string appSign, bool isTestEnv, ZegoScenario scenario)
-        {
-            return ZegoExpressEngineImpl.CreateEngine(appID, appSign, isTestEnv, scenario);
-        } 
-
-
+    [Obsolete(
+        "Deprecated since 2.14.0, please use the method with the same name without [isTestEnv] parameter instead.",
+        false)]
+    public static ZegoExpressEngine CreateEngine(uint appID, string appSign, bool isTestEnv,
+                                                 ZegoScenario scenario) {
+        return ZegoExpressEngineImpl.CreateEngine(appID, appSign, isTestEnv, scenario);
     }
+}
 
 }
