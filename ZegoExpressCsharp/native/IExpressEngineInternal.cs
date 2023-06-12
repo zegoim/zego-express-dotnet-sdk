@@ -43,7 +43,7 @@ public class IExpressEngineInternal {
     public static extern System.IntPtr GetJVM();
 #endif
 
-    [DllImport("ZegoExpressEngine", EntryPoint = "zego_express_set_room_mode",
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_room_mode",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_set_room_mode(ZegoRoomMode mode);
 
@@ -55,7 +55,13 @@ public class IExpressEngineInternal {
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_version",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern System.IntPtr zego_express_get_version();
+#if UNITY_WEBGL
+    [return:MarshalAs(UnmanagedType.CustomMarshaler,
+                      MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))]
+    public static extern string zego_express_get_version();
+#else
+    public static extern int zego_express_get_version(ref IntPtr version);
+#endif
 
     /**
          * 设置Android的上下文环境
@@ -76,7 +82,7 @@ public class IExpressEngineInternal {
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_get_android_context",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern System.IntPtr zego_express_get_android_context();
+    public static extern int zego_express_get_android_context(ref IntPtr context);
     /**
          * 设置初始化预配置
          * 
@@ -84,8 +90,36 @@ public class IExpressEngineInternal {
          */
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_engine_config",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern void zego_express_set_engine_config(zego_engine_config config);
+#if UNITY_WEBGL
+    public static extern int zego_express_set_engine_config(string logLonfig,
+                                                            string advancedConfig);
+#else
+    public static extern int zego_express_set_engine_config(zego_engine_config config);
+#endif
 
+/**
+         * 创建引擎实例对象
+         * 在调用其他 API 前需要先创建并初始化引擎；SDK 只支持创建一个 ZegoExpressEngine 实例，多次调用此接口返回的都是同一个对象。
+         * @param profile 创建引擎实例对象的配置
+         * @param event_handler 事件通知回调对象
+         * @return (zego_error), 错误码
+         */
+#if UNITY_WEBGL
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_init_with_profile_web",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_engine_init_with_profile_web(uint appID, string token,
+                                                                       ZegoScenario scenario);
+
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_update_local_texture",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern void zego_express_engine_update_local_texture(IntPtr texture,
+                                                                       ZegoPublishChannel channel);
+
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_update_remote_texture",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern void zego_express_engine_update_remote_texture(IntPtr texture,
+                                                                        string streamID);
+#else
     /**
          * 创建引擎实例对象
          * 在调用其他 API 前需要先创建并初始化引擎；SDK 只支持创建一个 ZegoExpressEngine 实例，多次调用此接口返回的都是同一个对象。
@@ -96,6 +130,7 @@ public class IExpressEngineInternal {
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_engine_init_with_profile",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_engine_init_with_profile(zego_engine_profile profile);
+#endif
 
     /**
          * 创建引擎实例对象
@@ -127,7 +162,7 @@ public class IExpressEngineInternal {
          */
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_upload_log",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern void zego_express_upload_log();
+    public static extern int zego_express_upload_log(ref int seq);
 
     /**
          * 注册调试错误回调
@@ -162,13 +197,25 @@ public class IExpressEngineInternal {
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_log_config",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern void zego_express_set_log_config(zego_log_config log_config);
+#if UNITY_WEBGL
+    public static extern int zego_express_set_log_config(string log_config);
+#else
+    public static extern int zego_express_set_log_config(zego_log_config log_config);
+#endif
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_call_experimental_api",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern System.IntPtr zego_express_call_experimental_api(
+    public static extern int zego_express_call_experimental_api(
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
-                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string param);
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string param,
+        ref IntPtr result);
+
+#if !UNITY_WEBGL
+    [DllImportAttribute(ZegoConstans.LIB_NAME,
+                        EntryPoint = "zego_express_free_call_experimental_api_result",
+                        CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_free_call_experimental_api_result(System.IntPtr p);
+#endif
 
     [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public delegate void zego_on_recv_experimental_api(
@@ -220,15 +267,29 @@ public class IExpressEngineInternal {
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_is_feature_supported",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern void zego_express_is_feature_supported(zego_feature_type feature_type,
-                                                                out bool is_supported);
+    public static extern int zego_express_is_feature_supported(zego_feature_type feature_type,
+                                                               out bool is_supported);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_room_scenario",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern void zego_express_set_room_scenario(zego_scenario scenario);
+    public static extern int zego_express_set_room_scenario(zego_scenario scenario);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_enable_debug_assistant",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern void zego_express_enable_debug_assistant(bool enable);
+    public static extern int zego_express_enable_debug_assistant(bool enable);
+
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_local_proxy_config",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+
+    public static extern int zego_express_set_local_proxy_config(IntPtr proxy_list, int proxy_count,
+                                                                 bool enable);
+
+    [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_cloud_proxy_config",
+               CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+    public static extern int zego_express_set_cloud_proxy_config(
+        IntPtr proxy_list, int proxy_count,
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string token,
+        bool enable);
 }
 }

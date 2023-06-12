@@ -6,7 +6,7 @@ public class IExpressMixerInternal {
     ///instance_index: zego_mediaplayer_instance_index
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_mixer_task",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern int zego_express_start_mixer_task(zego_mixer_task task);
+    public static extern int zego_express_start_mixer_task(zego_mixer_task task, ref int sequence);
 
     /// Return Type: void
     ///callback_func: zego_on_mixer_start_result
@@ -32,7 +32,7 @@ public class IExpressMixerInternal {
     ///task: zego_mixer_task
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_stop_mixer_task",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern int zego_express_stop_mixer_task(zego_mixer_task task);
+    public static extern int zego_express_stop_mixer_task(zego_mixer_task task, ref int seq);
     /// Return Type: void
     ///error_code: int
     ///seq: int
@@ -80,11 +80,13 @@ public class IExpressMixerInternal {
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_start_auto_mixer_task",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern int zego_express_start_auto_mixer_task(zego_auto_mixer_task task);
+    public static extern int zego_express_start_auto_mixer_task(zego_auto_mixer_task task,
+                                                                ref int seq);
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_stop_auto_mixer_task",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
-    public static extern int zego_express_stop_auto_mixer_task(zego_auto_mixer_task task);
+    public static extern int zego_express_stop_auto_mixer_task(zego_auto_mixer_task task,
+                                                               ref int seq);
 
     [UnmanagedFunctionPointer(ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public delegate void zego_on_auto_mixer_sound_level_update(IntPtr sound_levels, uint info_count,

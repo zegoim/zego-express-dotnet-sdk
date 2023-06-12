@@ -78,10 +78,19 @@ public class IExpressIMInternal {
     ///content: char*
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_broadcast_message",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
     public static extern int zego_express_send_broadcast_message(
         [In()][MarshalAs(UnmanagedType.LPStr)] string room_id,
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
-                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content);
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content,
+        int seq);
+#else
+    public static extern int zego_express_send_broadcast_message(
+        [In()][MarshalAs(UnmanagedType.LPStr)] string room_id,
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content,
+        ref int seq);
+#endif
 
     /// Return Type: int
     ///room_id: char*
@@ -90,21 +99,38 @@ public class IExpressIMInternal {
     ///to_user_count: unsigned int
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_custom_command",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
     public static extern int zego_express_send_custom_command(
         [In()][MarshalAs(UnmanagedType.LPStr)] string room_id,
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
                          MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content,
-        zego_user[] user_list, uint to_user_count);
+        string user_list, int seq);
+#else
+    public static extern int zego_express_send_custom_command(
+        [In()][MarshalAs(UnmanagedType.LPStr)] string room_id,
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content,
+        zego_user[] user_list, uint to_user_count, ref int seq);
+#endif
 
     /// Return Type: int
     ///room_id: char*
     ///content: char*
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_send_barrage_message",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
     public static extern int zego_express_send_barrage_message(
         [In()][MarshalAs(UnmanagedType.LPStr)] string room_id,
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
-                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content);
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content,
+        int seq);
+#else
+    public static extern int zego_express_send_barrage_message(
+        [In()][MarshalAs(UnmanagedType.LPStr)] string room_id,
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string content,
+        ref int seq);
+#endif
 
     /// Return Type: void
     ///callback_func: zego_on_im_send_broadcast_message_result
@@ -187,7 +213,7 @@ public class IExpressIMInternal {
                EntryPoint = "zego_express_create_real_time_sequential_data_manager",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_create_real_time_sequential_data_manager(
-        [In()][MarshalAs(UnmanagedType.LPStr)] string room_id);
+        [In()][MarshalAs(UnmanagedType.LPStr)] string room_id, ref int index);
 
     [DllImport(ZegoConstans.LIB_NAME,
                EntryPoint = "zego_express_destroy_real_time_sequential_data_manager",
@@ -211,7 +237,7 @@ public class IExpressIMInternal {
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_send_real_time_sequential_data(
         IntPtr data, uint data_length, [In()][MarshalAs(UnmanagedType.LPStr)] string stream_id,
-        int instance_index);
+        int instance_index, ref int sequence);
 
     [DllImport(ZegoConstans.LIB_NAME,
                EntryPoint = "zego_express_real_time_sequential_data_start_subscribing",

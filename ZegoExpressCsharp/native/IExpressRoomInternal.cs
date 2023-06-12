@@ -33,15 +33,24 @@ public class IExpressRoomInternal {
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_login_room",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
+    public static extern int zego_express_login_room(string room_id, string user, string config);
+#else
     public static extern int
     zego_express_login_room([In()][MarshalAs(UnmanagedType.LPStr)] string room_id, zego_user user,
                             System.IntPtr config);
+#endif
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_login_room_with_callback",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
+    public static extern int zego_express_login_room_with_callback(string room_id, string user,
+                                                                   string config, int sequence);
+#else
     public static extern int
     zego_express_login_room_with_callback([In()][MarshalAs(UnmanagedType.LPStr)] string room_id,
-                                          zego_user user, System.IntPtr config);
+                                          zego_user user, System.IntPtr config, ref int sequence);
+#endif
 
     [DllImportAttribute(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_logout_room",
                         CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
@@ -88,12 +97,23 @@ public class IExpressRoomInternal {
 
     [DllImport(ZegoConstans.LIB_NAME, EntryPoint = "zego_express_set_room_extra_info",
                CallingConvention = ZegoConstans.ZEGO_CALLINGCONVENTION)]
+#if UNITY_WEBGL
     public static extern int zego_express_set_room_extra_info(
         [In()][MarshalAs(UnmanagedType.LPStr)] string room_id,
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
                          MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string key,
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
-                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string value);
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string value,
+        int seq);
+#else
+    public static extern int zego_express_set_room_extra_info(
+        [In()][MarshalAs(UnmanagedType.LPStr)] string room_id,
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string key,
+        [In()][MarshalAs(UnmanagedType.CustomMarshaler,
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string value,
+        ref int seq);
+#endif
 
     /// Return Type: void
     ///callback_func: zego_on_room_extra_info_update
@@ -209,13 +229,14 @@ public class IExpressRoomInternal {
     [DllImport(LIB_NAME, EntryPoint = "zego_express_logout_all_room_with_callback",
                CallingConvention = ZEGO_CALLINGCONVENTION)]
 
-    public static extern int zego_express_logout_all_room_with_callback();
+    public static extern int zego_express_logout_all_room_with_callback(ref int sequence);
 
     [DllImport(LIB_NAME, EntryPoint = "zego_express_logout_room_with_callback",
                CallingConvention = ZEGO_CALLINGCONVENTION)]
     public static extern int zego_express_logout_room_with_callback(
         [In()][MarshalAs(UnmanagedType.CustomMarshaler,
-                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string room_id);
+                         MarshalTypeRef = typeof(ZegoUtil.UTF8StringMarshaler))] string room_id,
+        ref int sequence);
 }
 
 }
