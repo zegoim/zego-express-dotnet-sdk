@@ -882,6 +882,7 @@ class ZegoImplCallChangeUtil {
                 Buffer.BlockCopy(bytes, 0, result.advanced_config, 0, count);
             }
             result.min_play_stream_buffer_length = task.minPlayStreamBufferLength;
+            result.whiteboard = System.IntPtr.Zero;
         }
         return result;
     }
@@ -1172,6 +1173,7 @@ class ZegoImplCallChangeUtil {
             result.background_color = zegoCanvas.backgroundColor;
             result.view = zegoCanvas.view;
             result.view_mode = (zego_view_mode)zegoCanvas.viewMode;
+            result.alpha_blend = false;
             return result;
         }
     }
@@ -1259,6 +1261,7 @@ class ZegoImplCallChangeUtil {
                               ZEGO_EXPRESS_MAX_ROOMID_LEN);
             ZegoUtil.ZegoCopy(config.masterID, ref request_config.master_id,
                               ZEGO_EXPRESS_MAX_USERID_LEN);
+            request_config.scene_id = config.sceneID;
             return request_config;
         }
     }
