@@ -1,11 +1,9 @@
 using static ZEGO.IZegoAudioEffectPlayerHandler;
 
-namespace ZEGO
-{
+namespace ZEGO {
 
-    public abstract class ZegoAudioEffectPlayer
-    {
-        /**
+public abstract class ZegoAudioEffectPlayer {
+    /**
          * Start playing audio effect.
          *
          * Available since: 1.16.0
@@ -18,9 +16,9 @@ namespace ZEGO
          * @param path The absolute path of the local resource. <br>Value range: "assets://"、"ipod-library://" and network url are not supported. Set path as null or "" if resource is loaded already using [loadResource].
          * @param config Audio effect playback configuration. <br>Default value: Set null will only be played once, and will not be mixed into the publishing stream.
          */
-        public abstract void Start(uint audioEffectID, string path, ZegoAudioEffectPlayConfig config);
+    public abstract void Start(uint audioEffectID, string path, ZegoAudioEffectPlayConfig config);
 
-        /**
+    /**
          * Stop playing audio effect.
          *
          * Available since: 1.16.0
@@ -30,9 +28,9 @@ namespace ZEGO
          *
          * @param audioEffectID ID for the audio effect.
          */
-        public abstract void Stop(uint audioEffectID);
+    public abstract void Stop(uint audioEffectID);
 
-        /**
+    /**
          * Pause playing audio effect.
          *
          * Available since: 1.16.0
@@ -42,9 +40,9 @@ namespace ZEGO
          *
          * @param audioEffectID ID for the audio effect.
          */
-        public abstract void Pause(uint audioEffectID);
+    public abstract void Pause(uint audioEffectID);
 
-        /**
+    /**
          * Resume playing audio effect.
          *
          * Available since: 1.16.0
@@ -54,9 +52,9 @@ namespace ZEGO
          *
          * @param audioEffectID ID for the audio effect.
          */
-        public abstract void Resume(uint audioEffectID);
+    public abstract void Resume(uint audioEffectID);
 
-        /**
+    /**
          * Stop playing all audio effect.
          *
          * Available since: 1.16.0
@@ -64,9 +62,9 @@ namespace ZEGO
          * When to call: Some audio effects are Playing.
          * Restrictions: None.
          */
-        public abstract void StopAll();
+    public abstract void StopAll();
 
-        /**
+    /**
          * Pause playing all audio effect.
          *
          * Available since: 1.16.0
@@ -74,9 +72,9 @@ namespace ZEGO
          * When to call: It can be called after [createAudioEffectPlayer].
          * Restrictions: None.
          */
-        public abstract void PauseAll();
+    public abstract void PauseAll();
 
-        /**
+    /**
          * Resume playing all audio effect.
          *
          * Available since: 1.16.0
@@ -84,9 +82,9 @@ namespace ZEGO
          * When to call: It can be called after [pauseAll].
          * Restrictions: None.
          */
-        public abstract void ResumeAll();
+    public abstract void ResumeAll();
 
-        /**
+    /**
          * Set the specified playback progress.
          *
          * Available since: 1.16.0
@@ -98,22 +96,24 @@ namespace ZEGO
          * @param millisecond Point in time of specified playback progress.
          * @param onAudioEffectPlayerSeekToCallback The result of seek.
          */
-        public abstract void SeekTo(uint audioEffectID, ulong millisecond, OnAudioEffectPlayerSeekToCallback onAudioEffectPlayerSeekToCallback);
+    public abstract void
+    SeekTo(uint audioEffectID, ulong millisecond,
+           OnAudioEffectPlayerSeekToCallback onAudioEffectPlayerSeekToCallback);
 
-        /**
+    /**
          * Set volume for a single audio effect. Both the local play volume and the publish volume are set.
          *
          * Available since: 1.16.0
          * Description: Set volume for a single audio effect. Both the local play volume and the publish volume are set.
-         * When to call: It can be called after [createAudioEffectPlayer].
+         * When to call: The specified [audioEffectID] is [start].
          * Restrictions: None.
          *
          * @param audioEffectID ID for the audio effect.
          * @param volume Volume. <br>Value range: The range is 0 ~ 200. <br>Default value: The default is 100.
          */
-        public abstract void SetVolume(uint audioEffectID, int volume);
+    public abstract void SetVolume(uint audioEffectID, int volume);
 
-        /**
+    /**
          * Set volume for all audio effect. Both the local play volume and the publish volume are set.
          *
          * Available since: 1.16.0
@@ -123,9 +123,9 @@ namespace ZEGO
          *
          * @param volume Volume. <br>Value range: The range is 0 ~ 200. <br>Default value: The default is 100.
          */
-        public abstract void SetVolumeAll(int volume);
+    public abstract void SetVolumeAll(int volume);
 
-        /**
+    /**
          * Get the total duration of the specified audio effect resource.
          *
          * Available since: 1.16.0
@@ -137,9 +137,9 @@ namespace ZEGO
          * @param audioEffectID ID for the audio effect.
          * @return Unit is millisecond.
          */
-        public abstract ulong GetTotalDuration(uint audioEffectID);
+    public abstract ulong GetTotalDuration(uint audioEffectID);
 
-        /**
+    /**
          * Get current playback progress.
          *
          * Available since: 1.16.0
@@ -150,9 +150,9 @@ namespace ZEGO
          *
          * @param audioEffectID ID for the audio effect.
          */
-        public abstract ulong GetCurrentProgress(uint audioEffectID);
+    public abstract ulong GetCurrentProgress(uint audioEffectID);
 
-        /**
+    /**
          * Load audio effect resource.
          *
          * Available since: 1.16.0
@@ -165,9 +165,11 @@ namespace ZEGO
          * @param path the absolute path of the audio effect resource and cannot be null or "". <br>Value range: "assets://"、"ipod-library://" and network url are not supported.
          * @param onAudioEffectPlayerLoadResourceCallback load audio effect resource result.
          */
-        public abstract void LoadResource(uint audioEffectID, string path, OnAudioEffectPlayerLoadResourceCallback onAudioEffectPlayerLoadResourceCallback);
+    public abstract void
+    LoadResource(uint audioEffectID, string path,
+                 OnAudioEffectPlayerLoadResourceCallback onAudioEffectPlayerLoadResourceCallback);
 
-        /**
+    /**
          * Unload audio effect resource.
          *
          * Available since: 1.16.0
@@ -178,9 +180,9 @@ namespace ZEGO
          *
          * @param audioEffectID ID for the audio effect loaded.
          */
-        public abstract void UnloadResource(uint audioEffectID);
+    public abstract void UnloadResource(uint audioEffectID);
 
-        /**
+    /**
          * Get audio effect player index.
          *
          * Available since: 1.16.0
@@ -190,11 +192,9 @@ namespace ZEGO
          *
          * @return Audio effect player index.
          */
-        public abstract int GetIndex();
+    public abstract int GetIndex();
 
-        public OnAudioEffectPlayStateUpdate onAudioEffectPlayStateUpdate;
-
-
-    }
+    public OnAudioEffectPlayStateUpdate onAudioEffectPlayStateUpdate;
+}
 
 }
