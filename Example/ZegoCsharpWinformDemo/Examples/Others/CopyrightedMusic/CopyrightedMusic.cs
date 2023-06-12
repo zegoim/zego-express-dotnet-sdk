@@ -50,9 +50,10 @@ namespace ZegoCsharpWinformDemo.Examples
 
             // Create copyrighted music
             copyrighted_music = engine.CreateCopyrightedMusic();
+            copyrighted_music.onDownloadProgressUpdate = OnCopyrightedMusicDownloadProgressUpdate;
 
             // Create Media player
-            for(int i=0;i< max_player_count;i++)
+            for (int i=0;i< max_player_count;i++)
             {
                 var media_player = engine.CreateMediaPlayer();
                 media_players.Add(media_player);
@@ -245,7 +246,6 @@ namespace ZegoCsharpWinformDemo.Examples
                 event_handler.onRoomStateUpdate = OnRoomStateUpdate;
                 event_handler.onPublisherStateUpdate = OnPublisherStateUpdate;
                 event_handler.onRoomStreamUpdate = OnRoomStreamUpdate;
-                event_handler.onCopyrightedMusicDownloadProgressUpdate = OnCopyrightedMusicDownloadProgressUpdate;
                 event_handler.SetZegoEventHandler(engine);
             }
         }
@@ -337,7 +337,7 @@ namespace ZegoCsharpWinformDemo.Examples
             config.user.userName = user.userName;
 
             PrintLogToView(string.Format("InitCopyrightedMusic,userID:{0}, userName:{1}", config.user.userID, config.user.userName));
-            copyrighted_music.InitCopyrightedMusic(config, (int errorCode, IntPtr user_context) =>{
+            copyrighted_music.InitCopyrightedMusic(config, (int errorCode) =>{
                 PrintLogToView(string.Format("InitCopyrightedMusic, errorCode:{0}", errorCode));
             });
         }

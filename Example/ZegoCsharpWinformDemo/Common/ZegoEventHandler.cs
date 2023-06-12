@@ -18,7 +18,6 @@ namespace ZegoCsharpWinformDemo.Common
         public IZegoEventHandler.OnPublisherStateUpdate onPublisherStateUpdate;
         public IZegoEventHandler.OnPlayerStateUpdate onPlayerStateUpdate;
         public IZegoEventHandler.OnRoomStreamUpdate onRoomStreamUpdate;
-        public IZegoEventHandler.OnCopyrightedMusicDownloadProgressUpdate onCopyrightedMusicDownloadProgressUpdate;
         public IZegoEventHandler.OnPublisherRelayCDNStateUpdate onPublisherRelayCDNStateUpdate;
         public IZegoEventHandler.OnRoomUserUpdate onRoomUserUpdate;
 
@@ -41,7 +40,6 @@ namespace ZegoCsharpWinformDemo.Common
             engine.onPublisherStateUpdate = OnPublisherStateUpdate;
             engine.onPlayerStateUpdate = OnPlayerStateUpdate;
             engine.onRoomStreamUpdate = OnRoomStreamUpdate;
-            engine.onCopyrightedMusicDownloadProgressUpdate = OnCopyrightedMusicDownloadProgressUpdate;
             engine.onPublisherRelayCDNStateUpdate = OnPublisherRelayCDNStateUpdate;
             engine.onRoomUserUpdate = OnRoomUserUpdate;
         }
@@ -100,14 +98,6 @@ namespace ZegoCsharpWinformDemo.Common
             if(onRoomStreamUpdate != null)
             {
                 onRoomStreamUpdate(roomID, updateType, streamList, extendedData);
-            }
-        }
-
-        public void OnCopyrightedMusicDownloadProgressUpdate(ZegoCopyrightedMusic copyrightedMusic, string resourceID, float progressRate)
-        {
-            if(onCopyrightedMusicDownloadProgressUpdate != null)
-            {
-                onCopyrightedMusicDownloadProgressUpdate(copyrightedMusic, resourceID, progressRate);
             }
         }
 
